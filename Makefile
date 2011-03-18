@@ -7,9 +7,8 @@ halo:
 	clang -Wall -I./include `pkg-config --cflags x11 xcomposite cairo` -c src/halo.c -o src/halo.o
 	clang -Wall -I./include `pkg-config --cflags x11 xcomposite cairo` -c src/menu.c -o src/menu.o
 	clang -Wall -I./include `pkg-config --cflags x11 xcomposite cairo` -c src/surface.c -o src/surface.o
-	clang -Wall -I./include `pkg-config --cflags x11 xcomposite cairo` -c src/timer.c -o src/timer.o
 	clang -Wall -I./include `pkg-config --cflags x11 xcomposite cairo` -c src/window.c -o src/window.o
-	clang -Wall `pkg-config --libs x11 xcomposite cairo` src/client.o src/display.o src/event.o src/halo.o src/menu.o src/surface.o src/timer.o src/window.o -o halo
+	clang -Wall `pkg-config --libs x11 xcomposite cairo` src/client.o src/display.o src/event.o src/halo.o src/menu.o src/surface.o src/window.o -o halo
 
 install:
 	cp ./halo /usr/bin/

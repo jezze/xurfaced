@@ -113,6 +113,7 @@ void halo_event_handler(struct halo *halo)
 
         case KeyPress:
             halo_event_keypress(halo, &event.xkey);
+            halo_surface_blit(halo, &halo_menu);
             break;
 
         case ButtonPress:

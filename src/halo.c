@@ -10,7 +10,6 @@
 #include <halo.h>
 #include <menu.h>
 #include <surface.h>
-#include <timer.h>
 #include <window.h>
 
 static void test()
@@ -58,8 +57,6 @@ static void halo_init(struct halo *halo)
     halo_menu_add_option("Media", test);
     halo_menu_add_option("Games", test);
     halo_menu_add_option("Quit", test);
-
-    halo_timer_init(halo);
 
 }
 
