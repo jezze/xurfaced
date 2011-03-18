@@ -1,12 +1,12 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
-#include <client.h>
 #include <menu.h>
 #include <surface.h>
 #include <halo.h>
 #include <event.h>
 
+Atom halo_atom_wm[3];
 extern struct halo_menu halo_menu;
 
 static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEvent *e)
@@ -24,6 +24,21 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
 
     XConfigureWindow(halo->display, e->window, e->value_mask, &wc);
 
+    XConfigureEvent ce;
+
+    ce.type = ConfigureNotify;
+    ce.display = halo->display;
+    ce.event = e->window;
+    ce.window = e->window;
+    ce.x = 0;
+    ce.y = 0;
+    ce.width = halo->screenWidth;
+    ce.height = halo->screenHeight;
+    ce.border_width = 0;
+    ce.above = 0;
+    ce.override_redirect = 0;
+    XSendEvent(halo->display, e->window, False, StructureNotifyMask, (XEvent *)&ce);
+
 }
 
 static void halo_event_expose(struct halo *halo, XExposeEvent *e)
@@ -34,15 +49,12 @@ static void halo_event_expose(struct halo *halo, XExposeEvent *e)
 static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *e)
 {
 
-    halo_client_add(&e->window);
-
-    XSelectInput(halo->display, e->window, StructureNotifyMask | PropertyChangeMask);
+    XSelectInput(halo->display, e->window, StructureNotifyMask);
 
     XRaiseWindow(halo->display, e->window);
     XMoveResizeWindow(halo->display, e->window, 0, 0, halo->screenWidth, halo->screenHeight);
-    XMapWindow(halo->display, e->window);
 
-    Atom halo_atom_wm[3];
+/*
     halo_atom_wm[0] = XInternAtom(halo->display, "WM_PROTOCOLS", 0);
     halo_atom_wm[1] = XInternAtom(halo->display, "WM_DELETE_WINDOW", 0);
     halo_atom_wm[2] = XInternAtom(halo->display, "WM_STATE", 0);
@@ -50,6 +62,9 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *e)
     long data[] = { NormalState, None };
 
     XChangeProperty(halo->display, e->window, halo_atom_wm[2], halo_atom_wm[2], 32, PropModeReplace, (unsigned char *)data, 2);
+*/
+
+    XMapWindow(halo->display, e->window);
 
 }
 

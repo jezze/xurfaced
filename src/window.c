@@ -18,7 +18,7 @@ static void halo_window_init_root(struct halo *halo)
     halo_atom_net[2] = XInternAtom(halo->display, "_NET_WM_STATE", 0);
     halo_atom_net[3] = XInternAtom(halo->display, "_NET_WM_STATE_FULLSCREEN", 0);
 
-    XChangeProperty(halo->display, halo->root, XInternAtom(halo->display, "_NET_SUPPORTED", 0), XA_ATOM, 32, PropModeReplace, (unsigned char *)halo_atom_net, 4);
+    XChangeProperty(halo->display, halo->root, halo_atom_net[0], XA_ATOM, 32, PropModeReplace, (unsigned char *)halo_atom_net, 4);
 
     XSetWindowAttributes attributes;
     attributes.event_mask = SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask | PropertyChangeMask | KeyPressMask;
@@ -53,7 +53,7 @@ static void halo_window_init_base(struct halo *halo)
 
 //    XShapeSelectInput(halo->display, halo->main, ShapeNotifyMask);
 
-    XSelectInput(halo->display, halo->main, ExposureMask | ButtonPressMask | KeyPressMask);
+    XSelectInput(halo->display, halo->main, ButtonPressMask | KeyPressMask);
     XMapWindow(halo->display, halo->main);
 
 }
