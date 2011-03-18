@@ -9,6 +9,7 @@ struct halo
   int screenWidth;
   int screenHeight;
   Window root;
+  Atom atom_net[4];
   Window main;
   int running;
 
