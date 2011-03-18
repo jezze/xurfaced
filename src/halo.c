@@ -13,7 +13,7 @@
 
 struct halo halo;
 
-void test()
+void halo_none()
 {
 
 }
@@ -52,10 +52,11 @@ static void halo_init()
     halo_surface_init(&halo);
 
     halo_menu_clear_options();
-    halo_menu_add_option("Home", test);
-    halo_menu_add_option("Media", test);
-    halo_menu_add_option("Games", test);
-    halo_menu_add_option("Quit", test);
+    halo_menu_add_option("Home", halo_none);
+    halo_menu_add_option("Media", halo_none);
+    halo_menu_add_option("Games", halo_none);
+    halo_menu_add_option("Terminal", halo_spawn);
+    halo_menu_add_option("Quit", halo_quit);
 
 }
 

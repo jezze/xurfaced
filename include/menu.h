@@ -5,7 +5,7 @@ struct halo_menu_option
 {
 
   char *name;
-  void (*command)(int current);
+  void (*command)();
 
 };
 
@@ -19,7 +19,7 @@ struct halo_menu
 
 };
 
-extern void halo_menu_add_option(char *name, void (*command)(int current));
+extern void halo_menu_add_option(char *name, void (*command)());
 extern void halo_menu_clear_options();
 extern void halo_menu_next();
 extern void halo_menu_previous();

@@ -20,7 +20,7 @@ static void halo_window_init_root(struct halo *halo)
     XChangeProperty(halo->display, halo->root, halo->atom_net[0], XA_ATOM, 32, PropModeReplace, (unsigned char *)halo->atom_net, 4);
 
     XSetWindowAttributes attributes;
-    attributes.event_mask = SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask | PropertyChangeMask | KeyPressMask;
+    attributes.event_mask = SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask | PropertyChangeMask;
 
     XChangeWindowAttributes(halo->display, halo->root, CWEventMask, &attributes);
     XSelectInput(halo->display, halo->root, attributes.event_mask);

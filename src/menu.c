@@ -2,7 +2,7 @@
 
 struct halo_menu halo_menu;
 
-void halo_menu_add_option(char *name, void (*command)(int current))
+void halo_menu_add_option(char *name, void (*command)())
 {
 
   halo_menu.options[halo_menu.count].name = name;
