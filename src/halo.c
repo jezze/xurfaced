@@ -12,26 +12,28 @@
 #include <surface.h>
 #include <window.h>
 
+struct halo halo;
+
 static void test()
 {
 
 }
 
-void halo_quit(struct halo *halo)
+void halo_quit()
 {
 
-    halo->running = 0;
+    halo.running = 0;
 
 }
 
-void halo_spawn(struct halo *halo)
+void halo_spawn()
 {
 
     if (fork() == 0)
     {
 
-        if (halo->display)
-            close(XConnectionNumber(halo->display));
+        if (halo.display)
+            close(XConnectionNumber(halo.display));
 
         setsid();
 
@@ -43,12 +45,12 @@ void halo_spawn(struct halo *halo)
 
 }
 
-static void halo_init(struct halo *halo)
+static void halo_init()
 {
 
-    halo_display_init(halo);
-    halo_window_init(halo);
-    halo_surface_init(halo);
+    halo_display_init(&halo);
+    halo_window_init(&halo);
+    halo_surface_init(&halo);
 
     halo_client_init();
 
@@ -60,24 +62,24 @@ static void halo_init(struct halo *halo)
 
 }
 
-static void halo_destroy(struct halo *halo)
+static void halo_destroy()
 {
 
-    halo_client_destroy(halo);
-    halo_surface_destroy(halo);
-    halo_display_destroy(halo);
+    halo_client_destroy(&halo);
+    halo_surface_destroy(&halo);
+    halo_display_destroy(&halo);
 
 }
 
-static void halo_run(struct halo *halo)
+static void halo_run()
 {
 
-    halo->running = 1;
+    halo.running = 1;
 
-    while (halo->running)
+    while (halo.running)
     {
 
-        halo_event_handler(halo);
+        halo_event_handler(&halo);
 
     }
 
@@ -86,11 +88,9 @@ static void halo_run(struct halo *halo)
 int main(int argc, char *argv[])
 {
 
-    struct halo halo;
-
-    halo_init(&halo);
-    halo_run(&halo);
-    halo_destroy(&halo);
+    halo_init();
+    halo_run();
+    halo_destroy();
 
     return 0;
 
