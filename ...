@@ -1,0 +1,291 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+#include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <X11/Xatom.h>
+#include <X11/Xproto.h>
+#include <X11/Xutil.h>
+#include <cairo.h>
+#include <cairo-xlib.h>
+#include "main.h"
+
+void halo_command_quit(halo_t *halo)
+{
+
+  halo->running = 0;
+
+}
+
+void halo_blit_background(halo_t *halo)
+{
+
+  cairo_rectangle(halo->cairo, 0, 0, halo->screenWidth, halo->screenHeight);
+
+  cairo_pattern_t *pat = cairo_pattern_create_linear(0.0, 0.0, 0.0, halo->screenHeight);
+  cairo_pattern_add_color_stop_rgba(pat, 0.0, 0.2, 0.8, 0.2, 1.0);
+  cairo_pattern_add_color_stop_rgba(pat, 0.4, 0.0, 0.6, 0.0, 1.0);
+  cairo_pattern_add_color_stop_rgba(pat, 0.6, 0.0, 0.6, 0.0, 1.0);
+  cairo_pattern_add_color_stop_rgba(pat, 1.0, 0.2, 0.8, 0.2, 1.0);
+
+  cairo_set_source(halo->cairo, pat);
+
+  cairo_fill(halo->cairo);
+
+}
+
+void halo_blit_menu(halo_t *halo)
+{
+
+  int i;
+
+  for (i = 0; i < halo->menu.count; i++)
+  {
+
+    cairo_move_to(halo->cairo, 100, i * 48 + 100);
+    cairo_text_path(halo->cairo, halo->menu.options[i].name);
+
+    if (i == halo->menu.current)
+    {
+
+
+      cairo_set_source_rgba(halo->cairo, 1.0, 1.0, 1.0, 1.0);
+      cairo_fill_preserve(halo->cairo);
+      cairo_set_source_rgba(halo->cairo, 0.0, 0.0, 0.0, 1.0);
+      cairo_stroke(halo->cairo);
+
+
+    }
+
+    else
+    {
+
+      cairo_set_source_rgba(halo->cairo, 1.0, 1.0, 1.0, 0.5);
+      cairo_fill_preserve(halo->cairo);
+      cairo_set_source_rgba(halo->cairo, 0.0, 0.0, 0.0, 0.5);
+      cairo_stroke(halo->cairo);
+
+    }
+
+  }
+
+}
+
+void halo_blit(halo_t *halo)
+{
+
+  cairo_push_group(halo->cairo);
+
+  halo_blit_background(halo);
+  halo_blit_menu(halo);
+
+  cairo_pop_group_to_source(halo->cairo);
+
+  cairo_paint(halo->cairo);
+
+}
+
+void halo_spawn(halo_t *halo)
+{
+
+  if (fork() == 0)
+  {
+
+//    if (halo->display)
+//      close(ConnectionNumber(halo->display));
+
+    setsid();
+    execvp("xterm", 0);
+    exit(0);
+
+  }
+
+}
+
+void test(int current)
+{
+
+}
+
+halo_t halo_create()
+{
+
+  halo_t halo;
+
+  if (!(halo.display = XOpenDisplay(0)))
+  {
+
+    fputs("halo: can not open display", stderr);
+    exit(EXIT_FAILURE);
+
+  }
+
+  halo.screen = XDefaultScreen(halo.display);
+  halo.screenWidth = DisplayWidth(halo.display, halo.screen);
+  halo.screenHeight = DisplayHeight(halo.display, halo.screen);
+
+  halo.wmatom[0] = XInternAtom(halo.display, "WM_PROTOCOLS", 0);
+  halo.wmatom[1] = XInternAtom(halo.display, "WM_DELETE_WINDOW", 0);
+  halo.wmatom[2] = XInternAtom(halo.display, "WM_STATE", 0);
+  halo.netatom[0] = XInternAtom(halo.display, "_NET_SUPPORTED", 0);
+  halo.netatom[1] = XInternAtom(halo.display, "_NET_WM_NAME", 0);
+
+  halo.root = XRootWindow(halo.display, halo.screen);
+  XChangeProperty(halo.display, halo.root, halo.netatom[0], XA_ATOM, 32, PropModeReplace, (unsigned char *) halo.netatom, 2);
+  XSelectInput(halo.display, halo.root, SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask | ButtonPressMask | KeyPressMask);
+  XSync(halo.display, 0);
+
+  halo.main = XCreateSimpleWindow(halo.display, halo.root, 1, 1, halo.screenWidth, halo.screenHeight, 0, BlackPixel(halo.display, halo.screen), BlackPixel(halo.display, halo.screen));
+  XSelectInput(halo.display, halo.main, ExposureMask | ButtonPressMask | KeyPressMask);
+  XMapWindow(halo.display, halo.main);
+  XSync(halo.display, 0);
+
+  halo_menu_clear_options(&halo.menu);
+  halo_menu_add_option(&halo.menu, "Home", test);
+  halo_menu_add_option(&halo.menu, "Media", test);
+  halo_menu_add_option(&halo.menu, "Games", test);
+  halo_menu_add_option(&halo.menu, "Quit", test);
+
+  halo.running = 0;
+
+  halo.surface  = cairo_xlib_surface_create(halo.display, halo.main, XDefaultVisual(halo.display, 0), halo.screenWidth, halo.screenHeight);
+
+  halo.cairo  = cairo_create(halo.surface);
+  cairo_select_font_face(halo.cairo, "Helvetica", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+  cairo_set_font_size(halo.cairo, 32.0);
+  cairo_set_line_width(halo.cairo, 0.4);
+  cairo_set_line_cap(halo.cairo, CAIRO_LINE_CAP_ROUND);
+
+  return halo;
+
+}
+
+void halo_destroy(halo_t *halo)
+{
+
+  cairo_destroy(halo->cairo);
+  cairo_surface_destroy(halo->surface);
+
+  XCloseDisplay(halo->display);
+
+}
+
+void halo_event_expose(halo_t *halo, XExposeEvent *e)
+{
+
+  cairo_xlib_surface_set_size(halo->surface, e->width, e->height);
+
+  halo_blit(halo);
+
+}
+
+void halo_event_configurerequest(halo_t *halo, XConfigureRequestEvent *e)
+{
+
+  XWindowChanges wc;
+
+  wc.x = 0;
+  wc.y = 0;
+  wc.width = 200;
+  wc.height = 200;
+  wc.border_width = 0;
+  wc.sibling = e->above;
+  wc.stack_mode = e->detail;
+
+  XConfigureWindow(halo->display, e->window, e->value_mask, &wc); 
+
+  XSync(halo->display, 0);
+
+}
+
+void halo_event_maprequest(halo_t *halo, XMapRequestEvent *e)
+{
+
+  XSelectInput(halo->display, e->window, StructureNotifyMask);
+  XRaiseWindow(halo->display, e->window);
+  XMoveResizeWindow(halo->display, e->window, 0, 0, halo->screenWidth, halo->screenHeight);
+  XMapWindow(halo->display, e->window);
+
+  XSync(halo->display, 0);
+
+}
+
+void halo_event_keypress(halo_t *halo, XKeyPressedEvent *e)
+{
+
+  KeySym key = XLookupKeysym(e, 0);
+
+  switch (key)
+  {
+
+    case XK_space:
+      halo_command_quit(halo);
+      break;
+
+    case XK_Up:
+      halo_menu_previous(&halo->menu);
+      halo_blit(halo);
+      break;
+
+    case XK_Down:
+      halo_menu_next(&halo->menu);
+      halo_blit(halo);
+      break;
+
+    case XK_s:
+      halo_spawn(halo);
+      break;
+
+  }
+
+}
+
+void halo_run(halo_t *halo)
+{
+
+  halo->running = 1;
+  XEvent e;
+
+  while (halo->running)
+  {
+
+    XNextEvent(halo->display, &e);
+
+    switch (e.type)
+    {
+
+      case Expose:
+        if (e.xexpose.count < 1)
+          halo_event_expose(halo, &e.xexpose);
+        break;
+
+      case KeyPress:
+        halo_event_keypress(halo, &e.xkey);
+        break;
+
+      case ButtonPress:
+        halo_command_quit(halo);
+        break;
+
+      case MapRequest:
+        halo_event_maprequest(halo, &e.xmaprequest);
+        break;
+
+    }
+
+  }
+
+}
+
+int main(int argc, char *argv[])
+{
+
+  halo_t halo =  halo_create();
+  halo_run(&halo);
+  halo_destroy(&halo);
+
+  return 0;
+
+}
+
