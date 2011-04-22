@@ -1,38 +1,36 @@
 #include <menu.h>
 
-struct halo_menu halo_menu;
-
-void halo_menu_add_option(char *name, void (*command)())
+void halo_menu_add_option(struct halo_menu *menu, char *name, void (*command)())
 {
 
-  halo_menu.options[halo_menu.count].name = name;
-  halo_menu.options[halo_menu.count].command = command;
-  halo_menu.count++;
+    menu->options[menu->count].name = name;
+    menu->options[menu->count].command = command;
+    menu->count++;
 
 }
 
-void halo_menu_clear_options()
+void halo_menu_clear_options(struct halo_menu *menu)
 {
 
-  halo_menu.count = 0;
-  halo_menu.current = 0;
-  halo_menu.select = -1;
+    menu->count = 0;
+    menu->current = 0;
+    menu->select = -1;
 
 }
 
-void halo_menu_next()
+void halo_menu_next(struct halo_menu *menu)
 {
 
-  if (halo_menu.current < halo_menu.count - 1)
-    halo_menu.current++;
+    if (menu->current < menu->count - 1)
+        menu->current++;
 
 }
 
-void halo_menu_previous()
+void halo_menu_previous(struct halo_menu *menu)
 {
 
-  if (halo_menu.current > 0)
-    halo_menu.current--;
+    if (menu->current > 0)
+        menu->current--;
 
 }
 

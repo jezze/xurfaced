@@ -6,7 +6,7 @@
 #include <halo.h>
 #include <event.h>
 
-extern struct halo_menu halo_menu;
+extern struct halo_menu menu;
 
 static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEvent *e)
 {
@@ -70,13 +70,13 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *e)
 
         case XK_Up:
 
-            halo_menu_previous();
+            halo_menu_previous(&menu);
 
             break;
 
         case XK_Down:
 
-            halo_menu_next();
+            halo_menu_next(&menu);
 
             break;
 
@@ -100,7 +100,7 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *e)
 
         case XK_Return:
 
-            halo_menu.options[halo_menu.current].command();
+            menu.options[menu.current].command();
 
             break;
 
@@ -127,7 +127,6 @@ void halo_event_handler(struct halo *halo)
         case KeyPress:
 
             halo_event_keypress(halo, &event.xkey);
-            halo_surface_blit(halo, &halo_menu);
 
             break;
 
