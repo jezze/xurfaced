@@ -33,7 +33,7 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
     ce.above = 0;
     ce.override_redirect = 0;
 
-    XSendEvent(halo->display, event->window, False, StructureNotifyMask, (XEvent *)&ce);
+    XSendEvent(halo->display, event->window, 0, StructureNotifyMask, (XEvent *)&ce);
 
 }
 
