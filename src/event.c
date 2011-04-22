@@ -52,6 +52,7 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
     XMapWindow(halo->display, event->window);
 
     halo_client_add(halo, event->window);
+    XSetInputFocus(halo->display, halo->clientCurrent->window, RevertToParent, CurrentTime);
 
 }
 
@@ -103,6 +104,7 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
         case XK_Escape:
 
             XRaiseWindow(halo->display, halo->main);
+            XSetInputFocus(halo->display, halo->main, RevertToParent, CurrentTime);
 
             break;
 
