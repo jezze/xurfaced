@@ -33,7 +33,7 @@ void halo_spawn()
     {
 
         if (halo.display)
-            close(XConnectionNumber(halo.display));
+            close(halo.connection);
 
         setsid();
 

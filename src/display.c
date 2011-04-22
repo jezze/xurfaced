@@ -15,6 +15,7 @@ void halo_display_init(struct halo *halo)
 
     }
 
+    halo->connection = XConnectionNumber(halo->display);
     halo->screen = XDefaultScreen(halo->display);
     halo->screenWidth = XDisplayWidth(halo->display, halo->screen);
     halo->screenHeight = XDisplayHeight(halo->display, halo->screen);

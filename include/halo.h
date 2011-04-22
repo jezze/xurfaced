@@ -7,6 +7,7 @@ struct halo
 {
 
     Display *display;
+    int connection;
     int screen;
     int screenWidth;
     int screenHeight;
@@ -18,8 +19,9 @@ struct halo
 
 };
 
-extern void halo_quit(struct halo *halo);
-extern void halo_spawn(struct halo *halo);
+extern void halo_none();
+extern void halo_quit();
+extern void halo_spawn();
 
 #endif
 
