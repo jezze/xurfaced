@@ -1,17 +1,20 @@
 #ifndef HALO_HALO_H
 #define HALO_HALO_H
 
+struct halo_menu;
+
 struct halo
 {
 
-  Display *display;
-  int screen;
-  int screenWidth;
-  int screenHeight;
-  Window root;
-  Atom atom_net[4];
-  Window main;
-  int running;
+    Display *display;
+    int screen;
+    int screenWidth;
+    int screenHeight;
+    Window root;
+    Atom atom_net[4];
+    Window main;
+    int running;
+    struct halo_menu *menuCurrent;
 
 };
 

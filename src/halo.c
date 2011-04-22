@@ -12,7 +12,7 @@
 #include <window.h>
 
 struct halo halo;
-struct halo_menu menu;
+struct halo_menu mainMenu;
 
 void halo_none()
 {
@@ -45,6 +45,20 @@ void halo_spawn()
 
 }
 
+static void halo_init_menu()
+{
+
+    halo_menu_clear_options(&mainMenu);
+    halo_menu_add_option(&mainMenu, "Home", halo_none);
+    halo_menu_add_option(&mainMenu, "Media", halo_none);
+    halo_menu_add_option(&mainMenu, "Games", halo_none);
+    halo_menu_add_option(&mainMenu, "Terminal", halo_spawn);
+    halo_menu_add_option(&mainMenu, "Quit", halo_quit);
+
+    halo.menuCurrent = &mainMenu;
+
+}
+
 static void halo_init()
 {
 
@@ -52,12 +66,7 @@ static void halo_init()
     halo_window_init(&halo);
     halo_surface_init(&halo);
 
-    halo_menu_clear_options(&menu);
-    halo_menu_add_option(&menu, "Home", halo_none);
-    halo_menu_add_option(&menu, "Media", halo_none);
-    halo_menu_add_option(&menu, "Games", halo_none);
-    halo_menu_add_option(&menu, "Terminal", halo_spawn);
-    halo_menu_add_option(&menu, "Quit", halo_quit);
+    halo_init_menu();
 
 }
 
@@ -78,7 +87,7 @@ static void halo_run()
     {
 
         halo_event_handler(&halo);
-        halo_surface_blit(&halo, &menu);
+        halo_surface_blit(&halo);
 
     }
 

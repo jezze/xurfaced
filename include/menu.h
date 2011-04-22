@@ -21,6 +21,7 @@ struct halo_menu
 
 extern void halo_menu_add_option(struct halo_menu *menu, char *name, void (*command)());
 extern void halo_menu_clear_options(struct halo_menu *menu);
+extern void halo_menu_activate(struct halo_menu *menu);
 extern void halo_menu_next(struct halo_menu *menu);
 extern void halo_menu_previous(struct halo_menu *menu);
 

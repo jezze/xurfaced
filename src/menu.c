@@ -18,6 +18,13 @@ void halo_menu_clear_options(struct halo_menu *menu)
 
 }
 
+void halo_menu_activate(struct halo_menu *menu)
+{
+
+    menu->options[menu->current].command();
+
+}
+
 void halo_menu_next(struct halo_menu *menu)
 {
 
