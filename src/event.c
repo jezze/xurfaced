@@ -51,7 +51,7 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
     XMoveResizeWindow(halo->display, event->window, 0, 0, halo->screenWidth, halo->screenHeight);
     XMapWindow(halo->display, event->window);
 
-    halo_client_add(&event->window);
+    halo_client_add(halo, &event->window);
 
 }
 

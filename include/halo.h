@@ -1,6 +1,7 @@
 #ifndef HALO_HALO_H
 #define HALO_HALO_H
 
+struct halo_client;
 struct halo_menu;
 
 struct halo
@@ -16,6 +17,7 @@ struct halo
     Window main;
     int running;
     struct halo_menu *menuCurrent;
+    struct halo_client *clients;
 
 };
 

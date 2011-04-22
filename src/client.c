@@ -3,19 +3,17 @@
 #include <client.h>
 #include <halo.h>
 
-struct halo_client *haloClients;
-
-struct halo_client *halo_client_add(Window *window)
+struct halo_client *halo_client_add(struct halo *halo, Window *window)
 {
 
     struct halo_client *client = malloc(sizeof (struct halo_client));
     client->window = window;
     client->next = 0;
 
-    if (!haloClients)
-        return haloClients = client;
+    if (!halo->clients)
+        return halo->clients = client;
 
-    struct halo_client *current = haloClients;
+    struct halo_client *current = halo->clients;
 
     while (current->next)
         current = current->next;
@@ -24,10 +22,10 @@ struct halo_client *halo_client_add(Window *window)
 
 }
 
-struct halo_client *halo_client_find(Window *window)
+struct halo_client *halo_client_find(struct halo *halo, Window *window)
 {
 
-    struct halo_client *current = haloClients;
+    struct halo_client *current = halo->clients;
 
     while (current->window != window)
         current = current->next;
@@ -47,7 +45,7 @@ void halo_client_remove(struct halo_client *client)
 void halo_client_destroy(struct halo *halo)
 {
 
-    struct halo_client *current = haloClients;
+    struct halo_client *current = halo->clients;
 
     while (current != 0)
     {
@@ -65,7 +63,7 @@ void halo_client_destroy(struct halo *halo)
 void halo_client_init(struct halo *halo)
 {
 
-    haloClients = 0;
+    halo->clients = 0;
 
 }
 
