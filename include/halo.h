@@ -18,6 +18,7 @@ struct halo
     int running;
     struct halo_menu *menuCurrent;
     struct halo_client *clients;
+    struct halo_client *clientCurrent;
 
 };
 

@@ -51,7 +51,7 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
     XMoveResizeWindow(halo->display, event->window, 0, 0, halo->screenWidth, halo->screenHeight);
     XMapWindow(halo->display, event->window);
 
-    halo_client_add(halo, &event->window);
+    halo_client_add(halo, event->window);
 
 }
 
@@ -86,8 +86,15 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
             if (event->state & Mod1Mask)
             {
 
-                XRaiseWindow(halo->display, event->window);
-                XSetInputFocus(halo->display, event->window, RevertToParent, CurrentTime);
+                if (halo->clientCurrent)
+                {
+
+                    halo->clientCurrent = (halo->clientCurrent->next) ? halo->clientCurrent->next : halo->clients;
+
+                    XRaiseWindow(halo->display, halo->clientCurrent->window);
+                    XSetInputFocus(halo->display, halo->clientCurrent->window, RevertToParent, CurrentTime);
+
+                }
 
             }
 
