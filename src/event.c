@@ -1,6 +1,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
+#include <client.h>
 #include <menu.h>
 #include <surface.h>
 #include <halo.h>
@@ -49,6 +50,8 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
     XRaiseWindow(halo->display, event->window);
     XMoveResizeWindow(halo->display, event->window, 0, 0, halo->screenWidth, halo->screenHeight);
     XMapWindow(halo->display, event->window);
+
+    halo_client_add(&event->window);
 
 }
 
