@@ -23,9 +23,9 @@ static void halo_window_init_root(struct halo *halo)
 
 //    XCompositeRedirectSubwindows(halo->display, halo->root, CompositeRedirectAutomatic);
 
-    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Escape), Mod1Mask, halo->root, True, GrabModeAsync, GrabModeAsync);
-    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Tab), Mod1Mask, halo->root, True, GrabModeAsync, GrabModeAsync);
-    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_q), Mod1Mask | ShiftMask, halo->root, True, GrabModeAsync, GrabModeAsync);
+    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Escape), Mod1Mask, halo->root, 1, GrabModeAsync, GrabModeAsync);
+    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Tab), Mod1Mask, halo->root, 1, GrabModeAsync, GrabModeAsync);
+    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_q), Mod1Mask | ShiftMask, halo->root, 1, GrabModeAsync, GrabModeAsync);
 
     XSync(halo->display, 0);
 
