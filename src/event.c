@@ -8,7 +8,7 @@
 
 extern struct halo_menu menu;
 
-static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEvent *e)
+static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEvent *event)
 {
 
     XWindowChanges wc;
@@ -17,16 +17,16 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
     wc.width = halo->screenWidth;
     wc.height = halo->screenHeight;
     wc.border_width = 0;
-    wc.sibling = e->above;
-    wc.stack_mode = e->detail;
+    wc.sibling = event->above;
+    wc.stack_mode = event->detail;
 
-    XConfigureWindow(halo->display, e->window, e->value_mask, &wc);
+    XConfigureWindow(halo->display, event->window, event->value_mask, &wc);
 
     XConfigureEvent ce;
     ce.type = ConfigureNotify;
     ce.display = halo->display;
-    ce.event = e->window;
-    ce.window = e->window;
+    ce.event = event->window;
+    ce.window = event->window;
     ce.x = 0;
     ce.y = 0;
     ce.width = halo->screenWidth;
@@ -35,29 +35,29 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
     ce.above = 0;
     ce.override_redirect = 0;
 
-    XSendEvent(halo->display, e->window, False, StructureNotifyMask, (XEvent *)&ce);
+    XSendEvent(halo->display, event->window, False, StructureNotifyMask, (XEvent *)&ce);
 
 }
 
-static void halo_event_expose(struct halo *halo, XExposeEvent *e)
+static void halo_event_expose(struct halo *halo, XExposeEvent *event)
 {
 
 }
 
-static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *e)
+static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
 {
 
-    XSelectInput(halo->display, e->window, StructureNotifyMask);
-    XRaiseWindow(halo->display, e->window);
-    XMoveResizeWindow(halo->display, e->window, 0, 0, halo->screenWidth, halo->screenHeight);
-    XMapWindow(halo->display, e->window);
+    XSelectInput(halo->display, event->window, StructureNotifyMask);
+    XRaiseWindow(halo->display, event->window);
+    XMoveResizeWindow(halo->display, event->window, 0, 0, halo->screenWidth, halo->screenHeight);
+    XMapWindow(halo->display, event->window);
 
 }
 
-static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *e)
+static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 {
 
-    KeySym key = XLookupKeysym(e, 0);
+    KeySym key = XLookupKeysym(event, 0);
 
     switch (key)
     {
@@ -82,11 +82,11 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *e)
 
         case XK_Tab:
 
-            if (e->state & Mod1Mask)
+            if (event->state & Mod1Mask)
             {
 
-                XRaiseWindow(halo->display, e->window);
-                XSetInputFocus(halo->display, e->window, RevertToParent, CurrentTime);
+                XRaiseWindow(halo->display, event->window);
+                XSetInputFocus(halo->display, event->window, RevertToParent, CurrentTime);
 
             }
 
