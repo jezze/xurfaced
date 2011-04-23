@@ -34,10 +34,9 @@ struct halo_client *halo_client_find(struct halo *halo, Window window)
 
 }
 
-void halo_client_remove(struct halo_client *client)
+void halo_client_remove(struct halo *halo, struct halo_client *client)
 {
 
-    // something like XCloseWindow(client->window);
     free(client);
 
 }
@@ -51,7 +50,7 @@ void halo_client_destroy(struct halo *halo)
     {
 
         struct halo_client *next = current->next;
-        halo_client_remove(current);
+        halo_client_remove(halo, current);
         current = next;
 
     }

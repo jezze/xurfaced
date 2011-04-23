@@ -38,7 +38,22 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
 
 }
 
+static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *event)
+{
+
+    struct halo_client *client = halo_client_find(halo, event->window);
+
+    if (client)
+        halo_client_remove(halo, client);
+
+}
+
 static void halo_event_expose(struct halo *halo, XExposeEvent *event)
+{
+
+}
+
+static void halo_event_unmap(struct halo *halo, XUnmapEvent *event)
 {
 
 }
@@ -46,7 +61,7 @@ static void halo_event_expose(struct halo *halo, XExposeEvent *event)
 static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
 {
 
-    XSelectInput(halo->display, event->window, StructureNotifyMask);
+    XSelectInput(halo->display, event->window, StructureNotifyMask | PropertyChangeMask);
     XRaiseWindow(halo->display, event->window);
     XMoveResizeWindow(halo->display, event->window, 0, 0, halo->screenWidth, halo->screenHeight);
     XMapWindow(halo->display, event->window);
@@ -153,6 +168,18 @@ void halo_event_handler(struct halo *halo)
         case ConfigureRequest:
 
             halo_event_configurerequest(halo, &event.xconfigurerequest);
+
+            break;
+
+        case UnmapNotify:
+
+            halo_event_unmap(halo, &event.xunmap);
+
+            break;
+
+        case DestroyNotify:
+
+            halo_event_destroywindow(halo, &event.xdestroywindow);
 
             break;
 
