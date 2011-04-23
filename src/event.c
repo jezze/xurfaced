@@ -41,15 +41,6 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
 static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *event)
 {
 
-    struct halo_client *client = halo_client_find(halo, event->window);
-
-    if (!client)
-        return;
-
-    halo_client_remove(halo, client);
-
-    halo->clientCurrent = halo->clients;
-
 }
 
 static void halo_event_expose(struct halo *halo, XExposeEvent *event)
@@ -62,6 +53,20 @@ static void halo_event_expose(struct halo *halo, XExposeEvent *event)
 
 static void halo_event_unmap(struct halo *halo, XUnmapEvent *event)
 {
+
+    struct halo_client *client = halo_client_find(halo, event->window);
+
+    if (!client)
+        return;
+
+    halo->clientCurrent = halo->clients;
+
+    XRaiseWindow(halo->display, halo->clientCurrent->window);
+    XSetInputFocus(halo->display, halo->clientCurrent->window, RevertToParent, CurrentTime);
+
+    XSync(halo->display, 0);
+
+    halo_client_remove(halo, client);
 
 }
 
@@ -114,15 +119,13 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
             if (event->state & Mod1Mask)
             {
 
-                if (halo->clientCurrent)
-                {
+                if (!halo->clientCurrent)
+                    break;
 
-                    halo->clientCurrent = (halo->clientCurrent->next) ? halo->clientCurrent->next : halo->clients;
+                halo->clientCurrent = halo->clientCurrent->next;
 
-                    XRaiseWindow(halo->display, halo->clientCurrent->window);
-                    XSetInputFocus(halo->display, halo->clientCurrent->window, RevertToParent, CurrentTime);
-
-                }
+                XRaiseWindow(halo->display, halo->clientCurrent->window);
+                XSetInputFocus(halo->display, halo->clientCurrent->window, RevertToParent, CurrentTime);
 
             }
 
