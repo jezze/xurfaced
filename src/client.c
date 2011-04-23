@@ -9,6 +9,7 @@ struct halo_client *halo_client_add(struct halo *halo, Window window)
     struct halo_client *client = malloc(sizeof (struct halo_client));
     client->window = window;
     client->next = 0;
+    client->prev = 0;
 
     if (!halo->clients)
         return halo->clients = client;

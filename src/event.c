@@ -48,6 +48,8 @@ static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *eve
 
     halo_client_remove(halo, client);
 
+    halo->clientCurrent = halo->clients;
+
 }
 
 static void halo_event_expose(struct halo *halo, XExposeEvent *event)
