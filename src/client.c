@@ -1,5 +1,6 @@
-#include <X11/Xlib.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <X11/Xlib.h>
 #include <client.h>
 #include <halo.h>
 
@@ -37,6 +38,8 @@ struct halo_client *halo_client_find(struct halo *halo, Window window)
 
         if (current->window == window)
             return current;
+
+        current = current->next;
 
     }
 

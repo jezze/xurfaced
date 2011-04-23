@@ -7,10 +7,12 @@
 void halo_display_init(struct halo *halo)
 {
 
-    if (!(halo->display = XOpenDisplay(0)))
+    halo->display = XOpenDisplay(0);
+
+    if (!halo->display)
     {
 
-        fputs("halo: can not open display", stderr);
+        fprintf(stderr, "halo: can not open display");
         exit(EXIT_FAILURE);
 
     }
