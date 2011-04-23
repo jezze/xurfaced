@@ -1,5 +1,5 @@
-#include <stdlib.h>
 #include <X11/Xlib.h>
+#include <stdlib.h>
 #include <client.h>
 #include <halo.h>
 
@@ -11,14 +11,16 @@ struct halo_client *halo_client_add(struct halo *halo, Window window)
     client->next = 0;
 
     if (!halo->clients)
-        return halo->clients = halo->clientCurrent = client;
+        return halo->clients = client;
 
     struct halo_client *current = halo->clients;
 
     while (current->next)
         current = current->next;
 
-    return current->next = halo->clientCurrent = client;
+    client->prev = current;
+
+    return current->next = client;
 
 }
 
@@ -27,7 +29,7 @@ struct halo_client *halo_client_find(struct halo *halo, Window window)
 
     struct halo_client *current = halo->clients;
 
-    while (current->window != window)
+    while (current && current->window != window)
         current = current->next;
 
     return current;
@@ -36,6 +38,9 @@ struct halo_client *halo_client_find(struct halo *halo, Window window)
 
 void halo_client_remove(struct halo *halo, struct halo_client *client)
 {
+
+    client->prev->next = client->next;
+    client->next->prev = client->prev;
 
     free(client);
 
@@ -54,8 +59,6 @@ void halo_client_destroy(struct halo *halo)
         current = next;
 
     }
-
-    XSync(halo->display, 0);
 
 }
 

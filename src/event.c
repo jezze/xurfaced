@@ -43,13 +43,18 @@ static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *eve
 
     struct halo_client *client = halo_client_find(halo, event->window);
 
-    if (client)
-        halo_client_remove(halo, client);
+    if (!client)
+        return;
+
+    halo_client_remove(halo, client);
 
 }
 
 static void halo_event_expose(struct halo *halo, XExposeEvent *event)
 {
+
+    if (event->count)
+        return;
 
 }
 
@@ -61,13 +66,18 @@ static void halo_event_unmap(struct halo *halo, XUnmapEvent *event)
 static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
 {
 
-    XSelectInput(halo->display, event->window, StructureNotifyMask | PropertyChangeMask);
-    XRaiseWindow(halo->display, event->window);
-    XMoveResizeWindow(halo->display, event->window, 0, 0, halo->screenWidth, halo->screenHeight);
-    XMapWindow(halo->display, event->window);
+    struct halo_client *client = halo_client_add(halo, event->window);
 
-    halo_client_add(halo, event->window);
-    XSetInputFocus(halo->display, halo->clientCurrent->window, RevertToParent, CurrentTime);
+    if (!client)
+        return;
+
+    XSelectInput(halo->display, client->window, StructureNotifyMask | PropertyChangeMask);
+    XRaiseWindow(halo->display, client->window);
+    XMoveResizeWindow(halo->display, client->window, 0, 0, halo->screenWidth, halo->screenHeight);
+    XMapWindow(halo->display, client->window);
+    XSetInputFocus(halo->display, client->window, RevertToParent, CurrentTime);
+
+    halo->clientCurrent = client;
 
 }
 
@@ -144,8 +154,7 @@ void halo_event_handler(struct halo *halo)
 
         case Expose:
 
-            if (event.xexpose.count < 1)
-                halo_event_expose(halo, &event.xexpose);
+            halo_event_expose(halo, &event.xexpose);
 
             break;
 
