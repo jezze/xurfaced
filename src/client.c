@@ -8,20 +8,19 @@ struct halo_client *halo_client_add(struct halo *halo, Window window)
 
     struct halo_client *client = malloc(sizeof (struct halo_client));
     client->window = window;
-    client->next = 0;
-    client->prev = 0;
+    client->next = client;
+    client->prev = client;
 
     if (!halo->clients)
         return halo->clients = client;
 
-    struct halo_client *current = halo->clients;
+    client->prev = halo->clients->prev;
+    client->next = halo->clients;
 
-    while (current->next)
-        current = current->next;
-
-    client->prev = current;
-
-    return current->next = client;
+    client->prev->next = client;
+    halo->clients->prev = client;
+    
+    return client;
 
 }
 
@@ -30,7 +29,7 @@ struct halo_client *halo_client_find(struct halo *halo, Window window)
 
     struct halo_client *current = halo->clients;
 
-    while (current && current->window != window)
+    while (current->window != window)
         current = current->next;
 
     return current;
@@ -45,11 +44,13 @@ void halo_client_remove(struct halo *halo, struct halo_client *client)
 
     free(client);
 
+    client = 0;
+
 }
 
 void halo_client_destroy(struct halo *halo)
 {
-
+/*
     struct halo_client *current = halo->clients;
 
     while (current != 0)
@@ -60,7 +61,7 @@ void halo_client_destroy(struct halo *halo)
         current = next;
 
     }
-
+*/
 }
 
 void halo_client_init(struct halo *halo)
