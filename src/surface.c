@@ -92,7 +92,5 @@ void halo_surface_destroy(struct halo *halo)
     cairo_destroy(halo_cairo);
     cairo_surface_destroy(halo_surface);
 
-    XSync(halo->display, 0);
-
 }
 
