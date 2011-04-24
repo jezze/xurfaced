@@ -12,9 +12,18 @@ struct halo_client
 
 };
 
-extern struct halo_client *halo_client_add(struct halo *halo, Window window);
-extern struct halo_client *halo_client_find(struct halo *halo, Window window);
-extern void halo_client_remove(struct halo *halo, struct halo_client *client);
+struct halo_client_list
+{
+
+    struct halo_client *head;
+    struct halo_client *current;
+    unsigned int count;
+
+};
+
+extern struct halo_client *halo_client_add(struct halo_client_list *list, Window window);
+extern struct halo_client *halo_client_find(struct halo_client_list *list, Window window);
+extern void halo_client_remove(struct halo_client_list *list, struct halo_client *client);
 extern void halo_client_destroy(struct halo *halo);
 extern void halo_client_init(struct halo *halo);
 

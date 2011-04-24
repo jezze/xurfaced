@@ -1,7 +1,7 @@
 #ifndef HALO_HALO_H
 #define HALO_HALO_H
 
-struct halo_client;
+struct halo_client_list;
 struct halo_menu;
 
 struct halo
@@ -13,12 +13,11 @@ struct halo
     int screenWidth;
     int screenHeight;
     Window root;
-    Atom atom_net[4];
     Window main;
+    Atom atom_net[4];
     int running;
     struct halo_menu *menuCurrent;
-    struct halo_client *clients;
-    struct halo_client *clientCurrent;
+    struct halo_client_list *clients;
 
 };
 

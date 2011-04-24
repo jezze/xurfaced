@@ -4,7 +4,9 @@
 #include <client.h>
 #include <halo.h>
 
-struct halo_client *halo_client_add(struct halo *halo, Window window)
+struct halo_client_list clients;
+
+struct halo_client *halo_client_add(struct halo_client_list *list, Window window)
 {
 
     struct halo_client *client = malloc(sizeof (struct halo_client));
@@ -12,28 +14,28 @@ struct halo_client *halo_client_add(struct halo *halo, Window window)
     client->next = client;
     client->prev = client;
 
-    if (!halo->clients)
-        return halo->clients = client;
+    if (!list->head)
+        return list->head = client;
 
-    client->prev = halo->clients->prev;
-    client->next = halo->clients;
+    client->prev = list->head->prev;
+    client->next = list->head;
 
     client->prev->next = client;
-    halo->clients->prev = client;
+    list->head->prev = client;
     
     return client;
 
 }
 
-struct halo_client *halo_client_find(struct halo *halo, Window window)
+struct halo_client *halo_client_find(struct halo_client_list *list, Window window)
 {
 
-    struct halo_client *current = halo->clients;
+    struct halo_client *current = list->head;
 
-    if (current->next == halo->clients)
+    if (current->next == list->head)
         return (current->window == window) ? current : 0;
 
-    while (current->next != halo->clients)
+    while (current->next != list->head)
     {
 
         if (current->window == window)
@@ -47,14 +49,14 @@ struct halo_client *halo_client_find(struct halo *halo, Window window)
 
 }
 
-void halo_client_remove(struct halo *halo, struct halo_client *client)
+void halo_client_remove(struct halo_client_list *list, struct halo_client *client)
 {
 
     client->prev->next = client->next;
     client->next->prev = client->prev;
 
-    if (client == halo->clients)
-        halo->clients = client->next;
+    if (client == list->head)
+        list->head = client->next;
 
     free(client);
 
@@ -81,8 +83,11 @@ void halo_client_destroy(struct halo *halo)
 void halo_client_init(struct halo *halo)
 {
 
-    halo->clients = 0;
-    halo->clientCurrent = 0;
+    clients.head = 0;
+    clients.count = 0;
+    clients.current = 0;
+
+    halo->clients = &clients;
 
 }
 
