@@ -61,14 +61,29 @@ static void halo_event_unmap(struct halo *halo, XUnmapEvent *event)
     if (!client)
         return;
 
-    halo->clientCurrent = halo->clients;
+    halo_client_remove(halo, client);
 
-    XRaiseWindow(halo->display, halo->clientCurrent->window);
-    XSetInputFocus(halo->display, halo->clientCurrent->window, RevertToParent, CurrentTime);
+    if (halo->clients)
+    {
+
+        halo->clientCurrent = halo->clients;
+
+        XRaiseWindow(halo->display, halo->clientCurrent->window);
+        XSetInputFocus(halo->display, halo->clientCurrent->window, RevertToParent, CurrentTime);
+
+    }
+
+    else
+    {
+
+        halo->clientCurrent = 0;
+
+        XRaiseWindow(halo->display, halo->main);
+        XSetInputFocus(halo->display, halo->main, RevertToParent, CurrentTime);
+
+    }
 
     XSync(halo->display, 0);
-
-    halo_client_remove(halo, client);
 
 }
 

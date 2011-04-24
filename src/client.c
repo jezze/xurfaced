@@ -53,6 +53,9 @@ void halo_client_remove(struct halo *halo, struct halo_client *client)
     client->prev->next = client->next;
     client->next->prev = client->prev;
 
+    if (client == halo->clients)
+        halo->clients = client->next;
+
     free(client);
 
 }
