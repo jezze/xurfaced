@@ -97,6 +97,18 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
     switch (key)
     {
 
+        case XK_c:
+
+            if (!(event->state & Mod1Mask))
+                break;
+
+            if (!halo->clients->current)
+                break;
+
+    		XKillClient(halo->display, halo->clients->current->window);
+
+            break;
+
         case XK_q:
 
             halo_quit(halo);
@@ -117,22 +129,23 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_Tab:
 
-            if (event->state & Mod1Mask)
-            {
+            if (!(event->state & Mod1Mask))
+                break;
 
-                if (!halo->clients->current)
-                    break;
+            if (!halo->clients->current)
+                break;
 
-                halo->clients->current = halo->clients->current->next;
+            halo->clients->current = halo->clients->current->next;
 
-                XRaiseWindow(halo->display, halo->clients->current->window);
-                XSetInputFocus(halo->display, halo->clients->current->window, RevertToParent, CurrentTime);
-
-            }
+            XRaiseWindow(halo->display, halo->clients->current->window);
+            XSetInputFocus(halo->display, halo->clients->current->window, RevertToParent, CurrentTime);
 
             break;
 
         case XK_Escape:
+
+            if (!(event->state & Mod1Mask))
+                break;
 
             XRaiseWindow(halo->display, halo->main);
             XSetInputFocus(halo->display, halo->main, RevertToParent, CurrentTime);
