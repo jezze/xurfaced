@@ -68,7 +68,7 @@ static void halo_event_expose(struct halo *halo, XExposeEvent *event)
 static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
 {
 
-    struct halo_client *client = halo_client_add(event->window);
+    struct halo_client *client = halo_client_create(event->window);
 
     if (!client)
         return;
@@ -117,13 +117,13 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_Up:
 
-            halo_menu_previous(halo->menuCurrent);
+            halo_menu_previous(halo->menu);
 
             break;
 
         case XK_Down:
 
-            halo_menu_next(halo->menuCurrent);
+            halo_menu_next(halo->menu);
 
             break;
 
@@ -154,7 +154,7 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_Return:
 
-            halo_menu_activate(halo->menuCurrent);
+            halo_menu_activate(halo->menu);
 
             break;
 

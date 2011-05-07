@@ -24,11 +24,13 @@ struct halo_menu
 };
 
 extern struct halo_menu_option *halo_menu_option_create(unsigned int type, char *name, char *command);
-extern void halo_menu_add_option(struct halo_menu *menu, struct halo_menu_option *option);
+extern void halo_menu_add(struct halo_menu *menu, struct halo_menu_option *option);
+extern void halo_menu_remove(struct halo_menu *menu, struct halo_menu_option *option);
 extern void halo_menu_clear(struct halo_menu *menu);
 extern void halo_menu_activate(struct halo_menu *menu);
 extern void halo_menu_next(struct halo_menu *menu);
 extern void halo_menu_previous(struct halo_menu *menu);
+extern struct halo_menu *halo_menu_init();
 
 #endif
 

@@ -4,7 +4,7 @@
 
 struct halo_client_list clients;
 
-struct halo_client *halo_client_add(Window window)
+struct halo_client *halo_client_create(Window window)
 {
 
     struct halo_client *client = malloc(sizeof (struct halo_client));

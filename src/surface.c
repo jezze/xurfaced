@@ -61,7 +61,7 @@ void halo_surface_blit(struct halo *halo)
     cairo_push_group(halo_cairo);
 
     halo_surface_blit_background(halo);
-    halo_surface_blit_menu(halo->menuCurrent);
+    halo_surface_blit_menu(halo->menu);
 
     cairo_pop_group_to_source(halo_cairo);
 

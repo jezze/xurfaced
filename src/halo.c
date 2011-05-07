@@ -10,23 +10,6 @@
 #include <window.h>
 
 struct halo halo;
-struct halo_menu mainMenu;
-
-static void halo_init_menu()
-{
-
-    halo_menu_clear(&mainMenu);
-
-    halo_menu_add_option(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Home", 0));
-    halo_menu_add_option(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Media", 0));
-    halo_menu_add_option(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Games", 0));
-    halo_menu_add_option(&mainMenu, halo_menu_option_create(MENU_TYPE_EXEC, "Terminal", "xterm"));
-    halo_menu_add_option(&mainMenu, halo_menu_option_create(MENU_TYPE_EXEC, "Eyes", "xeyes"));
-    halo_menu_add_option(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit"));
-
-    halo.menuCurrent = &mainMenu;
-
-}
 
 static void halo_init()
 {
@@ -35,8 +18,7 @@ static void halo_init()
     halo_window_init(&halo);
     halo_surface_init(&halo);
     halo.clients = halo_client_init();
-
-    halo_init_menu();
+    halo.menu = halo_menu_init();
 
 }
 

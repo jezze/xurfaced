@@ -8,6 +8,7 @@
 #include <menu.h>
 
 extern struct halo halo;
+struct halo_menu mainMenu;
 
 static void halo_menu_option_control(struct halo_menu_option *option)
 {
@@ -50,7 +51,7 @@ struct halo_menu_option *halo_menu_option_create(unsigned int type, char *name, 
 
 }
 
-void halo_menu_add_option(struct halo_menu *menu, struct halo_menu_option *option)
+void halo_menu_add(struct halo_menu *menu, struct halo_menu_option *option)
 {
 
     menu->options[menu->count] = option;
@@ -58,7 +59,7 @@ void halo_menu_add_option(struct halo_menu *menu, struct halo_menu_option *optio
 
 }
 
-void halo_menu_remove_option(struct halo_menu *menu, struct halo_menu_option *option)
+void halo_menu_remove(struct halo_menu *menu, struct halo_menu_option *option)
 {
 
     free(option);
@@ -71,7 +72,7 @@ void halo_menu_clear(struct halo_menu *menu)
     unsigned int i;
 
     for (i = 0; i < menu->count; i++)
-        halo_menu_remove_option(menu, menu->options[i]);
+        halo_menu_remove(menu, menu->options[i]);
 
     menu->count = 0;
     menu->current = 0;
@@ -113,6 +114,22 @@ void halo_menu_previous(struct halo_menu *menu)
 
     if (menu->current > 0)
         menu->current--;
+
+}
+
+struct halo_menu *halo_menu_init()
+{
+
+    halo_menu_clear(&mainMenu);
+
+    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Home", "show home"));
+    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media"));
+    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Games", "show games"));
+    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_EXEC, "Terminal", "xterm"));
+    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_EXEC, "Eyes", "xeyes"));
+    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit"));
+
+    return &mainMenu;
 
 }
 

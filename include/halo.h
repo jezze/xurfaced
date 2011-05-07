@@ -16,7 +16,7 @@ struct halo
     Window main;
     Atom atom_net[4];
     int running;
-    struct halo_menu *menuCurrent;
+    struct halo_menu *menu;
     struct halo_client_list *clients;
 
 };
