@@ -1,8 +1,6 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include <X11/Xlib.h>
 #include <client.h>
-#include <halo.h>
 
 struct halo_client_list clients;
 
@@ -91,32 +89,24 @@ struct halo_client *halo_client_list_find(struct halo_client_list *list, Window 
 
 }
 
-void halo_client_destroy(struct halo *halo)
+void halo_client_destroy(struct halo_client_list *list)
 {
 
-/*
-    struct halo_client *current = halo->clients;
+    while (list->head)
+        halo_client_list_remove(list, list->head);
 
-    while (current != 0)
-    {
-
-        struct halo_client *next = current->next;
-        halo_client_remove(halo, current);
-        current = next;
-
-    }
-*/
+    list->head = 0;
+    list->current = 0;
 
 }
 
-void halo_client_init(struct halo *halo)
+struct halo_client_list *halo_client_init()
 {
 
     clients.head = 0;
-    clients.count = 0;
     clients.current = 0;
 
-    halo->clients = &clients;
+    return &clients;
 
 }
 

@@ -68,7 +68,7 @@ static void halo_init()
     halo_display_init(&halo);
     halo_window_init(&halo);
     halo_surface_init(&halo);
-    halo_client_init(&halo);
+    halo.clients = halo_client_init();
 
     halo_init_menu();
 
@@ -77,7 +77,7 @@ static void halo_init()
 static void halo_destroy()
 {
 
-    halo_client_destroy(&halo);
+    halo_client_destroy(halo.clients);
     halo_surface_destroy(&halo);
     halo_display_destroy(&halo);
 
