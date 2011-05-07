@@ -12,6 +12,8 @@
 void halo_display_init(struct halo *halo)
 {
 
+    XInitThreads();
+
     halo->display = XOpenDisplay(0);
 
     if (!halo->display)
