@@ -44,7 +44,7 @@ void halo_surface_blit_menu(struct halo_menu *menu)
         else
         {
 
-            cairo_set_source_rgba(halo_cairo, 0.6, 0.6, 0.6, 1.0);
+            cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, 0.4);
             cairo_fill_preserve(halo_cairo);
             cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, 0.1);
             cairo_stroke(halo_cairo);
@@ -81,8 +81,8 @@ void halo_surface_init(struct halo *halo)
     cairo_set_line_cap(halo_cairo, CAIRO_LINE_CAP_ROUND);
 
     halo_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, halo->screenHeight);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.10, 0.10, 0.10, 1.0);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.08, 0.08, 0.08, 1.0);
+    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.0, 0.0, 0.10, 1.0);
+    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.0, 0.0, 0.08, 1.0);
 
 }
 
