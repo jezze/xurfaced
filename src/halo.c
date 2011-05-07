@@ -42,13 +42,7 @@ static void *halo_thread_gui(void *ptr)
 {
 
     while (halo.running)
-    {
-
-        XLockDisplay(halo.display);
         halo_surface_blit(&halo);
-        XUnlockDisplay(halo.display);
-
-    }
 
     return 0;
 
@@ -58,11 +52,7 @@ static void *halo_thread_events(void *ptr)
 {
 
     while (halo.running)
-    {
-
         halo_event_handler(&halo);
-
-    }
 
     return 0;
 

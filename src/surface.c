@@ -63,6 +63,8 @@ void halo_surface_blit_menu(struct halo_menu *menu)
 void halo_surface_blit(struct halo *halo)
 {
 
+    XLockDisplay(halo->display);
+
     cairo_push_group(halo_cairo);
 
     halo_surface_blit_background(halo);
@@ -71,6 +73,8 @@ void halo_surface_blit(struct halo *halo)
     cairo_pop_group_to_source(halo_cairo);
 
     cairo_paint(halo_cairo);
+
+    XUnlockDisplay(halo->display);
 
 }
 
