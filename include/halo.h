@@ -21,9 +21,5 @@ struct halo
 
 };
 
-extern void halo_none();
-extern void halo_quit();
-extern void halo_spawn();
-
 #endif
 

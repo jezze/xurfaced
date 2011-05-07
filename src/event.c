@@ -111,7 +111,7 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_q:
 
-            halo_quit(halo);
+            halo->running = 0;
 
             break;
 

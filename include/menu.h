@@ -1,11 +1,16 @@
 #ifndef HALO_MENU_H
 #define HALO_MENU_H
 
+#define MENU_TYPE_NULL 0
+#define MENU_TYPE_CTRL 1
+#define MENU_TYPE_EXEC 2
+
 struct halo_menu_option
 {
 
+    unsigned int type;
     char *name;
-    void (*command)();
+    char *command;
 
 };
 
@@ -19,7 +24,7 @@ struct halo_menu
 
 };
 
-extern void halo_menu_add_option(struct halo_menu *menu, char *name, void (*command)());
+extern void halo_menu_add_option(struct halo_menu *menu, unsigned int type, char *name, char *command);
 extern void halo_menu_clear_options(struct halo_menu *menu);
 extern void halo_menu_activate(struct halo_menu *menu);
 extern void halo_menu_next(struct halo_menu *menu);

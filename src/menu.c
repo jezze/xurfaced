@@ -1,8 +1,43 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <signal.h>
+#include <unistd.h>
+#include <X11/Xlib.h>
+#include <halo.h>
 #include <menu.h>
 
-void halo_menu_add_option(struct halo_menu *menu, char *name, void (*command)())
+extern struct halo halo;
+
+static void halo_menu_ctrl(struct halo_menu_option *option)
 {
 
+}
+
+static void halo_menu_exec(struct halo_menu_option *option)
+{
+
+    int pid = fork();
+
+    if (pid == 0)
+    {
+
+        if (halo.display)
+            close(XConnectionNumber(halo.display));
+
+        setsid();
+
+        execlp(option->command, option->command, 0);
+
+        exit(0);
+
+    }
+
+}
+
+void halo_menu_add_option(struct halo_menu *menu, unsigned int type, char *name, char *command)
+{
+
+    menu->options[menu->count].type = type;
     menu->options[menu->count].name = name;
     menu->options[menu->count].command = command;
     menu->count++;
@@ -21,7 +56,22 @@ void halo_menu_clear_options(struct halo_menu *menu)
 void halo_menu_activate(struct halo_menu *menu)
 {
 
-    menu->options[menu->current].command();
+    switch (menu->options[menu->current].type)
+    {
+
+        case MENU_TYPE_CTRL:
+
+            halo_menu_ctrl(&menu->options[menu->current]);
+
+            break;
+
+        case MENU_TYPE_EXEC:
+
+            halo_menu_exec(&menu->options[menu->current]);
+
+            break;
+
+    }
 
 }
 

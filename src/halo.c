@@ -1,8 +1,5 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <signal.h>
-#include <unistd.h>
-#include <sys/wait.h>
 #include <X11/Xlib.h>
 #include <client.h>
 #include <display.h>
@@ -15,48 +12,16 @@
 struct halo halo;
 struct halo_menu mainMenu;
 
-void halo_none()
-{
-
-}
-
-void halo_quit()
-{
-
-    halo.running = 0;
-
-}
-
-void halo_spawn()
-{
-
-    int pid = fork();
-
-    if (pid == 0)
-    {
-
-        if (halo.display)
-            close(XConnectionNumber(halo.display));
-
-        setsid();
-
-        execlp("xterm", "xterm", 0);
-
-        exit(0);
-
-    }
-
-}
-
 static void halo_init_menu()
 {
 
     halo_menu_clear_options(&mainMenu);
-    halo_menu_add_option(&mainMenu, "Home", halo_none);
-    halo_menu_add_option(&mainMenu, "Media", halo_none);
-    halo_menu_add_option(&mainMenu, "Games", halo_none);
-    halo_menu_add_option(&mainMenu, "Terminal", halo_spawn);
-    halo_menu_add_option(&mainMenu, "Quit", halo_quit);
+    halo_menu_add_option(&mainMenu, MENU_TYPE_CTRL, "Home", 0);
+    halo_menu_add_option(&mainMenu, MENU_TYPE_CTRL, "Media", 0);
+    halo_menu_add_option(&mainMenu, MENU_TYPE_CTRL, "Games", 0);
+    halo_menu_add_option(&mainMenu, MENU_TYPE_EXEC, "Terminal", "xterm");
+    halo_menu_add_option(&mainMenu, MENU_TYPE_EXEC, "Eyes", "xeyes");
+    halo_menu_add_option(&mainMenu, MENU_TYPE_CTRL, "Quit", 0);
 
     halo.menuCurrent = &mainMenu;
 
