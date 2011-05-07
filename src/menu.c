@@ -9,6 +9,7 @@
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/shape.h>
+#include <client.h>
 #include <halo.h>
 #include <menu.h>
 
@@ -16,6 +17,7 @@ extern struct halo halo;
 struct halo_menu menuHome;
 struct halo_menu menuMedia;
 struct halo_menu menuGames;
+struct halo_menu menuSessions;
 
 static void halo_menu_option_control(struct halo_menu_option *option)
 {
@@ -34,6 +36,32 @@ static void halo_menu_option_control(struct halo_menu_option *option)
 
         if (!strcmp(option->command + 5, "games"))
             halo.menu = &menuGames;
+
+        if (!strcmp(option->command + 5, "sessions"))
+        {
+
+            halo_menu_clear(&menuSessions);
+            halo_menu_add(&menuSessions, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
+
+            halo.menu = &menuSessions;
+
+            if (!halo.clients->head)
+                return;
+
+            struct halo_client *client = halo.clients->head;
+
+            while (client->next != halo.clients->head)
+            {
+
+                halo_menu_add(&menuSessions, halo_menu_option_create(MENU_TYPE_CTRL, "Program X", "window 1"));
+
+                client = client->next;
+
+            }
+
+            halo_menu_add(&menuSessions, halo_menu_option_create(MENU_TYPE_CTRL, "Program X", "window 1"));
+
+        }
 
     }
 
@@ -146,8 +174,7 @@ struct halo_menu *halo_menu_init()
     halo_menu_clear(&menuHome);
     halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media"));
     halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Games", "show games"));
-    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_EXEC, "Terminal", "xterm"));
-    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_EXEC, "Eyes", "xeyes"));
+    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Sessions", "show sessions"));
     halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit"));
 
     menuMedia.name = "media";
@@ -162,6 +189,10 @@ struct halo_menu *halo_menu_init()
     halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
     halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "Super Mario World", "xterm"));
     halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "Legend of Zelda", "xterm"));
+
+    menuSessions.name = "sessions";
+
+    halo_menu_clear(&menuSessions);
 
     return &menuHome;
 
