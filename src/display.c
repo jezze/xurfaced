@@ -12,7 +12,7 @@ void halo_display_init(struct halo *halo)
     if (!halo->display)
     {
 
-        fprintf(stderr, "halo: can not open display");
+        fprintf(stderr, "halo: can not open display\n");
         exit(EXIT_FAILURE);
 
     }

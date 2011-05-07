@@ -6,34 +6,76 @@
 
 struct halo_client_list clients;
 
-struct halo_client *halo_client_add(struct halo_client_list *list, Window window)
+struct halo_client *halo_client_add(Window window)
 {
 
     struct halo_client *client = malloc(sizeof (struct halo_client));
     client->window = window;
-    client->next = client;
-    client->prev = client;
+    client->next = 0;
+    client->prev = 0;
 
-    if (!list->head)
-        return list->head = client;
-
-    client->prev = list->head->prev;
-    client->next = list->head;
-
-    client->prev->next = client;
-    list->head->prev = client;
-    
     return client;
 
 }
 
-struct halo_client *halo_client_find(struct halo_client_list *list, Window window)
+void halo_client_list_add(struct halo_client_list *list, struct halo_client *client)
+{
+
+    if (!list->head)
+    {
+
+        client->next = client;
+        client->prev = client;
+
+        list->head = client;
+
+    }
+
+    else
+    {
+
+        client->next = list->head;
+        client->prev = list->head->prev;
+
+        list->head->prev->next = client;
+        list->head->prev = client;
+
+    }
+
+}
+
+void halo_client_list_remove(struct halo_client_list *list, struct halo_client *client)
+{
+
+    if (client == client->next)
+    {
+
+        list->head = 0;
+
+    }
+
+    else
+    {
+
+        client->prev->next = client->next;
+        client->next->prev = client->prev;
+
+        if (client == list->head)
+            list->head = client->next;
+
+    }
+
+    free(client);
+
+}
+
+struct halo_client *halo_client_list_find(struct halo_client_list *list, Window window)
 {
 
     struct halo_client *current = list->head;
 
-    if (current->next == list->head)
-        return (current->window == window) ? current : 0;
+    if (!current)
+        return 0;
 
     while (current->next != list->head)
     {
@@ -45,20 +87,7 @@ struct halo_client *halo_client_find(struct halo_client_list *list, Window windo
 
     }
 
-    return 0;
-
-}
-
-void halo_client_remove(struct halo_client_list *list, struct halo_client *client)
-{
-
-    client->prev->next = client->next;
-    client->next->prev = client->prev;
-
-    if (client == list->head)
-        list->head = client->next;
-
-    free(client);
+    return (current->window == window) ? current : 0;
 
 }
 

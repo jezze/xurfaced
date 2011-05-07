@@ -30,15 +30,17 @@ void halo_quit()
 void halo_spawn()
 {
 
-    if (fork() == 0)
+    int pid = fork();
+
+    if (pid == 0)
     {
 
         if (halo.display)
-            close(halo.connection);
+            close(XConnectionNumber(halo.display));
 
         setsid();
 
-        execl("/usr/bin/xterm", "/usr/bin/xterm", (char *)0);
+        execlp("xterm", "xterm", 0);
 
         exit(0);
 

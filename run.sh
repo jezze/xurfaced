@@ -1,3 +1,3 @@
 #!/bin/sh
 
-xinit ./halo -display :1 -- :1 vt8 &
+xinit ./halo -display :1 -- :1 vt5

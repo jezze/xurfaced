@@ -43,6 +43,20 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
 static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *event)
 {
 
+    struct halo_client *client = halo_client_list_find(halo->clients, event->window);
+
+    if (!client)
+        return;
+
+    halo_client_list_remove(halo->clients, client);
+
+    halo->clients->current = halo->clients->head;
+
+    XRaiseWindow(halo->display, halo->main);
+    XSetInputFocus(halo->display, halo->main, RevertToParent, CurrentTime);
+
+    XSync(halo->display, 0);
+
 }
 
 static void halo_event_expose(struct halo *halo, XExposeEvent *event)
@@ -53,44 +67,10 @@ static void halo_event_expose(struct halo *halo, XExposeEvent *event)
 
 }
 
-static void halo_event_unmap(struct halo *halo, XUnmapEvent *event)
-{
-
-    struct halo_client *client = halo_client_find(halo->clients, event->window);
-
-    if (!client)
-        return;
-
-    halo_client_remove(halo->clients, client);
-
-    if (halo->clients->head)
-    {
-
-        halo->clients->current = halo->clients->head;
-
-        XRaiseWindow(halo->display, halo->clients->current->window);
-        XSetInputFocus(halo->display, halo->clients->current->window, RevertToParent, CurrentTime);
-
-    }
-
-    else
-    {
-
-        halo->clients->current = 0;
-
-        XRaiseWindow(halo->display, halo->main);
-        XSetInputFocus(halo->display, halo->main, RevertToParent, CurrentTime);
-
-    }
-
-    XSync(halo->display, 0);
-
-}
-
 static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
 {
 
-    struct halo_client *client = halo_client_add(halo->clients, event->window);
+    struct halo_client *client = halo_client_add(event->window);
 
     if (!client)
         return;
@@ -101,7 +81,13 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
     XMapWindow(halo->display, client->window);
     XSetInputFocus(halo->display, client->window, RevertToParent, CurrentTime);
 
+    halo_client_list_add(halo->clients, client);
     halo->clients->current = client;
+
+}
+
+static void halo_event_unmap(struct halo *halo, XUnmapEvent *event)
+{
 
 }
 
