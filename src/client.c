@@ -45,23 +45,14 @@ void halo_client_list_add(struct halo_client_list *list, struct halo_client *cli
 void halo_client_list_remove(struct halo_client_list *list, struct halo_client *client)
 {
 
+    if (client == list->head)
+        list->head = client->next;
+
+    client->prev->next = client->next;
+    client->next->prev = client->prev;
+
     if (client == client->next)
-    {
-
         list->head = 0;
-
-    }
-
-    else
-    {
-
-        client->prev->next = client->next;
-        client->next->prev = client->prev;
-
-        if (client == list->head)
-            list->head = client->next;
-
-    }
 
     free(client);
 
@@ -95,7 +86,6 @@ void halo_client_destroy(struct halo_client_list *list)
     while (list->head)
         halo_client_list_remove(list, list->head);
 
-    list->head = 0;
     list->current = 0;
 
 }
