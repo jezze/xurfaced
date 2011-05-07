@@ -27,7 +27,7 @@ void halo_surface_blit_menu(struct halo_menu *menu)
     {
 
         cairo_move_to(halo_cairo, 100, i * 32 + 100);
-        cairo_text_path(halo_cairo, menu->options[i].name);
+        cairo_text_path(halo_cairo, menu->options[i]->name);
 
         if (i == menu->current)
         {

@@ -17,15 +17,15 @@ struct halo_menu_option
 struct halo_menu
 {
 
-    struct halo_menu_option options[32];
+    struct halo_menu_option *options[32];
     int count;
     int current;
-    int select;
 
 };
 
-extern void halo_menu_add_option(struct halo_menu *menu, unsigned int type, char *name, char *command);
-extern void halo_menu_clear_options(struct halo_menu *menu);
+extern struct halo_menu_option *halo_menu_option_create(unsigned int type, char *name, char *command);
+extern void halo_menu_add_option(struct halo_menu *menu, struct halo_menu_option *option);
+extern void halo_menu_clear(struct halo_menu *menu);
 extern void halo_menu_activate(struct halo_menu *menu);
 extern void halo_menu_next(struct halo_menu *menu);
 extern void halo_menu_previous(struct halo_menu *menu);
