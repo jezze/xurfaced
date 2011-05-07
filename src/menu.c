@@ -13,13 +13,29 @@
 #include <menu.h>
 
 extern struct halo halo;
-struct halo_menu mainMenu;
+struct halo_menu menuHome;
+struct halo_menu menuMedia;
+struct halo_menu menuGames;
 
 static void halo_menu_option_control(struct halo_menu_option *option)
 {
 
     if (!strcmp(option->command, "quit"))
         halo.running = 0;
+
+    if (!strncmp(option->command, "show ", 5))
+    {
+
+        if (!strcmp(option->command + 5, "home"))
+            halo.menu = &menuHome;
+
+        if (!strcmp(option->command + 5, "media"))
+            halo.menu = &menuMedia;
+
+        if (!strcmp(option->command + 5, "games"))
+            halo.menu = &menuGames;
+
+    }
 
 }
 
@@ -125,16 +141,29 @@ void halo_menu_previous(struct halo_menu *menu)
 struct halo_menu *halo_menu_init()
 {
 
-    halo_menu_clear(&mainMenu);
+    menuHome.name = "home";
 
-    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Home", "show home"));
-    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media"));
-    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Games", "show games"));
-    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_EXEC, "Terminal", "xterm"));
-    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_EXEC, "Eyes", "xeyes"));
-    halo_menu_add(&mainMenu, halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit"));
+    halo_menu_clear(&menuHome);
+    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media"));
+    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Games", "show games"));
+    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_EXEC, "Terminal", "xterm"));
+    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_EXEC, "Eyes", "xeyes"));
+    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit"));
 
-    return &mainMenu;
+    menuMedia.name = "media";
+
+    halo_menu_clear(&menuMedia);
+    halo_menu_add(&menuMedia, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
+    halo_menu_add(&menuMedia, halo_menu_option_create(MENU_TYPE_EXEC, "The Matrix", "xterm"));
+
+    menuGames.name = "games";
+
+    halo_menu_clear(&menuGames);
+    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
+    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "Super Mario World", "xterm"));
+    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "Legend of Zelda", "xterm"));
+
+    return &menuHome;
 
 }
 

@@ -17,6 +17,7 @@ struct halo_menu_option
 struct halo_menu
 {
 
+    char *name;
     struct halo_menu_option *options[32];
     int count;
     int current;
