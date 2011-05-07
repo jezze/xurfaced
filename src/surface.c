@@ -1,4 +1,9 @@
 #include <X11/Xlib.h>
+#include <X11/Xproto.h>
+#include <X11/extensions/Xcomposite.h>
+#include <X11/extensions/Xrender.h>
+#include <X11/extensions/Xfixes.h>
+#include <X11/extensions/shape.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
 #include <halo.h>
@@ -81,8 +86,8 @@ void halo_surface_init(struct halo *halo)
     cairo_set_line_cap(halo_cairo, CAIRO_LINE_CAP_ROUND);
 
     halo_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, halo->screenHeight);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.4, 0.0, 0.2, 1.0);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.0, 0.0, 0.2, 1.0);
+    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.4, 0.0, 0.2, 0.5);
+    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.0, 0.0, 0.2, 0.5);
 
 }
 

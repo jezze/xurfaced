@@ -5,6 +5,7 @@ struct halo_client
 {
 
     Window window;
+    Picture picture;
     struct halo_client *next;
     struct halo_client *prev;
 

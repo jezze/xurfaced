@@ -14,6 +14,7 @@ struct halo
     int screenHeight;
     Window root;
     Window main;
+    Picture mainPicture;
     Atom atom_net[4];
     int running;
     struct halo_menu *menu;

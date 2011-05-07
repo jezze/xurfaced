@@ -3,6 +3,7 @@
 #include <X11/Xproto.h>
 #include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xrender.h>
+#include <X11/extensions/Xfixes.h>
 #include <X11/extensions/shape.h>
 #include <halo.h>
 #include <window.h>
@@ -21,12 +22,13 @@ static void halo_window_init_root(struct halo *halo)
 
     XChangeProperty(halo->display, halo->root, halo->atom_net[0], XA_ATOM, 32, PropModeReplace, (unsigned char *)halo->atom_net, 4);
 
-//    XCompositeRedirectSubwindows(halo->display, halo->root, CompositeRedirectAutomatic);
-
     XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_c), Mod1Mask | ShiftMask, halo->root, 1, GrabModeAsync, GrabModeAsync);
     XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_q), Mod1Mask | ShiftMask, halo->root, 1, GrabModeAsync, GrabModeAsync);
     XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Escape), Mod1Mask, halo->root, 1, GrabModeAsync, GrabModeAsync);
     XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Tab), Mod1Mask, halo->root, 1, GrabModeAsync, GrabModeAsync);
+
+//    Makes stuff happen to late
+//    XCompositeRedirectSubwindows(halo->display, halo->root, CompositeRedirectAutomatic);
 
     XSync(halo->display, 0);
 
@@ -37,15 +39,15 @@ static void halo_window_init_base(struct halo *halo)
 
     halo->main = XCreateSimpleWindow(halo->display, halo->root, 1, 1, halo->screenWidth, halo->screenHeight, 0, XBlackPixel(halo->display, halo->screen), XBlackPixel(halo->display, halo->screen));
 
-//    XWindowAttributes wa;
-//    XGetWindowAttributes(halo->display, halo->main, &wa);
+    XWindowAttributes wa;
+    XGetWindowAttributes(halo->display, halo->main, &wa);
 
-//    XRenderPictFormat *format = XRenderFindVisualFormat(halo->display, wa.visual);
+    XRenderPictFormat *format = XRenderFindVisualFormat(halo->display, wa.visual);
 
-//    XRenderPictureAttributes pa;
-//    pa.subwindow_mode = IncludeInferiors;
+    XRenderPictureAttributes pa;
+    pa.subwindow_mode = IncludeInferiors;
 
-//    Picture picture = XRenderCreatePicture(halo->display, halo->main, format, CPSubwindowMode, &pa); 
+    halo->mainPicture = XRenderCreatePicture(halo->display, halo->main, format, CPSubwindowMode, &pa); 
 
 //    XShapeSelectInput(halo->display, halo->main, ShapeNotifyMask);
 

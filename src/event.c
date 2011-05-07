@@ -3,6 +3,11 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
+#include <X11/Xproto.h>
+#include <X11/extensions/Xcomposite.h>
+#include <X11/extensions/Xrender.h>
+#include <X11/extensions/Xfixes.h>
+#include <X11/extensions/shape.h>
 #include <client.h>
 #include <menu.h>
 #include <surface.h>
@@ -81,6 +86,17 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
     XMoveResizeWindow(halo->display, client->window, 0, 0, halo->screenWidth, halo->screenHeight);
     XMapWindow(halo->display, client->window);
     XSetInputFocus(halo->display, client->window, RevertToParent, CurrentTime);
+    XSync(halo->display, 0);
+
+    XWindowAttributes wa;
+    XGetWindowAttributes(halo->display, client->window, &wa);
+
+    XRenderPictFormat *format = XRenderFindVisualFormat(halo->display, wa.visual);
+
+    XRenderPictureAttributes pa;
+    pa.subwindow_mode = IncludeInferiors;
+
+    client->picture = XRenderCreatePicture(halo->display, client->window, format, CPSubwindowMode, &pa); 
 
 }
 
