@@ -27,8 +27,7 @@ static void halo_window_init_root(struct halo *halo)
     XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Escape), Mod1Mask, halo->root, 1, GrabModeAsync, GrabModeAsync);
     XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Tab), Mod1Mask, halo->root, 1, GrabModeAsync, GrabModeAsync);
 
-//    Makes stuff happen to late
-//    XCompositeRedirectSubwindows(halo->display, halo->root, CompositeRedirectAutomatic);
+    XCompositeRedirectSubwindows(halo->display, halo->root, CompositeRedirectAutomatic);
 
     XSync(halo->display, 0);
 
