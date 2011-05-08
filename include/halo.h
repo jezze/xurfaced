@@ -17,6 +17,7 @@ struct halo
     Picture mainPicture;
     Atom atom_net[4];
     int running;
+    int paused;
     struct halo_menu *menu;
     struct halo_client_list *clients;
 

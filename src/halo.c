@@ -42,7 +42,12 @@ static void *halo_thread_gui(void *ptr)
 {
 
     while (halo.running)
-        halo_surface_blit(&halo);
+    {
+
+        if (!halo.paused)
+            halo_surface_blit(&halo);
+
+    }
 
     return 0;
 
@@ -62,6 +67,7 @@ static void halo_run()
 {
 
     halo.running = 1;
+    halo.paused = 0;
 
     pthread_t threadGui;
     pthread_t threadEvents;

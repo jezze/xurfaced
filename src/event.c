@@ -56,6 +56,8 @@ static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *eve
     halo_client_list_remove(halo->clients, client);
     halo->clients->current = halo->clients->head;
 
+    halo->paused = 0;
+
     XRaiseWindow(halo->display, halo->main);
     XSetInputFocus(halo->display, halo->main, RevertToParent, CurrentTime);
     XSync(halo->display, 0);
@@ -96,7 +98,9 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
     XRenderPictureAttributes pa;
     pa.subwindow_mode = IncludeInferiors;
 
-    client->picture = XRenderCreatePicture(halo->display, client->window, format, CPSubwindowMode, &pa); 
+    client->picture = XRenderCreatePicture(halo->display, client->window, format, CPSubwindowMode, &pa);
+
+    halo->paused = 1;
 
 }
 
@@ -162,6 +166,8 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
             if (!(event->state & Mod1Mask))
                 break;
+
+            halo->paused = 0;
 
             XRaiseWindow(halo->display, halo->main);
             XSetInputFocus(halo->display, halo->main, RevertToParent, CurrentTime);
