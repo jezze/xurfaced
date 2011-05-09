@@ -70,6 +70,16 @@ static void halo_menu_option_control(struct halo_menu_option *option)
 static void halo_menu_option_execute(struct halo_menu_option *option)
 {
 
+    char args[256], *argv[32];
+
+    memcpy(args, option->command, strlen(option->command) + 1);
+
+    argv[0] = strtok(args, " ");
+
+    unsigned int i = 0;
+
+    while ((argv[++i] = strtok(0, " ")));
+
     int pid = fork();
 
     if (pid == 0)
@@ -80,7 +90,7 @@ static void halo_menu_option_execute(struct halo_menu_option *option)
 
         setsid();
 
-        execlp(option->command, option->command, 0);
+        execvp(argv[0], argv);
 
         exit(0);
 
@@ -187,8 +197,7 @@ struct halo_menu *halo_menu_init()
 
     halo_menu_clear(&menuGames);
     halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "Super Mario World", "xterm"));
-    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "Legend of Zelda", "xterm"));
+    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "zsnes /home/jfu/SecretOfMana.smc"));
 
     menuSessions.name = "sessions";
 
