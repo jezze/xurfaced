@@ -197,7 +197,7 @@ struct halo_menu *halo_menu_init()
 
     halo_menu_clear(&menuGames);
     halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "zsnes /home/jfu/SecretOfMana.smc"));
+    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "snes9x-gtk /home/jfu/SecretOfMana.smc"));
 
     menuSessions.name = "sessions";
 
