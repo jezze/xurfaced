@@ -191,13 +191,13 @@ struct halo_menu *halo_menu_init()
 
     halo_menu_clear(&menuMedia);
     halo_menu_add(&menuMedia, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-    halo_menu_add(&menuMedia, halo_menu_option_create(MENU_TYPE_EXEC, "The Matrix", "xterm"));
+    halo_menu_add(&menuMedia, halo_menu_option_create(MENU_TYPE_EXEC, "Big buck bunny", "mplayer /home/jfu/movies/big_buck_bunny_720p_surround.avi"));
 
     menuGames.name = "games";
 
     halo_menu_clear(&menuGames);
     halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "snes9x-gtk /home/jfu/SecretOfMana.smc"));
+    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc"));
 
     menuSessions.name = "sessions";
 
