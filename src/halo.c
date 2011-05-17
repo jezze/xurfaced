@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <sys/time.h>
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
 #include <X11/extensions/Xcomposite.h>
@@ -38,16 +39,35 @@ static void halo_destroy()
 
 }
 
+pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
 static void *halo_thread_gui(void *ptr)
 {
+
+    struct timespec ts;
+    struct timeval tv;
+
+    pthread_mutex_lock(&mutex);
+    pthread_cond_signal(&cond);
 
     while (halo.running)
     {
 
-        if (!halo.paused)
-            halo_surface_blit(&halo);
+        gettimeofday(&tv, 0);
+
+        ts.tv_sec = tv.tv_sec;
+        ts.tv_nsec = tv.tv_usec * 1000;
+        ts.tv_nsec += 16 * 1000 * 1000;
+
+        pthread_cond_timedwait(&cond, &mutex, &ts);
+
+        halo_surface_blit(&halo);
 
     }
+
+    pthread_cond_destroy(&cond);
+    pthread_mutex_destroy(&mutex);
 
     return 0;
 

@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <pthread.h>
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
 #include <X11/extensions/Xcomposite.h>
@@ -22,12 +24,14 @@ void halo_surface_blit_background(struct halo *halo)
     cairo_fill(halo_cairo);
 
 }
+    int oldcurrent = 0;
+    float alpha = 1.0;
+
 
 void halo_surface_blit_menu(struct halo_menu *menu)
 {
 
     int i;
-
     for (i = 0; i < menu->count; i++)
     {
 
@@ -37,12 +41,17 @@ void halo_surface_blit_menu(struct halo_menu *menu)
         if (i == menu->current)
         {
 
+            if (i != oldcurrent)
+                alpha = 0.4;
 
-            cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, 1.0);
-            cairo_fill_preserve(halo_cairo);
-            cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, 0.4);
+            alpha = (alpha >= 1.0) ? 1.0 : alpha + 0.025;
+
+            cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, alpha);
+            cairo_fill(halo_cairo);
+            cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, alpha - 0.3);
             cairo_stroke(halo_cairo);
 
+            oldcurrent = i;
 
         }
 
@@ -50,7 +59,7 @@ void halo_surface_blit_menu(struct halo_menu *menu)
         {
 
             cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, 0.4);
-            cairo_fill_preserve(halo_cairo);
+            cairo_fill(halo_cairo);
             cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, 0.1);
             cairo_stroke(halo_cairo);
 
@@ -63,14 +72,14 @@ void halo_surface_blit_menu(struct halo_menu *menu)
 void halo_surface_blit(struct halo *halo)
 {
 
-    XLockDisplay(halo->display);
-
     cairo_push_group(halo_cairo);
 
     halo_surface_blit_background(halo);
     halo_surface_blit_menu(halo->menu);
 
     cairo_pop_group_to_source(halo_cairo);
+
+    XLockDisplay(halo->display);
 
     cairo_paint(halo_cairo);
 
@@ -90,8 +99,8 @@ void halo_surface_init(struct halo *halo)
     cairo_set_line_cap(halo_cairo, CAIRO_LINE_CAP_ROUND);
 
     halo_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, halo->screenHeight);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.4, 0.0, 0.2, 0.5);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.0, 0.0, 0.2, 0.5);
+    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.4, 0.0, 0.2, 1.0);
+    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.0, 0.0, 0.2, 1.0);
 
 }
 
