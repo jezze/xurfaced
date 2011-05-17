@@ -5,12 +5,15 @@
 #define MENU_TYPE_CTRL 1
 #define MENU_TYPE_EXEC 2
 
+struct animation_properties;
+
 struct halo_menu_option
 {
 
     unsigned int type;
     char *name;
     char *command;
+    struct animation_properties animationProperties;
 
 };
 

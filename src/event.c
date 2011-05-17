@@ -8,6 +8,7 @@
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/shape.h>
+#include <animation.h>
 #include <client.h>
 #include <menu.h>
 #include <surface.h>

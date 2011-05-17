@@ -8,6 +8,7 @@
 #include <X11/extensions/shape.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
+#include <animation.h>
 #include <halo.h>
 #include <menu.h>
 #include <surface.h>
@@ -24,14 +25,12 @@ void halo_surface_blit_background(struct halo *halo)
     cairo_fill(halo_cairo);
 
 }
-    int oldcurrent = 0;
-    float alpha = 1.0;
-
 
 void halo_surface_blit_menu(struct halo_menu *menu)
 {
 
     int i;
+
     for (i = 0; i < menu->count; i++)
     {
 
@@ -39,31 +38,20 @@ void halo_surface_blit_menu(struct halo_menu *menu)
         cairo_text_path(halo_cairo, menu->options[i]->name);
 
         if (i == menu->current)
-        {
-
-            if (i != oldcurrent)
-                alpha = 0.4;
-
-            alpha = (alpha >= 1.0) ? 1.0 : alpha + 0.025;
-
-            cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, alpha);
-            cairo_fill(halo_cairo);
-            cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, alpha - 0.3);
-            cairo_stroke(halo_cairo);
-
-            oldcurrent = i;
-
-        }
-
+            menu->options[i]->animationProperties.alpha += 0.2;
         else
-        {
+            menu->options[i]->animationProperties.alpha -= 0.05;
 
-            cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, 0.4);
-            cairo_fill(halo_cairo);
-            cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, 0.1);
-            cairo_stroke(halo_cairo);
+        if (menu->options[i]->animationProperties.alpha >= 1.0)
+            menu->options[i]->animationProperties.alpha = 1.0;
 
-        }
+        if (menu->options[i]->animationProperties.alpha <= 0.4)
+            menu->options[i]->animationProperties.alpha = 0.4;
+
+        cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, menu->options[i]->animationProperties.alpha);
+        cairo_fill(halo_cairo);
+        cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, menu->options[i]->animationProperties.alpha - 0.3);
+        cairo_stroke(halo_cairo);
 
     }
 

@@ -9,6 +9,7 @@
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/shape.h>
+#include <animation.h>
 #include <client.h>
 #include <halo.h>
 #include <menu.h>
@@ -105,6 +106,7 @@ struct halo_menu_option *halo_menu_option_create(unsigned int type, char *name, 
     option->type = type;
     option->name = name;
     option->command = command;
+    option->animationProperties.alpha = 0;
 
     return option;
 
