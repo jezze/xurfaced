@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <math.h>
 #include <pthread.h>
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
@@ -30,6 +31,20 @@ void halo_surface_blit_menu(struct halo_menu *menu)
 {
 
     int i;
+
+    float middle = 200.0;
+    float offset = menu->animationProperties.translationY + menu->options[menu->current]->animationProperties.translationY;
+    float distance = fabs(middle - offset);
+
+    if (distance > 0.01)
+    {
+
+        if (middle - offset < 0)
+            menu->animationProperties.translationY -= (distance / 10.0);
+        else
+            menu->animationProperties.translationY += (distance / 10.0);
+
+    }
 
     for (i = 0; i < menu->count; i++)
     {

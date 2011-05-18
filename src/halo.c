@@ -60,7 +60,7 @@ static void *halo_thread_gui(void *ptr)
 
         ts.tv_sec = tv.tv_sec;
         ts.tv_nsec = tv.tv_usec * 1000;
-        ts.tv_nsec += 16 * 1000 * 1000;
+        ts.tv_nsec += 24 * 1000 * 1000;
 
         pthread_cond_timedwait(&cond, &mutex, &ts);
 
