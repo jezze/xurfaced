@@ -21,9 +21,10 @@ struct halo_menu
 {
 
     char *name;
-    struct halo_menu_option *options[32];
     int count;
     int current;
+    struct halo_menu_option *options[32];
+    struct animation_properties animationProperties;
     struct halo_menu *next;
     struct halo_menu *prev;
 

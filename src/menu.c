@@ -175,27 +175,72 @@ struct halo_menu_list *halo_menu_list_create()
 {
 
     struct halo_menu *menu;
+    struct halo_menu_option *option;
 
     menu = halo_menu_create("home");
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media"));
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "Games", "show games"));
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "Sessions", "show sessions"));
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit"));
+    menu->animationProperties.translationX = 200;
+    menu->animationProperties.translationY = 200;
     halo_menu_list_add(&menues, menu);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 0;
+    halo_menu_add_option(menu, option);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Games", "show games");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 32;
+    halo_menu_add_option(menu, option);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Sessions", "show sessions");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 64;
+    halo_menu_add_option(menu, option);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 96;
+    halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("media");
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_EXEC, "Big buck bunny", "mplayer /home/jfu/movies/big_buck_bunny_720p_surround.avi"));
+    menu->animationProperties.translationX = 200;
+    menu->animationProperties.translationY = 200;
     halo_menu_list_add(&menues, menu);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "show home");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 0;
+    halo_menu_add_option(menu, option);
+
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "Big buck bunny", "mplayer /home/jfu/movies/big_buck_bunny_720p_surround.avi");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 64;
+    halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("games");
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc"));
+    menu->animationProperties.translationX = 200;
+    menu->animationProperties.translationY = 200;
     halo_menu_list_add(&menues, menu);
 
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "show home");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 0;
+    halo_menu_add_option(menu, option);
+
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 64;
+    halo_menu_add_option(menu, option);
+
     menu = halo_menu_create("sessions");
-    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
+    menu->animationProperties.translationX = 200;
+    menu->animationProperties.translationY = 200;
     halo_menu_list_add(&menues, menu);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "show home");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 0;
+    halo_menu_add_option(menu, option);
 
     menues.current = menues.head;
 
