@@ -55,6 +55,8 @@ static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *eve
         return;
 
     halo_client_list_remove(halo->clients, client);
+    halo_client_destroy(client);
+
     halo->clients->current = halo->clients->head;
 
     halo->paused = 0;
@@ -138,13 +140,13 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_Up:
 
-            halo_menu_previous(halo->menu);
+            halo_menu_previous(halo->menues->current);
 
             break;
 
         case XK_Down:
 
-            halo_menu_next(halo->menu);
+            halo_menu_next(halo->menues->current);
 
             break;
 
@@ -177,7 +179,7 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_Return:
 
-            halo_menu_activate(halo->menu);
+            halo_menu_activate(halo->menues->current);
 
             break;
 

@@ -26,15 +26,16 @@ static void halo_init()
     halo_display_init(&halo);
     halo_window_init(&halo);
     halo_surface_init(&halo);
-    halo.clients = halo_client_init();
-    halo.menu = halo_menu_init();
+    halo.clients = halo_client_list_create();
+    halo.menues = halo_menu_list_create();
 
 }
 
 static void halo_destroy()
 {
 
-    halo_client_destroy(halo.clients);
+    halo_menu_list_destroy(halo.menues);
+    halo_client_list_destroy(halo.clients);
     halo_surface_destroy(&halo);
     halo_display_destroy(&halo);
 

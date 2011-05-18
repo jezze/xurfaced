@@ -20,11 +20,13 @@ struct halo_client_list
 };
 
 extern struct halo_client *halo_client_create(Window window);
+extern void halo_client_destroy(struct halo_client *client);
+
+extern struct halo_client_list *halo_client_list_create();
+extern void halo_client_list_destroy(struct halo_client_list *list);
 extern void halo_client_list_add(struct halo_client_list *list, struct halo_client *client);
 extern void halo_client_list_remove(struct halo_client_list *list, struct halo_client *client);
 extern struct halo_client *halo_client_list_find(struct halo_client_list *list, Window window);
-extern void halo_client_destroy(struct halo_client_list *list);
-extern struct halo_client_list *halo_client_init();
 
 #endif
 

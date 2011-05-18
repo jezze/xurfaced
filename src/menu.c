@@ -15,10 +15,8 @@
 #include <menu.h>
 
 extern struct halo halo;
-struct halo_menu menuHome;
-struct halo_menu menuMedia;
-struct halo_menu menuGames;
-struct halo_menu menuSessions;
+
+struct halo_menu_list menues;
 
 static void halo_menu_option_control(struct halo_menu_option *option)
 {
@@ -29,40 +27,12 @@ static void halo_menu_option_control(struct halo_menu_option *option)
     if (!strncmp(option->command, "show ", 5))
     {
 
-        if (!strcmp(option->command + 5, "home"))
-            halo.menu = &menuHome;
+        struct halo_menu *menu = halo_menu_list_find(halo.menues, option->command + 5);
 
-        if (!strcmp(option->command + 5, "media"))
-            halo.menu = &menuMedia;
+        if (!menu)
+            return;
 
-        if (!strcmp(option->command + 5, "games"))
-            halo.menu = &menuGames;
-
-        if (!strcmp(option->command + 5, "sessions"))
-        {
-
-            halo_menu_clear(&menuSessions);
-            halo_menu_add(&menuSessions, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-
-            halo.menu = &menuSessions;
-
-            if (!halo.clients->head)
-                return;
-
-            struct halo_client *client = halo.clients->head;
-
-            while (client->next != halo.clients->head)
-            {
-
-                halo_menu_add(&menuSessions, halo_menu_option_create(MENU_TYPE_CTRL, "Program X", "window 1"));
-
-                client = client->next;
-
-            }
-
-            halo_menu_add(&menuSessions, halo_menu_option_create(MENU_TYPE_CTRL, "Program X", "window 1"));
-
-        }
+        halo.menues->current = menu;
 
     }
 
@@ -112,7 +82,45 @@ struct halo_menu_option *halo_menu_option_create(unsigned int type, char *name, 
 
 }
 
-void halo_menu_add(struct halo_menu *menu, struct halo_menu_option *option)
+void halo_menu_option_destroy(struct halo_menu_option *option)
+{
+
+    free(option);
+
+}
+
+struct halo_menu *halo_menu_create(char *name)
+{
+
+    struct halo_menu *menu = malloc(sizeof (struct halo_menu));
+    menu->name = name;
+    menu->current = 0;
+    menu->count = 0;
+    menu->next = 0;
+    menu->prev = 0;
+
+    return menu;
+
+}
+
+void halo_menu_destroy(struct halo_menu *menu)
+{
+
+    unsigned int i;
+
+    for (i = 0; i < menu->count; i++)
+    {
+
+        halo_menu_remove_option(menu, menu->options[i]);
+        halo_menu_option_destroy(menu->options[i]);
+
+    }
+
+    free(menu);
+
+}
+
+void halo_menu_add_option(struct halo_menu *menu, struct halo_menu_option *option)
 {
 
     menu->options[menu->count] = option;
@@ -120,23 +128,8 @@ void halo_menu_add(struct halo_menu *menu, struct halo_menu_option *option)
 
 }
 
-void halo_menu_remove(struct halo_menu *menu, struct halo_menu_option *option)
+void halo_menu_remove_option(struct halo_menu *menu, struct halo_menu_option *option)
 {
-
-    free(option);
-
-}
-
-void halo_menu_clear(struct halo_menu *menu)
-{
-
-    unsigned int i;
-
-    for (i = 0; i < menu->count; i++)
-        halo_menu_remove(menu, menu->options[i]);
-
-    menu->count = 0;
-    menu->current = 0;
 
 }
 
@@ -178,34 +171,112 @@ void halo_menu_previous(struct halo_menu *menu)
 
 }
 
-struct halo_menu *halo_menu_init()
+struct halo_menu_list *halo_menu_list_create()
 {
 
-    menuHome.name = "home";
+    struct halo_menu *menu;
 
-    halo_menu_clear(&menuHome);
-    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media"));
-    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Games", "show games"));
-    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Sessions", "show sessions"));
-    halo_menu_add(&menuHome, halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit"));
+    menu = halo_menu_create("home");
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media"));
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "Games", "show games"));
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "Sessions", "show sessions"));
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "quit"));
+    halo_menu_list_add(&menues, menu);
 
-    menuMedia.name = "media";
+    menu = halo_menu_create("media");
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_EXEC, "Big buck bunny", "mplayer /home/jfu/movies/big_buck_bunny_720p_surround.avi"));
+    halo_menu_list_add(&menues, menu);
 
-    halo_menu_clear(&menuMedia);
-    halo_menu_add(&menuMedia, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-    halo_menu_add(&menuMedia, halo_menu_option_create(MENU_TYPE_EXEC, "Big buck bunny", "mplayer /home/jfu/movies/big_buck_bunny_720p_surround.avi"));
+    menu = halo_menu_create("games");
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc"));
+    halo_menu_list_add(&menues, menu);
 
-    menuGames.name = "games";
+    menu = halo_menu_create("sessions");
+    halo_menu_add_option(menu, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
+    halo_menu_list_add(&menues, menu);
 
-    halo_menu_clear(&menuGames);
-    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_CTRL, "< Return", "show home"));
-    halo_menu_add(&menuGames, halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc"));
+    menues.current = menues.head;
 
-    menuSessions.name = "sessions";
+    return &menues;
 
-    halo_menu_clear(&menuSessions);
+}
 
-    return &menuHome;
+void halo_menu_list_destroy(struct halo_menu_list *list)
+{
+
+    while (list->head)
+    {
+
+        halo_menu_list_remove(list, list->head);
+        halo_menu_destroy(list->head);
+
+    }
+
+    list->current = 0;
+
+}
+
+void halo_menu_list_add(struct halo_menu_list *list, struct halo_menu *menu)
+{
+
+    if (!list->head)
+    {
+
+        menu->next = menu;
+        menu->prev = menu;
+
+        list->head = menu;
+
+    }
+
+    else
+    {
+
+        menu->next = list->head;
+        menu->prev = list->head->prev;
+
+        list->head->prev->next = menu;
+        list->head->prev = menu;
+
+    }
+
+}
+
+void halo_menu_list_remove(struct halo_menu_list *list, struct halo_menu *menu)
+{
+
+    if (menu == list->head)
+        list->head = menu->next;
+
+    menu->prev->next = menu->next;
+    menu->next->prev = menu->prev;
+
+    if (menu == menu->next)
+        list->head = 0;
+
+}
+
+struct halo_menu *halo_menu_list_find(struct halo_menu_list *list, char *name)
+{
+
+    struct halo_menu *current = list->head;
+
+    if (!current)
+        return 0;
+
+    while (current->next != list->head)
+    {
+
+        if (!strcmp(current->name, name))
+            return current;
+
+        current = current->next;
+
+    }
+
+    return (!strcmp(current->name, name)) ? current : 0;
 
 }
 

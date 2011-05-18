@@ -22,6 +22,38 @@ struct halo_client *halo_client_create(Window window)
 
 }
 
+void halo_client_destroy(struct halo_client *client)
+{
+
+    free(client);
+
+}
+
+struct halo_client_list *halo_client_list_create()
+{
+
+    clients.head = 0;
+    clients.current = 0;
+
+    return &clients;
+
+}
+
+void halo_client_list_destroy(struct halo_client_list *list)
+{
+
+    while (list->head)
+    {
+
+        halo_client_list_remove(list, list->head);
+        halo_client_destroy(list->head);
+
+    }
+
+    list->current = 0;
+
+}
+
 void halo_client_list_add(struct halo_client_list *list, struct halo_client *client)
 {
 
@@ -60,8 +92,6 @@ void halo_client_list_remove(struct halo_client_list *list, struct halo_client *
     if (client == client->next)
         list->head = 0;
 
-    free(client);
-
 }
 
 struct halo_client *halo_client_list_find(struct halo_client_list *list, Window window)
@@ -83,26 +113,6 @@ struct halo_client *halo_client_list_find(struct halo_client_list *list, Window 
     }
 
     return (current->window == window) ? current : 0;
-
-}
-
-void halo_client_destroy(struct halo_client_list *list)
-{
-
-    while (list->head)
-        halo_client_list_remove(list, list->head);
-
-    list->current = 0;
-
-}
-
-struct halo_client_list *halo_client_init()
-{
-
-    clients.head = 0;
-    clients.current = 0;
-
-    return &clients;
 
 }
 
