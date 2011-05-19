@@ -36,13 +36,13 @@ void halo_surface_blit_menu(struct halo_menu *menu)
     float offset = menu->animationProperties.translationY + menu->options[menu->current]->animationProperties.translationY;
     float distance = fabs(middle - offset);
 
-    if (distance > 0.01)
+    if (distance > 5.0)
     {
 
         if (middle - offset < 0)
-            menu->animationProperties.translationY -= (distance / 10.0);
+            menu->animationProperties.translationY -= (distance) / 5.0;
         else
-            menu->animationProperties.translationY += (distance / 10.0);
+            menu->animationProperties.translationY += (distance) / 5.0;
 
     }
 
@@ -53,7 +53,7 @@ void halo_surface_blit_menu(struct halo_menu *menu)
         cairo_text_path(halo_cairo, menu->options[i]->name);
 
         if (i == menu->current)
-            menu->options[i]->animationProperties.alpha += 0.2;
+            menu->options[i]->animationProperties.alpha += 1.0;
         else
             menu->options[i]->animationProperties.alpha -= 0.05;
 
@@ -72,7 +72,7 @@ void halo_surface_blit_menu(struct halo_menu *menu)
 
 }
 
-void halo_surface_blit(struct halo *halo)
+void halo_surface_prep(struct halo *halo)
 {
 
     cairo_push_group(halo_cairo);
@@ -81,6 +81,11 @@ void halo_surface_blit(struct halo *halo)
     halo_surface_blit_menu(halo->menues->current);
 
     cairo_pop_group_to_source(halo_cairo);
+
+}
+
+void halo_surface_blit(struct halo *halo)
+{
 
     XLockDisplay(halo->display);
 

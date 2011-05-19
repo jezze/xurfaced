@@ -56,15 +56,16 @@ static void *halo_thread_gui(void *ptr)
     while (halo.running)
     {
 
+        halo_surface_prep(&halo);
+        halo_surface_blit(&halo);
+
         gettimeofday(&tv, 0);
 
         ts.tv_sec = tv.tv_sec;
         ts.tv_nsec = tv.tv_usec * 1000;
-        ts.tv_nsec += 24 * 1000 * 1000;
+        ts.tv_nsec += 10 * 1000 * 1000;
 
         pthread_cond_timedwait(&cond, &mutex, &ts);
-
-        halo_surface_blit(&halo);
 
     }
 
