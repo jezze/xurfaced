@@ -27,12 +27,12 @@ void halo_surface_blit_background(struct halo *halo)
 
 }
 
-void halo_surface_blit_menu(struct halo_menu *menu)
+void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 {
 
     int i;
 
-    float middle = 200.0;
+    float middle = height / 4;
     float offset = menu->animationProperties.translationY + menu->options[menu->current]->animationProperties.translationY;
     float distance = fabs(middle - offset);
 
@@ -78,7 +78,7 @@ void halo_surface_prep(struct halo *halo)
     cairo_push_group(halo_cairo);
 
     halo_surface_blit_background(halo);
-    halo_surface_blit_menu(halo->menues->current);
+    halo_surface_blit_menu(halo->screenHeight, halo->menues->current);
 
     cairo_pop_group_to_source(halo_cairo);
 

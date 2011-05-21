@@ -171,15 +171,18 @@ void halo_menu_previous(struct halo_menu *menu)
 
 }
 
-struct halo_menu_list *halo_menu_list_create()
+struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int height)
 {
+
+    unsigned int center = width / 4;
+    unsigned int middle = height / 4;
 
     struct halo_menu *menu;
     struct halo_menu_option *option;
 
     menu = halo_menu_create("home");
-    menu->animationProperties.translationX = 200;
-    menu->animationProperties.translationY = 200;
+    menu->animationProperties.translationX = center;
+    menu->animationProperties.translationY = middle;
     halo_menu_list_add(&menues, menu);
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Media", "show media");
@@ -203,8 +206,8 @@ struct halo_menu_list *halo_menu_list_create()
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("media");
-    menu->animationProperties.translationX = 200;
-    menu->animationProperties.translationY = 200;
+    menu->animationProperties.translationX = center;
+    menu->animationProperties.translationY = middle;
     halo_menu_list_add(&menues, menu);
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "show home");
@@ -218,8 +221,8 @@ struct halo_menu_list *halo_menu_list_create()
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("games");
-    menu->animationProperties.translationX = 200;
-    menu->animationProperties.translationY = 200;
+    menu->animationProperties.translationX = center;
+    menu->animationProperties.translationY = middle;
     halo_menu_list_add(&menues, menu);
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "show home");
@@ -233,8 +236,8 @@ struct halo_menu_list *halo_menu_list_create()
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("sessions");
-    menu->animationProperties.translationX = 200;
-    menu->animationProperties.translationY = 200;
+    menu->animationProperties.translationX = center;
+    menu->animationProperties.translationY = middle;
     halo_menu_list_add(&menues, menu);
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "show home");

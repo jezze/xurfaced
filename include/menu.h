@@ -49,7 +49,7 @@ extern void halo_menu_activate(struct halo_menu *menu);
 extern void halo_menu_next(struct halo_menu *menu);
 extern void halo_menu_previous(struct halo_menu *menu);
 
-extern struct halo_menu_list *halo_menu_list_create();
+extern struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int height);
 extern void halo_menu_list_destroy(struct halo_menu_list *list);
 extern void halo_menu_list_add(struct halo_menu_list *list, struct halo_menu *menu);
 extern void halo_menu_list_remove(struct halo_menu_list *list, struct halo_menu *menu);
