@@ -40,6 +40,7 @@ static void halo_destroy(struct halo *halo)
     halo_menu_list_destroy(halo->menues);
     halo_client_list_destroy(halo->clients);
     halo_surface_destroy(halo);
+    halo_window_destroy(halo);
     halo_display_destroy(halo);
 
 }

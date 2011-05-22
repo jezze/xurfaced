@@ -52,7 +52,13 @@ static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *eve
     struct halo_client *client = halo_client_list_find(halo->clients, event->window);
 
     if (!client)
+    {
+
+        XSync(halo->display, 0);
+
         return;
+
+    }
 
     halo_client_list_remove(halo->clients, client);
     halo_client_destroy(client);

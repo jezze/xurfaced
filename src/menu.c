@@ -253,7 +253,7 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
 
 void halo_menu_list_destroy(struct halo_menu_list *list)
 {
-
+/*
     while (list->head)
     {
 
@@ -261,7 +261,7 @@ void halo_menu_list_destroy(struct halo_menu_list *list)
         halo_menu_destroy(list->head);
 
     }
-
+*/
     list->current = 0;
 
 }

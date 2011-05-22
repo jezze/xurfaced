@@ -63,3 +63,12 @@ void halo_window_init(struct halo *halo)
 
 }
 
+void halo_window_destroy(struct halo *halo)
+{
+
+    XUnmapWindow(halo->display, halo->main);
+
+    XSync(halo->display, 0);
+
+}
+
