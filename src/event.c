@@ -217,6 +217,8 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
     }
 
+    XSync(halo->display, 0);
+
 }
 
 void halo_event_handler(struct halo *halo)

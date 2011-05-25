@@ -53,6 +53,8 @@ static void halo_window_init_base(struct halo *halo)
     XSelectInput(halo->display, halo->main, ButtonPressMask | PointerMotionMask | KeyPressMask);
     XMapWindow(halo->display, halo->main);
 
+    XSync(halo->display, 0);
+
 }
 
 void halo_window_init(struct halo *halo)
@@ -67,6 +69,8 @@ void halo_window_destroy(struct halo *halo)
 {
 
     XUnmapWindow(halo->display, halo->main);
+
+    XUngrabKeyboard(halo->display, CurrentTime);
 
     XSync(halo->display, 0);
 
