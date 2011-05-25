@@ -9,6 +9,7 @@
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/shape.h>
+#include <limb/list.h>
 #include <animation.h>
 #include <client.h>
 #include <halo.h>
@@ -233,6 +234,11 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
     option = halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 64;
+    halo_menu_add_option(menu, option);
+
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "NDS: Children of Mana", "desmume /home/jfu/roms/ChildrenOfMana.nds");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 96;
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("sessions");
