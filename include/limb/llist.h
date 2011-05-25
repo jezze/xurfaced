@@ -1,6 +1,3 @@
-#include <stdlib.h>
-#include <stdio.h>
-
 struct limb_litem
 {
 
