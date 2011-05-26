@@ -52,10 +52,10 @@ void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
         if (i == menu->current)
             menu->options[i]->animationProperties.alpha += 1.0;
         else
-            menu->options[i]->animationProperties.alpha -= 0.05;
+            menu->options[i]->animationProperties.alpha -= 0.02;
 
-        if (menu->options[i]->animationProperties.alpha >= 0.9)
-            menu->options[i]->animationProperties.alpha = 0.9;
+        if (menu->options[i]->animationProperties.alpha >= 0.8)
+            menu->options[i]->animationProperties.alpha = 0.8;
 
         if (menu->options[i]->animationProperties.alpha <= 0.3)
             menu->options[i]->animationProperties.alpha = 0.3;

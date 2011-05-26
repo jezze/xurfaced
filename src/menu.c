@@ -34,6 +34,7 @@ static void halo_menu_option_control(struct halo_menu_option *option)
             return;
 
         halo.menues->current = menu;
+        halo.menues->current->animationProperties.translationY = 0;
         menu->current = 0;
 
     }
@@ -188,39 +189,29 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
     menu->animationProperties.translationY = middle;
     halo_menu_list_add(&menues, menu);
 
-    option = halo_menu_option_create(MENU_TYPE_CTRL, "Media", "All the media at your disposal", "show media");
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Games", "Play games installed on your system", "show games");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 0;
     halo_menu_add_option(menu, option);
 
-    option = halo_menu_option_create(MENU_TYPE_CTRL, "Games", "Collection of games", "show games");
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Videos", "Watch videos on your system or from an online streaming service", "show videos");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 64;
     halo_menu_add_option(menu, option);
 
-    option = halo_menu_option_create(MENU_TYPE_CTRL, "Sessions", "Programs running at the moment", "show sessions");
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Music", "Connect to your online music provider and start listening", "show music");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 128;
     halo_menu_add_option(menu, option);
 
-    option = halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "Turn off your system", "quit");
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Sessions", "Browse applications running on your system", "show sessions");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 192;
     halo_menu_add_option(menu, option);
 
-    menu = halo_menu_create("media");
-    menu->animationProperties.translationX = center;
-    menu->animationProperties.translationY = middle;
-    halo_menu_list_add(&menues, menu);
-
-    option = halo_menu_option_create(MENU_TYPE_EXEC, "Big buck bunny", "Playtime: 12 minutes 49 seconds, Format: MPEG", "mplayer /home/jfu/movies/big_buck_bunny_720p_surround.avi");
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "Turn off your system", "quit");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 0;
-    halo_menu_add_option(menu, option);
-
-    option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
-    option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 128;
+    option->animationProperties.translationY = 256;
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("games");
@@ -241,6 +232,31 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 192;
+    halo_menu_add_option(menu, option);
+
+    menu = halo_menu_create("videos");
+    menu->animationProperties.translationX = center;
+    menu->animationProperties.translationY = middle;
+    halo_menu_list_add(&menues, menu);
+
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "Big buck bunny", "Playtime: 12 minutes 49 seconds, Format: MPEG", "mplayer /home/jfu/movies/big_buck_bunny_720p_surround.avi");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 0;
+    halo_menu_add_option(menu, option);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 128;
+    halo_menu_add_option(menu, option);
+
+    menu = halo_menu_create("music");
+    menu->animationProperties.translationX = center;
+    menu->animationProperties.translationY = middle;
+    halo_menu_list_add(&menues, menu);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 0;
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("sessions");
