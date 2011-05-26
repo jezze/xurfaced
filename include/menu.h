@@ -12,6 +12,7 @@ struct halo_menu_option
 
     unsigned int type;
     char *name;
+    char *description;
     char *command;
     struct animation_properties animationProperties;
 
@@ -38,7 +39,7 @@ struct halo_menu_list
 
 };
 
-extern struct halo_menu_option *halo_menu_option_create(unsigned int type, char *name, char *command);
+extern struct halo_menu_option *halo_menu_option_create(unsigned int type, char *name, char *description, char *command);
 extern void halo_menu_option_destroy(struct halo_menu_option *option);
 
 extern struct halo_menu *halo_menu_create(char *name);

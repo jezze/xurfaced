@@ -32,7 +32,7 @@ void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 
     int i;
 
-    float middle = height / 4;
+    float middle = height / 4 + height / 8;
     float offset = menu->animationProperties.translationY + menu->options[menu->current]->animationProperties.translationY;
     float distance = fabs(middle - offset);
 
@@ -49,20 +49,35 @@ void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
     for (i = 0; i < menu->count; i++)
     {
 
-        cairo_move_to(halo_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + menu->options[i]->animationProperties.translationY);
-        cairo_text_path(halo_cairo, menu->options[i]->name);
-
         if (i == menu->current)
             menu->options[i]->animationProperties.alpha += 1.0;
         else
             menu->options[i]->animationProperties.alpha -= 0.05;
 
-        if (menu->options[i]->animationProperties.alpha >= 1.0)
-            menu->options[i]->animationProperties.alpha = 1.0;
+        if (menu->options[i]->animationProperties.alpha >= 0.9)
+            menu->options[i]->animationProperties.alpha = 0.9;
 
-        if (menu->options[i]->animationProperties.alpha <= 0.4)
-            menu->options[i]->animationProperties.alpha = 0.4;
+        if (menu->options[i]->animationProperties.alpha <= 0.3)
+            menu->options[i]->animationProperties.alpha = 0.3;
 
+        cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+        cairo_move_to(halo_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + menu->options[i]->animationProperties.translationY);
+        cairo_set_font_size(halo_cairo, 18.0);
+        cairo_set_line_width(halo_cairo, 1.0);
+        cairo_text_path(halo_cairo, menu->options[i]->name);
+        cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, menu->options[i]->animationProperties.alpha);
+        cairo_fill(halo_cairo);
+        cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, menu->options[i]->animationProperties.alpha - 0.3);
+        cairo_stroke(halo_cairo);
+
+        if (i != menu->current)
+            continue;
+
+        cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+        cairo_move_to(halo_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + menu->options[i]->animationProperties.translationY + 16);
+        cairo_set_font_size(halo_cairo, 12.0);
+        cairo_set_line_width(halo_cairo, 1.0);
+        cairo_text_path(halo_cairo, menu->options[i]->description);
         cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, menu->options[i]->animationProperties.alpha);
         cairo_fill(halo_cairo);
         cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, menu->options[i]->animationProperties.alpha - 0.3);
@@ -101,14 +116,11 @@ void halo_surface_init(struct halo *halo)
     halo_surface = cairo_xlib_surface_create(halo->display, halo->main, XDefaultVisual(halo->display, 0), halo->screenWidth, halo->screenHeight);
 
     halo_cairo = cairo_create(halo_surface);
-    cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-    cairo_set_font_size(halo_cairo, 18.0);
-    cairo_set_line_width(halo_cairo, 1.0);
     cairo_set_line_cap(halo_cairo, CAIRO_LINE_CAP_ROUND);
 
     halo_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, halo->screenHeight);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.4, 0.0, 0.2, 1.0);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.0, 0.0, 0.2, 1.0);
+    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.2, 0.0, 0.3, 1.0);
+    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.8, 0.5, 0.7, 1.0);
 
 }
 
