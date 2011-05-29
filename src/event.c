@@ -121,7 +121,28 @@ static void halo_event_unmap(struct halo *halo, XUnmapEvent *event)
 static void halo_event_buttonpress(struct halo *halo, XButtonEvent *event)
 {
 
-    halo_menu_activate(halo->menues->current);
+    switch (event->button)
+    {
+
+        case 1:
+
+            halo_menu_activate(halo->menues->current);
+
+            break;
+
+        case 4:
+
+            halo_menu_previous(halo->menues->current);
+
+            break;
+
+        case 5:
+
+            halo_menu_next(halo->menues->current);
+
+            break;
+
+    }
 
     XSync(halo->display, 0);
 
@@ -129,7 +150,7 @@ static void halo_event_buttonpress(struct halo *halo, XButtonEvent *event)
 
 static void halo_event_motionnotify(struct halo *halo, XMotionEvent *event)
 {
-
+/*
     unsigned int cx = halo->screenWidth / 2;
     unsigned int cy = halo->screenHeight / 2;
 
@@ -141,7 +162,7 @@ static void halo_event_motionnotify(struct halo *halo, XMotionEvent *event)
     XWarpPointer(halo->display, 0, event->window, 0, 0, 0, 0, cx, cy);
 
     XSync(halo->display, 0);
-
+*/
 }
 
 static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
