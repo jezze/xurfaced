@@ -219,19 +219,24 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
     menu->animationProperties.translationY = middle;
     halo_menu_list_add(&menues, menu);
 
-    option = halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "Emulator: snes9x", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc");
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Super Mario World", "Emulator: snes9x", "snes9x-gtk /home/jfu/roms/SuperMarioWorld.smc");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 0;
     halo_menu_add_option(menu, option);
 
-    option = halo_menu_option_create(MENU_TYPE_EXEC, "NDS: Children of Mana", "Emulator: desmume", "desmume /home/jfu/roms/ChildrenOfMana.nds");
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "Emulator: snes9x", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 64;
     halo_menu_add_option(menu, option);
 
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "NDS: Children of Mana", "Emulator: desmume", "desmume /home/jfu/roms/ChildrenOfMana.nds");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 128;
+    halo_menu_add_option(menu, option);
+
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 192;
+    option->animationProperties.translationY = 256;
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("videos");

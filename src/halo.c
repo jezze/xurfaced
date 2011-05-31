@@ -20,8 +20,8 @@
 
 struct halo halo;
 
-static pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t mutexRender;
+static pthread_cond_t condRender;
 
 static void halo_init(struct halo *halo)
 {
@@ -45,16 +45,16 @@ static void halo_destroy(struct halo *halo)
 
 }
 
-static void *halo_thread_gui(void *p)
+static void *halo_thread_render(void *arg)
 {
 
-    struct halo *halo = (struct halo *)p;
+    struct halo *halo = (struct halo *)arg;
 
     struct timespec ts;
     struct timeval tv;
 
-    pthread_mutex_lock(&mutex);
-    pthread_cond_signal(&cond);
+    pthread_mutex_init(&mutexRender, 0);
+    pthread_cond_init(&condRender, 0);
 
     while (halo->running)
     {
@@ -68,21 +68,21 @@ static void *halo_thread_gui(void *p)
         ts.tv_nsec = tv.tv_usec * 1000;
         ts.tv_nsec += 10 * 1000 * 1000;
 
-        pthread_cond_timedwait(&cond, &mutex, &ts);
+        pthread_cond_timedwait(&condRender, &mutexRender, &ts);
 
     }
 
-    pthread_cond_destroy(&cond);
-    pthread_mutex_destroy(&mutex);
+    pthread_cond_destroy(&condRender);
+    pthread_mutex_destroy(&mutexRender);
 
     return 0;
 
 }
 
-static void *halo_thread_events(void *p)
+static void *halo_thread_events(void *arg)
 {
 
-    struct halo *halo = (struct halo *)p;
+    struct halo *halo = (struct halo *)arg;
 
     while (halo->running)
         halo_event_handler(halo);
@@ -97,13 +97,13 @@ static void halo_run(struct halo *halo)
     halo->running = 1;
     halo->paused = 0;
 
-    pthread_t threadGui;
+    pthread_t threadRender;
     pthread_t threadEvents;
 
-    pthread_create(&threadGui, 0, halo_thread_gui, halo);
+    pthread_create(&threadRender, 0, halo_thread_render, halo);
     pthread_create(&threadEvents, 0, halo_thread_events, halo);
 
-    pthread_join(threadGui, 0);
+    pthread_join(threadRender, 0);
     pthread_join(threadEvents, 0);
 
 }
