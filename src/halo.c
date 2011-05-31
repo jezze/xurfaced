@@ -53,9 +53,6 @@ static void *halo_thread_render(void *arg)
     struct timespec ts;
     struct timeval tv;
 
-    pthread_mutex_init(&mutexRender, 0);
-    pthread_cond_init(&condRender, 0);
-
     while (halo->running)
     {
 
@@ -71,9 +68,6 @@ static void *halo_thread_render(void *arg)
         pthread_cond_timedwait(&condRender, &mutexRender, &ts);
 
     }
-
-    pthread_cond_destroy(&condRender);
-    pthread_mutex_destroy(&mutexRender);
 
     return 0;
 
@@ -91,7 +85,7 @@ static void *halo_thread_events(void *arg)
 
 }
 
-static void halo_run(struct halo *halo)
+static void halo_start(struct halo *halo)
 {
 
     halo->running = 1;
@@ -100,11 +94,18 @@ static void halo_run(struct halo *halo)
     pthread_t threadRender;
     pthread_t threadEvents;
 
+    pthread_mutex_init(&mutexRender, 0);
+    pthread_cond_init(&condRender, 0);
+
     pthread_create(&threadRender, 0, halo_thread_render, halo);
     pthread_create(&threadEvents, 0, halo_thread_events, halo);
 
     pthread_join(threadRender, 0);
     pthread_join(threadEvents, 0);
+
+    pthread_cond_destroy(&condRender);
+    pthread_mutex_destroy(&mutexRender);
+
 
 }
 
@@ -112,7 +113,7 @@ int main(int argc, char *argv[])
 {
 
     halo_init(&halo);
-    halo_run(&halo);
+    halo_start(&halo);
     halo_destroy(&halo);
 
     return 0;
