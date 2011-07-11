@@ -31,6 +31,7 @@ static void halo_init(struct halo *halo)
     halo_surface_init(halo);
     halo->clients = halo_client_list_create();
     halo->menues = halo_menu_list_create(halo->screenWidth, halo->screenHeight);
+    pipe(halo->fd);
 
 }
 

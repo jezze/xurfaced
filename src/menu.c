@@ -59,6 +59,9 @@ static void halo_menu_option_execute(struct halo_menu_option *option)
     if (pid == 0)
     {
 
+        close(1);
+        dup(halo.fd[1]);
+
         if (halo.display)
             close(halo.connection);
 
@@ -269,9 +272,14 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
     menu->animationProperties.translationY = middle;
     halo_menu_list_add(&menues, menu);
 
-    option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "Echo", "Testing echo", "echo hejsan");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 0;
+    halo_menu_add_option(menu, option);
+
+    option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
+    option->animationProperties.translationX = 0;
+    option->animationProperties.translationY = 128;
     halo_menu_add_option(menu, option);
 
     menues.current = menues.head;
