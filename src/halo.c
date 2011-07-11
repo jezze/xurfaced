@@ -46,6 +46,27 @@ static void halo_destroy(struct halo *halo)
 
 }
 
+static void *halo_thread_read(void *arg)
+{
+
+    struct halo *halo = (struct halo *)arg;
+
+    FILE *input = fdopen(halo->fd[0], "r");
+
+    int ch = getc(input);
+
+    while (halo->running && ch != EOF)
+    {
+
+        fputc(ch, stdout);
+        ch = getc(input);
+
+    }
+
+    return 0;
+
+}
+
 static void *halo_thread_render(void *arg)
 {
 
@@ -82,6 +103,9 @@ static void *halo_thread_events(void *arg)
     while (halo->running)
         halo_event_handler(halo);
 
+    FILE *output = fdopen(halo->fd[0], "w");
+    fputc(EOF, output);
+
     return 0;
 
 }
@@ -92,17 +116,20 @@ static void halo_start(struct halo *halo)
     halo->running = 1;
     halo->paused = 0;
 
+    pthread_t threadRead;
     pthread_t threadRender;
     pthread_t threadEvents;
 
     pthread_mutex_init(&mutexRender, 0);
     pthread_cond_init(&condRender, 0);
 
+    pthread_create(&threadRead, 0, halo_thread_read, halo);
     pthread_create(&threadRender, 0, halo_thread_render, halo);
     pthread_create(&threadEvents, 0, halo_thread_events, halo);
 
-    pthread_join(threadRender, 0);
     pthread_join(threadEvents, 0);
+    pthread_join(threadRender, 0);
+    pthread_join(threadRead, 0);
 
     pthread_cond_destroy(&condRender);
     pthread_mutex_destroy(&mutexRender);
