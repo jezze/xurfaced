@@ -199,22 +199,22 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Videos", "Watch videos on your system or from an online streaming service", "show videos");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 64;
+    option->animationProperties.translationY = 80;
     halo_menu_add_option(menu, option);
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Music", "Connect to your online music provider and start listening", "show music");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 128;
+    option->animationProperties.translationY = 160;
     halo_menu_add_option(menu, option);
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Sessions", "Browse applications running on your system", "show sessions");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 192;
+    option->animationProperties.translationY = 240;
     halo_menu_add_option(menu, option);
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Quit", "Turn off your system", "quit");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 256;
+    option->animationProperties.translationY = 320;
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("games");
@@ -229,17 +229,17 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
 
     option = halo_menu_option_create(MENU_TYPE_EXEC, "SNES: Secret of Mana", "Emulator: snes9x", "snes9x-gtk /home/jfu/roms/SecretOfMana.smc");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 64;
+    option->animationProperties.translationY = 80;
     halo_menu_add_option(menu, option);
 
     option = halo_menu_option_create(MENU_TYPE_EXEC, "NDS: Children of Mana", "Emulator: desmume", "desmume /home/jfu/roms/ChildrenOfMana.nds");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 128;
+    option->animationProperties.translationY = 160;
     halo_menu_add_option(menu, option);
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 256;
+    option->animationProperties.translationY = 320;
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("videos");
@@ -254,7 +254,7 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 128;
+    option->animationProperties.translationY = 160;
     halo_menu_add_option(menu, option);
 
     menu = halo_menu_create("music");
@@ -279,7 +279,7 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
 
     option = halo_menu_option_create(MENU_TYPE_CTRL, "Return", "Return back to the home screen", "show home");
     option->animationProperties.translationX = 0;
-    option->animationProperties.translationY = 128;
+    option->animationProperties.translationY = 160;
     halo_menu_add_option(menu, option);
 
     menues.current = menues.head;
