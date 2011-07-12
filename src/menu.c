@@ -272,7 +272,7 @@ struct halo_menu_list *halo_menu_list_create(unsigned int width, unsigned int he
     menu->animationProperties.translationY = middle;
     halo_menu_list_add(&menues, menu);
 
-    option = halo_menu_option_create(MENU_TYPE_EXEC, "Echo", "Testing echo", "echo hejsan");
+    option = halo_menu_option_create(MENU_TYPE_EXEC, "Echo", "Testing echo", "cat ./share/main");
     option->animationProperties.translationX = 0;
     option->animationProperties.translationY = 0;
     halo_menu_add_option(menu, option);

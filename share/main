@@ -1,0 +1,2 @@
+item: {title: Super Mario; desc: Super Mario game; exec: snes9x sm.smc;}
+item: {title: Back; desc: Go back to main; exec: cat main.halo;}
