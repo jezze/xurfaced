@@ -14,11 +14,11 @@
 #include <menu.h>
 #include <surface.h>
 
-cairo_t *halo_cairo;
-cairo_surface_t *halo_surface;
-cairo_pattern_t *halo_background_pattern;
+static cairo_t *halo_cairo;
+static cairo_surface_t *halo_surface;
+static cairo_pattern_t *halo_background_pattern;
 
-void halo_surface_blit_background(struct halo *halo)
+static void halo_surface_blit_background(struct halo *halo)
 {
 
     cairo_rectangle(halo_cairo, 0, 0, halo->screenWidth, halo->screenHeight);
@@ -27,7 +27,7 @@ void halo_surface_blit_background(struct halo *halo)
 
 }
 
-void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
+static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 {
 
     int i;
@@ -93,7 +93,7 @@ void halo_surface_prep(struct halo *halo)
     cairo_push_group(halo_cairo);
 
     halo_surface_blit_background(halo);
-    halo_surface_blit_menu(halo->screenHeight, halo->menues->current);
+    halo_surface_blit_menu(halo->screenHeight, halo->menu);
 
     cairo_pop_group_to_source(halo_cairo);
 

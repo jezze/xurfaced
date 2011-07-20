@@ -18,7 +18,7 @@ struct halo
     Atom atom_net[4];
     int running;
     int paused;
-    struct halo_menu_list *menues;
+    struct halo_menu *menu;
     struct halo_client_list *clients;
     int fd[2];
 

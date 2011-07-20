@@ -126,19 +126,19 @@ static void halo_event_buttonpress(struct halo *halo, XButtonEvent *event)
 
         case 1:
 
-            halo_menu_activate(halo->menues->current);
+            halo_menu_activate(halo->menu);
 
             break;
 
         case 4:
 
-            halo_menu_previous(halo->menues->current);
+            halo_menu_previous(halo->menu);
 
             break;
 
         case 5:
 
-            halo_menu_next(halo->menues->current);
+            halo_menu_next(halo->menu);
 
             break;
 
@@ -155,9 +155,9 @@ static void halo_event_motionnotify(struct halo *halo, XMotionEvent *event)
     unsigned int cy = halo->screenHeight / 2;
 
     if (event->y < cy)
-        halo_menu_previous(halo->menues->current);
+        halo_menu_previous(halo->menu);
     else if (event->y > cy)
-        halo_menu_next(halo->menues->current);
+        halo_menu_next(halo->menu);
 
     XWarpPointer(halo->display, 0, event->window, 0, 0, 0, 0, cx, cy);
 
@@ -193,13 +193,13 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_Up:
 
-            halo_menu_previous(halo->menues->current);
+            halo_menu_previous(halo->menu);
 
             break;
 
         case XK_Down:
 
-            halo_menu_next(halo->menues->current);
+            halo_menu_next(halo->menu);
 
             break;
 
@@ -232,7 +232,7 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_Return:
 
-            halo_menu_activate(halo->menues->current);
+            halo_menu_activate(halo->menu);
 
             break;
 
