@@ -39,18 +39,16 @@ static void halo_execute(char *command)
     if (pid == -1)
         return;
 
-    int status;
-
     if (pid)
     {
+
+        int status;
+        wait(&status);
 
     }
 
     else
     {
-
-        close(1);
-        dup(halo.fd[1]);
 
         if (halo.display)
             close(halo.connection);
@@ -62,8 +60,6 @@ static void halo_execute(char *command)
         exit(EXIT_FAILURE);
 
     }
-
-    wait(&status);
 
 }
 
