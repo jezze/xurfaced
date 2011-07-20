@@ -1,10 +1,6 @@
 #ifndef HALO_MENU_H
 #define HALO_MENU_H
 
-#define MENU_TYPE_NULL 0
-#define MENU_TYPE_CTRL 1
-#define MENU_TYPE_EXEC 2
-
 struct animation_properties;
 
 struct halo_menu_option

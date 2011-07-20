@@ -5,6 +5,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
 #include <X11/extensions/Xcomposite.h>
@@ -37,6 +39,8 @@ static void halo_execute(char *command)
     if (pid == -1)
         return;
 
+    int status;
+
     if (pid)
     {
 
@@ -55,7 +59,11 @@ static void halo_execute(char *command)
 
         execvp(argv[0], argv);
 
+        exit(EXIT_FAILURE);
+
     }
+
+    wait(&status);
 
 }
 
@@ -90,11 +98,6 @@ static void halo_menu_add_option(struct halo_menu *menu, struct halo_menu_option
 
 }
 
-static void halo_menu_remove_option(struct halo_menu *menu, struct halo_menu_option *option)
-{
-
-}
-
 struct halo_menu *halo_menu_create()
 {
 
@@ -114,12 +117,7 @@ void halo_menu_destroy(struct halo_menu *menu)
     unsigned int i;
 
     for (i = 0; i < menu->count; i++)
-    {
-
-        halo_menu_remove_option(menu, menu->options[i]);
         halo_menu_option_destroy(menu->options[i]);
-
-    }
 
     free(menu);
 
@@ -128,7 +126,10 @@ void halo_menu_destroy(struct halo_menu *menu)
 void halo_menu_activate(struct halo_menu *menu)
 {
 
+    struct halo_menu *current = halo.menu;
     halo_execute(menu->options[menu->current]->command);
+    halo.menu = halo_menu_init(halo.screenWidth, halo.screenHeight);
+    halo_menu_destroy(current);
 
 }
 

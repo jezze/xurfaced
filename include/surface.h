@@ -1,6 +1,9 @@
 #ifndef HALO_SURFACE_H
 #define HALO_SURFACE_H
 
+#define HALO_SURFACE_MENU_BEFORE 12
+#define HALO_SURFACE_MENU_AFTER 12
+
 struct halo;
 
 extern void halo_surface_prep(struct halo *halo);
