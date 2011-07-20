@@ -132,16 +132,42 @@ void halo_menu_activate(struct halo_menu *menu)
 void halo_menu_next(struct halo_menu *menu)
 {
 
-    if (menu->current < menu->count - 1)
-        menu->current++;
+    int current = menu->current + 1;
+
+    for (; current < menu->count - 1; current++)
+    {
+
+        if (strlen(menu->options[current]->name))
+        {
+
+            menu->current = current;
+
+            return;
+
+        }
+
+    }
 
 }
 
 void halo_menu_previous(struct halo_menu *menu)
 {
 
-    if (menu->current > 0)
-        menu->current--;
+    int current = menu->current - 1;
+
+    for (; current > - 1; current--)
+    {
+
+        if (strlen(menu->options[current]->name))
+        {
+
+            menu->current = current;
+
+            return;
+
+        }
+
+    }
 
 }
 
