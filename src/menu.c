@@ -37,21 +37,15 @@ static void halo_execute(char *command)
     while ((argv[++i] = strtok(0, " ")));
 
     int pid = fork();
+    int pchild;
 
     if (pid == -1)
         return;
 
-    if (pid)
+    if (!pid)
     {
 
-        int status;
-
-        wait(&status);
-
-    }
-
-    else
-    {
+        pchild = getpid();
 
         if (halo.display)
             close(halo.connection);
@@ -64,6 +58,10 @@ static void halo_execute(char *command)
 
     }
 
+    int status;
+
+    wait(&status);
+
 }
 
 static void halo_interpret(char *command)
@@ -74,23 +72,15 @@ static void halo_interpret(char *command)
     pipe(halo.pipe);
 
     int pid = fork();
+    int pchild;
 
     if (pid == -1)
         return;
 
-    if (pid)
+    if (!pid)
     {
 
-        close(halo.pipe[1]);
-
-        int status;
-
-        wait(&status);
-
-    }
-
-    else
-    {
+        pchild = getpid();
 
         close(1);
         dup(halo.pipe[1]);
@@ -107,6 +97,12 @@ static void halo_interpret(char *command)
         exit(EXIT_FAILURE);
 
     }
+
+    close(halo.pipe[1]);
+
+    int status;
+
+    wait(&status);
 
 }
 
@@ -283,7 +279,23 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(file);
 
-    file = fopen("/home/jfu/.halo/init/desc", "r");
+    stat("/home/jfu/.halo/init/desc", &info);
+
+    if (info.st_mode & S_IXUSR)
+    {
+
+        halo_interpret("/home/jfu/.halo/init/desc");
+
+        file = fdopen(halo.pipe[0], "r");
+
+    }
+    
+    else
+    {
+
+        file = fopen("/home/jfu/.halo/init/desc", "r");
+
+    }
 
     if (!file)
         return 0;
@@ -304,7 +316,23 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(file);
 
-    file = fopen("/home/jfu/.halo/init/exec", "r");
+    stat("/home/jfu/.halo/init/exec", &info);
+
+    if (info.st_mode & S_IXUSR)
+    {
+
+        halo_interpret("/home/jfu/.halo/init/exec");
+
+        file = fdopen(halo.pipe[0], "r");
+
+    }
+    
+    else
+    {
+
+        file = fopen("/home/jfu/.halo/init/exec", "r");
+
+    }
 
     if (!file)
         return 0;
