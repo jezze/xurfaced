@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <pthread.h>
 #include <X11/Xlib.h>
 #include <X11/Xproto.h>
 #include <X11/extensions/Xcomposite.h>
@@ -19,6 +20,7 @@
 #include <halo.h>
 #include <menu.h>
 
+extern pthread_mutex_t mutexMenu;
 extern struct halo halo;
 
 static void halo_execute(char *command)
@@ -124,8 +126,11 @@ void halo_menu_activate(struct halo_menu *menu)
 
     struct halo_menu *current = halo.menu;
     halo_execute(menu->options[menu->current]->command);
+
+    pthread_mutex_lock(&mutexMenu);
     halo.menu = halo_menu_init(halo.screenWidth, halo.screenHeight);
     halo_menu_destroy(current);
+    pthread_mutex_unlock(&mutexMenu);
 
 }
 
@@ -134,7 +139,7 @@ void halo_menu_next(struct halo_menu *menu)
 
     int current = menu->current + 1;
 
-    for (; current < menu->count - 1; current++)
+    for (; current < menu->count; current++)
     {
 
         if (strlen(menu->options[current]->name))
