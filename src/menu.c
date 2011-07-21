@@ -45,12 +45,57 @@ static void halo_execute(char *command)
     {
 
         int status;
+
         wait(&status);
 
     }
 
     else
     {
+
+        if (halo.display)
+            close(halo.connection);
+
+        setsid();
+
+        execvp(argv[0], argv);
+
+        exit(EXIT_FAILURE);
+
+    }
+
+}
+
+static void halo_interpret(char *command)
+{
+
+    char *argv[] = {command, (char *)0};
+
+    pipe(halo.pipe);
+
+    int pid = fork();
+
+    if (pid == -1)
+        return;
+
+    if (pid)
+    {
+
+        close(halo.pipe[1]);
+
+        int status;
+
+        wait(&status);
+
+    }
+
+    else
+    {
+
+        close(1);
+        dup(halo.pipe[1]);
+        close(halo.pipe[0]);
+        close(halo.pipe[1]);
 
         if (halo.display)
             close(halo.connection);
@@ -128,8 +173,17 @@ void halo_menu_activate(struct halo_menu *menu)
     halo_execute(menu->options[menu->current]->command);
 
     pthread_mutex_lock(&mutexMenu);
-    halo.menu = halo_menu_init(halo.screenWidth, halo.screenHeight);
-    halo_menu_destroy(current);
+
+    struct halo_menu *new = halo_menu_init(halo.screenWidth, halo.screenHeight);
+
+    if (new)
+    {
+
+        halo.menu = new;
+        halo_menu_destroy(current);
+
+    }
+
     pthread_mutex_unlock(&mutexMenu);
 
 }
@@ -187,8 +241,25 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     FILE *file;
     char line[512];
     int i;
+    struct stat info;
 
-    file = fopen("/home/jfu/.halo/init/title", "r");
+    stat("/home/jfu/.halo/init/title", &info);
+
+    if (info.st_mode & S_IXUSR)
+    {
+
+        halo_interpret("/home/jfu/.halo/init/title");    
+
+        file = fdopen(halo.pipe[0], "r");
+
+    }
+    
+    else
+    {
+
+        file = fopen("/home/jfu/.halo/init/title", "r");
+
+    }
 
     if (!file)
         return 0;

@@ -20,6 +20,7 @@ struct halo
     int paused;
     struct halo_menu *menu;
     struct halo_client_list *clients;
+    int pipe[2];
 
 };
 
