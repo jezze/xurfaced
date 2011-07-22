@@ -21,6 +21,12 @@ struct halo
     struct halo_menu *menu;
     struct halo_client_list *clients;
     int pipe[2];
+    char *pathHome;
+    char pathConfig[128];
+    char pathInit[128];
+    char pathTitle[128];
+    char pathDesc[128];
+    char pathExec[128];
 
 };
 

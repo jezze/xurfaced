@@ -239,12 +239,12 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     int i;
     struct stat info;
 
-    stat("/home/jfu/.halo/init/title", &info);
+    stat(halo.pathTitle, &info);
 
     if (info.st_mode & S_IXUSR)
     {
 
-        halo_interpret("/home/jfu/.halo/init/title");    
+        halo_interpret(halo.pathTitle);
 
         file = fdopen(halo.pipe[0], "r");
 
@@ -253,7 +253,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     else
     {
 
-        file = fopen("/home/jfu/.halo/init/title", "r");
+        file = fopen(halo.pathTitle, "r");
 
     }
 
@@ -279,12 +279,12 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(file);
 
-    stat("/home/jfu/.halo/init/desc", &info);
+    stat(halo.pathDesc, &info);
 
     if (info.st_mode & S_IXUSR)
     {
 
-        halo_interpret("/home/jfu/.halo/init/desc");
+        halo_interpret(halo.pathDesc);
 
         file = fdopen(halo.pipe[0], "r");
 
@@ -293,7 +293,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     else
     {
 
-        file = fopen("/home/jfu/.halo/init/desc", "r");
+        file = fopen(halo.pathDesc, "r");
 
     }
 
@@ -316,12 +316,12 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(file);
 
-    stat("/home/jfu/.halo/init/exec", &info);
+    stat(halo.pathExec, &info);
 
     if (info.st_mode & S_IXUSR)
     {
 
-        halo_interpret("/home/jfu/.halo/init/exec");
+        halo_interpret(halo.pathExec);
 
         file = fdopen(halo.pipe[0], "r");
 
@@ -330,7 +330,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     else
     {
 
-        file = fopen("/home/jfu/.halo/init/exec", "r");
+        file = fopen(halo.pathExec, "r");
 
     }
 

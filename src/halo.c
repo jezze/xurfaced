@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <pthread.h>
@@ -26,6 +27,18 @@ static pthread_cond_t condRender;
 
 static void halo_init(struct halo *halo)
 {
+
+    halo->pathHome = getenv("HOME");
+    strcpy(halo->pathConfig, halo->pathHome);
+    strcat(halo->pathConfig, "/.halo");
+    strcpy(halo->pathInit, halo->pathConfig);
+    strcat(halo->pathInit, "/init");
+    strcpy(halo->pathTitle, halo->pathInit);
+    strcat(halo->pathTitle, "/title");
+    strcpy(halo->pathDesc, halo->pathInit);
+    strcat(halo->pathDesc, "/desc");
+    strcpy(halo->pathExec, halo->pathInit);
+    strcat(halo->pathExec, "/exec");
 
     halo_display_init(halo);
     halo_window_init(halo);
