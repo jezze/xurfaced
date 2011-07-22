@@ -197,6 +197,31 @@ void halo_menu_previous(struct halo_menu *menu)
 
 }
 
+static FILE *halo_open(char *path)
+{
+
+    struct stat info;
+    stat(halo.pathTitle, &info);
+
+    if (info.st_mode & S_IXUSR)
+    {
+
+        pipe(halo.pipe);
+        halo_execute(path, halo.pipe);
+
+        return fdopen(halo.pipe[0], "r");
+
+    }
+    
+    else
+    {
+
+        return fopen(path, "r");
+
+    }
+
+}
+
 struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 {
 
@@ -205,36 +230,17 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     menu->animationProperties.translationY = height / 4 + height / 8;
 
     struct halo_menu_option *option;
-    FILE *file;
     char line[4096];
     int i;
-    struct stat info;
 
-    stat(halo.pathTitle, &info);
+    FILE *fileTitle = halo_open(halo.pathTitle);
 
-    if (info.st_mode & S_IXUSR)
-    {
-
-        pipe(halo.pipe);
-        halo_execute(halo.pathTitle, halo.pipe);
-
-        file = fdopen(halo.pipe[0], "r");
-
-    }
-    
-    else
-    {
-
-        file = fopen(halo.pathTitle, "r");
-
-    }
-
-    if (!file)
+    if (!fileTitle)
         return 0;
 
     float y = 0;
 
-    while (fgets(line, 4096, file) != NULL)
+    while (fgets(line, 4096, fileTitle) != NULL)
     {
 
         line[strlen(line) - 1] = '\0';
@@ -249,33 +255,16 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     }
 
-    fclose(file);
+    fclose(fileTitle);
 
-    stat(halo.pathDesc, &info);
+    FILE *fileDesc = halo_open(halo.pathDesc);
 
-    if (info.st_mode & S_IXUSR)
-    {
-
-        pipe(halo.pipe);
-        halo_execute(halo.pathDesc, halo.pipe);
-
-        file = fdopen(halo.pipe[0], "r");
-
-    }
-    
-    else
-    {
-
-        file = fopen(halo.pathDesc, "r");
-
-    }
-
-    if (!file)
+    if (!fileDesc)
         return 0;
 
     i = 0;
 
-    while (fgets(line, 4096, file) != NULL)
+    while (fgets(line, 4096, fileDesc) != NULL)
     {
 
         line[strlen(line) - 1] = '\0';
@@ -287,33 +276,16 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     }
 
-    fclose(file);
+    fclose(fileDesc);
 
-    stat(halo.pathExec, &info);
+    FILE *fileExec = halo_open(halo.pathExec);
 
-    if (info.st_mode & S_IXUSR)
-    {
-
-        pipe(halo.pipe);
-        halo_execute(halo.pathExec, halo.pipe);
-
-        file = fdopen(halo.pipe[0], "r");
-
-    }
-    
-    else
-    {
-
-        file = fopen(halo.pathExec, "r");
-
-    }
-
-    if (!file)
+    if (!fileExec)
         return 0;
 
     i = 0;
 
-    while (fgets(line, 4096, file) != NULL)
+    while (fgets(line, 4096, fileExec) != NULL)
     {
 
         line[strlen(line) - 1] = '\0';
@@ -325,7 +297,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     }
 
-    fclose(file);
+    fclose(fileExec);
 
     return menu;
 
