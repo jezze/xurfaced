@@ -23,10 +23,10 @@
 extern pthread_mutex_t mutexMenu;
 extern struct halo halo;
 
-static void halo_execute(char *command)
+static void halo_execute(char *command, int pipe[])
 {
 
-    char args[256], *argv[32];
+    char args[4096], *argv[32];
 
     memcpy(args, command, strlen(command) + 1);
 
@@ -47,45 +47,15 @@ static void halo_execute(char *command)
 
         pchild = getpid();
 
-        if (halo.display)
-            close(halo.connection);
+        if (pipe)
+        {
 
-        setsid();
+            close(1);
+            dup(pipe[1]);
+            close(pipe[0]);
+            close(pipe[1]);
 
-        execvp(argv[0], argv);
-
-        exit(EXIT_FAILURE);
-
-    }
-
-    int status;
-
-    wait(&status);
-
-}
-
-static void halo_interpret(char *command)
-{
-
-    char *argv[] = {command, (char *)0};
-
-    pipe(halo.pipe);
-
-    int pid = fork();
-    int pchild;
-
-    if (pid == -1)
-        return;
-
-    if (!pid)
-    {
-
-        pchild = getpid();
-
-        close(1);
-        dup(halo.pipe[1]);
-        close(halo.pipe[0]);
-        close(halo.pipe[1]);
+        }
 
         if (halo.display)
             close(halo.connection);
@@ -98,7 +68,8 @@ static void halo_interpret(char *command)
 
     }
 
-    close(halo.pipe[1]);
+    if (pipe)
+        close(pipe[1]);
 
     int status;
 
@@ -166,7 +137,7 @@ void halo_menu_activate(struct halo_menu *menu)
 {
 
     struct halo_menu *current = halo.menu;
-    halo_execute(menu->options[menu->current]->command);
+    halo_execute(menu->options[menu->current]->command, 0);
 
     pthread_mutex_lock(&mutexMenu);
 
@@ -235,7 +206,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     struct halo_menu_option *option;
     FILE *file;
-    char line[512];
+    char line[4096];
     int i;
     struct stat info;
 
@@ -244,7 +215,8 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     if (info.st_mode & S_IXUSR)
     {
 
-        halo_interpret(halo.pathTitle);
+        pipe(halo.pipe);
+        halo_execute(halo.pathTitle, halo.pipe);
 
         file = fdopen(halo.pipe[0], "r");
 
@@ -262,7 +234,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     float y = 0;
 
-    while (fgets(line, 512, file) != NULL)
+    while (fgets(line, 4096, file) != NULL)
     {
 
         line[strlen(line) - 1] = '\0';
@@ -284,7 +256,8 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     if (info.st_mode & S_IXUSR)
     {
 
-        halo_interpret(halo.pathDesc);
+        pipe(halo.pipe);
+        halo_execute(halo.pathDesc, halo.pipe);
 
         file = fdopen(halo.pipe[0], "r");
 
@@ -302,7 +275,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     i = 0;
 
-    while (fgets(line, 512, file) != NULL)
+    while (fgets(line, 4096, file) != NULL)
     {
 
         line[strlen(line) - 1] = '\0';
@@ -321,7 +294,8 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     if (info.st_mode & S_IXUSR)
     {
 
-        halo_interpret(halo.pathExec);
+        pipe(halo.pipe);
+        halo_execute(halo.pathExec, halo.pipe);
 
         file = fdopen(halo.pipe[0], "r");
 
@@ -339,7 +313,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     i = 0;
 
-    while (fgets(line, 512, file) != NULL)
+    while (fgets(line, 4096, file) != NULL)
     {
 
         line[strlen(line) - 1] = '\0';
