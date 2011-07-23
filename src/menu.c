@@ -73,11 +73,11 @@ static void halo_execute(char *command, int pipe[])
 
         close(pipe[1]);
 
-        int status;
-
-        wait(&status);
-
     }
+
+    int status;
+
+    wait(&status);
 
 }
 
@@ -140,22 +140,21 @@ void halo_menu_destroy(struct halo_menu *menu)
 void halo_menu_activate(struct halo_menu *menu)
 {
 
-    struct halo_menu *current = halo.menu;
     halo_execute(menu->options[menu->current]->command, 0);
-
-    pthread_mutex_lock(&mutexMenu);
 
     struct halo_menu *new = halo_menu_init(halo.screenWidth, halo.screenHeight);
 
     if (new)
     {
 
+        pthread_mutex_lock(&mutexMenu);
+
+        halo_menu_destroy(menu);
         halo.menu = new;
-        halo_menu_destroy(current);
+
+        pthread_mutex_unlock(&mutexMenu);
 
     }
-
-    pthread_mutex_unlock(&mutexMenu);
 
 }
 
