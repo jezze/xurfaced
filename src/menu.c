@@ -201,7 +201,7 @@ static FILE *halo_open(char *path)
 {
 
     struct stat info;
-    stat(halo.pathTitle, &info);
+    stat(path, &info);
 
     if (info.st_mode & S_IXUSR)
     {
