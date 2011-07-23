@@ -1,10 +1,6 @@
 #include <stdlib.h>
 #include <X11/Xlib.h>
-#include <X11/Xproto.h>
-#include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xrender.h>
-#include <X11/extensions/Xfixes.h>
-#include <X11/extensions/shape.h>
 #include <client.h>
 
 struct halo_client_list clients;
