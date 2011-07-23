@@ -169,7 +169,11 @@ void halo_menu_next(struct halo_menu *menu)
         if (strlen(menu->options[current]->name))
         {
 
+            pthread_mutex_lock(&mutexMenu);
+
             menu->current = current;
+
+            pthread_mutex_unlock(&mutexMenu);
 
             return;
 
@@ -190,7 +194,11 @@ void halo_menu_previous(struct halo_menu *menu)
         if (strlen(menu->options[current]->name))
         {
 
+            pthread_mutex_lock(&mutexMenu);
+
             menu->current = current;
+
+            pthread_mutex_unlock(&mutexMenu);
 
             return;
 
