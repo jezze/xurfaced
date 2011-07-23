@@ -69,11 +69,15 @@ static void halo_execute(char *command, int pipe[])
     }
 
     if (pipe)
+    {
+
         close(pipe[1]);
 
-    int status;
+        int status;
 
-    wait(&status);
+        wait(&status);
+
+    }
 
 }
 
