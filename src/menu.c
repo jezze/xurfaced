@@ -9,14 +9,9 @@
 #include <sys/wait.h>
 #include <pthread.h>
 #include <X11/Xlib.h>
-#include <X11/Xproto.h>
-#include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xrender.h>
-#include <X11/extensions/Xfixes.h>
-#include <X11/extensions/shape.h>
 #include <limb/dlist.h>
 #include <animation.h>
-#include <client.h>
 #include <halo.h>
 #include <menu.h>
 
