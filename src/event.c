@@ -1,17 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <X11/Xlib.h>
-#include <X11/Xutil.h>
 #include <X11/keysym.h>
-#include <X11/Xproto.h>
-#include <X11/extensions/Xcomposite.h>
 #include <X11/extensions/Xrender.h>
-#include <X11/extensions/Xfixes.h>
-#include <X11/extensions/shape.h>
 #include <animation.h>
 #include <client.h>
 #include <menu.h>
-#include <surface.h>
 #include <halo.h>
 #include <event.h>
 
