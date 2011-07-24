@@ -68,11 +68,11 @@ static void halo_execute(char *command, int pipe[])
 
         close(pipe[1]);
 
+        int status;
+
+        wait(&status);
+
     }
-
-    int status;
-
-    wait(&status);
 
 }
 
@@ -238,6 +238,8 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     struct halo_menu_option *option;
     char line[4096];
     int i;
+
+    sleep(1);
 
     FILE *fileTitle = halo_open(halo.pathTitle);
 
