@@ -18,6 +18,9 @@ struct halo
     Atom atom_net[4];
     int running;
     int paused;
+    pthread_mutex_t mutexMenu;
+    pthread_mutex_t mutexRender;
+    pthread_cond_t condRender;
     struct halo_menu *menu;
     struct halo_client_list *clients;
     int pipe[2];

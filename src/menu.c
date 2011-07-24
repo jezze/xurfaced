@@ -15,7 +15,6 @@
 #include <halo.h>
 #include <menu.h>
 
-extern pthread_mutex_t mutexMenu;
 extern struct halo halo;
 
 static void halo_execute(char *command, int pipe[])
@@ -142,12 +141,12 @@ void halo_menu_activate(struct halo_menu *menu)
     if (new)
     {
 
-        pthread_mutex_lock(&mutexMenu);
+        pthread_mutex_lock(&halo.mutexMenu);
 
         halo_menu_destroy(menu);
         halo.menu = new;
 
-        pthread_mutex_unlock(&mutexMenu);
+        pthread_mutex_unlock(&halo.mutexMenu);
 
     }
 
@@ -164,11 +163,11 @@ void halo_menu_next(struct halo_menu *menu)
         if (strlen(menu->options[current]->name))
         {
 
-            pthread_mutex_lock(&mutexMenu);
+            pthread_mutex_lock(&halo.mutexMenu);
 
             menu->current = current;
 
-            pthread_mutex_unlock(&mutexMenu);
+            pthread_mutex_unlock(&halo.mutexMenu);
 
             return;
 
@@ -189,11 +188,11 @@ void halo_menu_previous(struct halo_menu *menu)
         if (strlen(menu->options[current]->name))
         {
 
-            pthread_mutex_lock(&mutexMenu);
+            pthread_mutex_lock(&halo.mutexMenu);
 
             menu->current = current;
 
-            pthread_mutex_unlock(&mutexMenu);
+            pthread_mutex_unlock(&halo.mutexMenu);
 
             return;
 

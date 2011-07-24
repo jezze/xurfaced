@@ -17,10 +17,6 @@
 
 struct halo halo;
 
-pthread_mutex_t mutexMenu;
-static pthread_mutex_t mutexRender;
-static pthread_cond_t condRender;
-
 static void halo_init(struct halo *halo)
 {
 
@@ -66,10 +62,10 @@ static void *halo_thread_render(void *arg)
     while (halo->running)
     {
 
-        pthread_mutex_lock(&mutexMenu);
+        pthread_mutex_lock(&halo->mutexMenu);
         halo_surface_prep(halo);
         halo_surface_blit(halo);
-        pthread_mutex_unlock(&mutexMenu);
+        pthread_mutex_unlock(&halo->mutexMenu);
 
         gettimeofday(&tv, 0);
 
@@ -77,7 +73,7 @@ static void *halo_thread_render(void *arg)
         ts.tv_nsec = tv.tv_usec * 1000;
         ts.tv_nsec += 10 * 1000 * 1000;
 
-        pthread_cond_timedwait(&condRender, &mutexRender, &ts);
+        pthread_cond_timedwait(&halo->condRender, &halo->mutexRender, &ts);
 
     }
 
@@ -103,9 +99,9 @@ static void halo_start(struct halo *halo)
     halo->running = 1;
     halo->paused = 0;
 
-    pthread_mutex_init(&mutexRender, 0);
-    pthread_cond_init(&condRender, 0);
-    pthread_mutex_init(&mutexMenu, 0);
+    pthread_mutex_init(&halo->mutexRender, 0);
+    pthread_cond_init(&halo->condRender, 0);
+    pthread_mutex_init(&halo->mutexMenu, 0);
 
     pthread_t threadRender;
     pthread_t threadEvents;
@@ -116,9 +112,9 @@ static void halo_start(struct halo *halo)
     pthread_join(threadEvents, 0);
     pthread_join(threadRender, 0);
 
-    pthread_cond_destroy(&condRender);
-    pthread_mutex_destroy(&mutexRender);
-
+    pthread_mutex_destroy(&halo->mutexMenu);
+    pthread_cond_destroy(&halo->condRender);
+    pthread_mutex_destroy(&halo->mutexRender);
 
 }
 
