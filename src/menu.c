@@ -136,20 +136,6 @@ void halo_menu_activate(struct halo_menu *menu)
 
     halo_execute(menu->options[menu->current]->command, 0);
 
-    struct halo_menu *new = halo_menu_init(halo.screenWidth, halo.screenHeight);
-
-    if (new)
-    {
-
-        pthread_mutex_lock(&halo.mutexMenu);
-
-        halo_menu_destroy(menu);
-        halo.menu = new;
-
-        pthread_mutex_unlock(&halo.mutexMenu);
-
-    }
-
 }
 
 void halo_menu_next(struct halo_menu *menu)
@@ -237,8 +223,6 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     struct halo_menu_option *option;
     char line[4096];
     int i;
-
-    sleep(1);
 
     FILE *fileTitle = halo_open(halo.pathTitle);
 

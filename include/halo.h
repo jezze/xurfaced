@@ -30,6 +30,7 @@ struct halo
     char pathTitle[128];
     char pathDesc[128];
     char pathExec[128];
+    char pathPid[128];
 
 };
 

@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 #include <unistd.h>
 #include <sys/time.h>
 #include <pthread.h>
@@ -17,6 +18,25 @@
 
 struct halo halo;
 
+static void halo_signal_usr1(int sig)
+{
+
+    struct halo_menu *new = halo_menu_init(halo.screenWidth, halo.screenHeight);
+
+    if (new)
+    {
+
+        pthread_mutex_lock(&halo.mutexMenu);
+
+        halo_menu_destroy(halo.menu);
+        halo.menu = new;
+
+        pthread_mutex_unlock(&halo.mutexMenu);
+
+    }
+
+}
+
 static void halo_init(struct halo *halo)
 {
 
@@ -31,6 +51,14 @@ static void halo_init(struct halo *halo)
     strcat(halo->pathDesc, "/desc");
     strcpy(halo->pathExec, halo->pathInit);
     strcat(halo->pathExec, "/exec");
+    strcpy(halo->pathPid, halo->pathConfig);
+    strcat(halo->pathPid, "/pid");
+
+    signal(SIGUSR1, halo_signal_usr1);
+
+    FILE *file = fopen(halo->pathPid, "w");
+    fprintf(file, "%d", getpid());
+    fclose(file);
 
     halo_display_init(halo);
     halo_window_init(halo);
