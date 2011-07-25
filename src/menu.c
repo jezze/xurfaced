@@ -83,6 +83,8 @@ struct halo_menu_option *halo_menu_option_create()
     option->description = 0;
     option->command = 0;
     option->animationProperties.alpha = 0;
+    option->next = 0;
+    option->prev = 0;
 
     return option;
 
@@ -95,6 +97,73 @@ void halo_menu_option_destroy(struct halo_menu_option *option)
     free(option->description);
     free(option->command);
     free(option);
+
+}
+
+struct halo_menu_option_list *halo_menu_option_list_create()
+{
+
+    struct halo_menu_option_list *list = malloc(sizeof (struct halo_menu_option_list));
+    list->head = 0;
+    list->current = 0;
+
+    return list;
+
+}
+
+void halo_menu_option_list_destroy(struct halo_menu_option_list *list)
+{
+
+    while (list->head)
+    {
+
+        halo_menu_option_list_remove(list, list->head);
+        halo_menu_option_destroy(list->head);
+
+    }
+
+    list->current = 0;
+    free(list);
+
+}
+
+void halo_menu_option_list_add(struct halo_menu_option_list *list, struct halo_menu_option *option)
+{
+
+    if (!list->head)
+    {
+
+        option->next = option;
+        option->prev = option;
+
+        list->head = option;
+
+    }
+
+    else
+    {
+
+        option->next = list->head;
+        option->prev = list->head->prev;
+
+        list->head->prev->next = option;
+        list->head->prev = option;
+
+    }
+
+}
+
+void halo_menu_option_list_remove(struct halo_menu_option_list *list, struct halo_menu_option *option)
+{
+
+    if (option == list->head)
+        list->head = option->next;
+
+    option->prev->next = option->next;
+    option->next->prev = option->prev;
+
+    if (option == option->next)
+        list->head = 0;
 
 }
 
@@ -114,6 +183,7 @@ struct halo_menu *halo_menu_create()
     menu->count = 0;
     menu->next = 0;
     menu->prev = 0;
+    menu->opts = halo_menu_option_list_create();
 
     return menu;
 
@@ -126,6 +196,8 @@ void halo_menu_destroy(struct halo_menu *menu)
 
     for (i = 0; i < menu->count; i++)
         halo_menu_option_destroy(menu->options[i]);
+
+    halo_menu_option_list_destroy(menu->opts);
 
     free(menu);
 

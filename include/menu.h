@@ -11,6 +11,16 @@ struct halo_menu_option
     char *description;
     char *command;
     struct animation_properties animationProperties;
+    struct halo_menu_option *next;
+    struct halo_menu_option *prev;
+
+};
+
+struct halo_menu_option_list
+{
+
+    struct halo_menu_option *head;
+    struct halo_menu_option *current;
 
 };
 
@@ -20,6 +30,7 @@ struct halo_menu
     int count;
     int current;
     struct halo_menu_option *options[32];
+    struct halo_menu_option_list *opts;
     struct halo_menu *next;
     struct halo_menu *prev;
     struct animation_properties animationProperties;
@@ -28,6 +39,11 @@ struct halo_menu
 
 extern struct halo_menu_option *halo_menu_option_create();
 extern void halo_menu_option_destroy(struct halo_menu_option *option);
+
+extern struct halo_menu_option_list *halo_menu_option_list_create();
+extern void halo_menu_option_list_destroy(struct halo_menu_option_list *list);
+extern void halo_menu_option_list_add(struct halo_menu_option_list *list, struct halo_menu_option *option);
+extern void halo_menu_option_list_remove(struct halo_menu_option_list *list, struct halo_menu_option *option);
 
 extern struct halo_menu *halo_menu_create();
 extern void halo_menu_destroy(struct halo_menu *menu);
