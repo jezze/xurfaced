@@ -27,12 +27,7 @@ struct halo_menu_option_list
 struct halo_menu
 {
 
-    int count;
-    int current;
-    struct halo_menu_option *options[32];
     struct halo_menu_option_list *opts;
-    struct halo_menu *next;
-    struct halo_menu *prev;
     struct animation_properties animationProperties;
 
 };

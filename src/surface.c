@@ -26,8 +26,10 @@ static void halo_surface_blit_background(struct halo *halo)
 static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 {
 
+    struct halo_menu_option *current = menu->opts->current;
+
     float middle = height / 4 + height / 8;
-    float offset = menu->animationProperties.translationY + menu->options[menu->current]->animationProperties.translationY;
+    float offset = menu->animationProperties.translationY + current->animationProperties.translationY;
     float distance = fabs(middle - offset);
 
     if (distance > 5.0)
@@ -40,25 +42,21 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 
     }
 
-    int min = (menu->current - HALO_SURFACE_MENU_BEFORE > 0) ? menu->current - HALO_SURFACE_MENU_BEFORE : 0;
-    int max = (menu->current + HALO_SURFACE_MENU_AFTER + 1 < menu->count) ? menu->current + HALO_SURFACE_MENU_AFTER + 1 : menu->count;
-    int i;
+    struct halo_menu_option *option = menu->opts->head;
 
-    for (i = min; i < max; i++)
+    do
     {
 
-        struct halo_menu_option *option = menu->options[i];
-
-        if (i == menu->current)
-            menu->options[i]->animationProperties.alpha += 1.0;
+        if (option == current)
+            option->animationProperties.alpha += 1.0;
         else
-            menu->options[i]->animationProperties.alpha -= 0.05;
+            option->animationProperties.alpha -= 0.05;
 
-        if (menu->options[i]->animationProperties.alpha >= 0.8)
-            menu->options[i]->animationProperties.alpha = 0.8;
+        if (option->animationProperties.alpha >= 0.8)
+            option->animationProperties.alpha = 0.8;
 
-        if (menu->options[i]->animationProperties.alpha <= 0.3)
-            menu->options[i]->animationProperties.alpha = 0.3;
+        if (option->animationProperties.alpha <= 0.3)
+            option->animationProperties.alpha = 0.3;
 
         cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
         cairo_move_to(halo_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY);
@@ -69,7 +67,7 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
         cairo_fill(halo_cairo);
         cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
         cairo_stroke(halo_cairo);
-
+/*
         if (i != menu->current)
             continue;
 
@@ -82,8 +80,12 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
         cairo_fill(halo_cairo);
         cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
         cairo_stroke(halo_cairo);
+*/
+
+        option = option->next;
 
     }
+    while (option != menu->opts->head);
 
 }
 

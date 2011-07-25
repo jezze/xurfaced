@@ -123,7 +123,6 @@ void halo_menu_option_list_destroy(struct halo_menu_option_list *list)
     }
 
     list->current = 0;
-    free(list);
 
 }
 
@@ -167,22 +166,10 @@ void halo_menu_option_list_remove(struct halo_menu_option_list *list, struct hal
 
 }
 
-static void halo_menu_add_option(struct halo_menu *menu, struct halo_menu_option *option)
-{
-
-    menu->options[menu->count] = option;
-    menu->count++;
-
-}
-
 struct halo_menu *halo_menu_create()
 {
 
     struct halo_menu *menu = malloc(sizeof (struct halo_menu));
-    menu->current = 0;
-    menu->count = 0;
-    menu->next = 0;
-    menu->prev = 0;
     menu->opts = halo_menu_option_list_create();
 
     return menu;
@@ -192,13 +179,9 @@ struct halo_menu *halo_menu_create()
 void halo_menu_destroy(struct halo_menu *menu)
 {
 
-    unsigned int i;
-
-    for (i = 0; i < menu->count; i++)
-        halo_menu_option_destroy(menu->options[i]);
-
     halo_menu_option_list_destroy(menu->opts);
 
+    free(menu->opts);
     free(menu);
 
 }
@@ -206,14 +189,36 @@ void halo_menu_destroy(struct halo_menu *menu)
 void halo_menu_activate(struct halo_menu *menu)
 {
 
-    if (strlen(menu->options[menu->current]->command))
-        halo_execute(menu->options[menu->current]->command, 0);
+    if (strlen(menu->opts->current->command))
+        halo_execute(menu->opts->current->command, 0);
 
 }
 
 void halo_menu_next(struct halo_menu *menu)
 {
 
+    struct halo_menu_option *option = menu->opts->current;
+
+    do
+    {
+
+        option = option->next;
+
+        if (strlen(option->name))
+        {
+
+            menu->opts->current = option;
+
+            return;
+
+        }
+
+    }
+    while (option != menu->opts->current);
+
+
+
+/*
     int current = menu->current + 1;
 
     for (; current < menu->count; current++)
@@ -233,12 +238,36 @@ void halo_menu_next(struct halo_menu *menu)
         }
 
     }
-
+*/
 }
 
 void halo_menu_previous(struct halo_menu *menu)
 {
 
+    struct halo_menu_option *option = menu->opts->current;
+
+    do
+    {
+
+        option = option->prev;
+
+        if (strlen(option->name))
+        {
+
+            menu->opts->current = option;
+
+            return;
+
+        }
+
+    }
+    while (option != menu->opts->current);
+
+
+
+
+
+/*
     int current = menu->current - 1;
 
     for (; current > - 1; current--)
@@ -258,7 +287,7 @@ void halo_menu_previous(struct halo_menu *menu)
         }
 
     }
-
+*/
 }
 
 static FILE *halo_open(char *path)
@@ -295,7 +324,6 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     struct halo_menu_option *option;
     char line[4096];
-    int i;
 
     FILE *fileTitle = halo_open(halo.pathTitle);
 
@@ -313,7 +341,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
         strcpy(option->name, line);
         option->animationProperties.translationX = 0;
         option->animationProperties.translationY = y;
-        halo_menu_add_option(menu, option);
+        halo_menu_option_list_add(menu->opts, option);
 
         y += 80.0;
 
@@ -326,17 +354,16 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     if (!fileDesc)
         return 0;
 
-    i = 0;
+    option = menu->opts->head;
 
     while (fgets(line, 4096, fileDesc) != NULL)
     {
 
         line[strlen(line) - 1] = '\0';
-        option = menu->options[i];
         option->description = (char *)malloc(strlen(line) + 1);
         strcpy(option->description, line);
 
-        i++;
+        option = option->next;
 
     }
 
@@ -347,21 +374,22 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     if (!fileExec)
         return 0;
 
-    i = 0;
+    option = menu->opts->head;
 
     while (fgets(line, 4096, fileExec) != NULL)
     {
 
         line[strlen(line) - 1] = '\0';
-        option = menu->options[i];
         option->command = (char *)malloc(strlen(line) + 1);
         strcpy(option->command, line);
 
-        i++;
+        option = option->next;
 
     }
 
     fclose(fileExec);
+
+    menu->opts->current = menu->opts->head;
 
     return menu;
 
