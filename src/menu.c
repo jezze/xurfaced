@@ -134,7 +134,8 @@ void halo_menu_destroy(struct halo_menu *menu)
 void halo_menu_activate(struct halo_menu *menu)
 {
 
-    halo_execute(menu->options[menu->current]->command, 0);
+    if (strlen(menu->options[menu->current]->command))
+        halo_execute(menu->options[menu->current]->command, 0);
 
 }
 
