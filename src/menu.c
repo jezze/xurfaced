@@ -205,6 +205,9 @@ void halo_menu_next(struct halo_menu *menu, unsigned int num)
 
     struct halo_menu_option *option = menu->opts->current;
 
+    if (option == menu->opts->head->prev)
+        return;
+
     while ((option = option->next))
     {
 
@@ -212,6 +215,9 @@ void halo_menu_next(struct halo_menu *menu, unsigned int num)
             continue;
 
         if (!--num)
+            break;
+
+        if (option == menu->opts->head->prev)
             break;
 
     }
@@ -225,6 +231,9 @@ void halo_menu_previous(struct halo_menu *menu, unsigned int num)
 
     struct halo_menu_option *option = menu->opts->current;
 
+    if (option == menu->opts->head)
+        return;
+
     while ((option = option->prev))
     {
 
@@ -232,6 +241,9 @@ void halo_menu_previous(struct halo_menu *menu, unsigned int num)
             continue;
 
         if (!--num)
+            break;
+
+        if (option == menu->opts->head)
             break;
 
     }
