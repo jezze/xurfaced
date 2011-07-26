@@ -44,14 +44,8 @@ static void halo_init(struct halo *halo)
     halo->pathHome = getenv("HOME");
     strcpy(halo->pathConfig, halo->pathHome);
     strcat(halo->pathConfig, "/.halo");
-    strcpy(halo->pathInit, halo->pathConfig);
-    strcat(halo->pathInit, "/init");
-    strcpy(halo->pathTitle, halo->pathInit);
-    strcat(halo->pathTitle, "/title");
-    strcpy(halo->pathDesc, halo->pathInit);
-    strcat(halo->pathDesc, "/desc");
-    strcpy(halo->pathExec, halo->pathInit);
-    strcat(halo->pathExec, "/exec");
+    strcpy(halo->pathHead, halo->pathConfig);
+    strcat(halo->pathHead, "/head");
     strcpy(halo->pathPid, halo->pathConfig);
     strcat(halo->pathPid, "/pid");
 

@@ -222,29 +222,6 @@ void halo_menu_next(struct halo_menu *menu)
     }
     while (option != menu->opts->current);
 
-
-
-/*
-    int current = menu->current + 1;
-
-    for (; current < menu->count; current++)
-    {
-
-        if (strlen(menu->options[current]->name))
-        {
-
-            pthread_mutex_lock(&halo.mutexMenu);
-
-            menu->current = current;
-
-            pthread_mutex_unlock(&halo.mutexMenu);
-
-            return;
-
-        }
-
-    }
-*/
 }
 
 void halo_menu_previous(struct halo_menu *menu)
@@ -269,31 +246,6 @@ void halo_menu_previous(struct halo_menu *menu)
     }
     while (option != menu->opts->current);
 
-
-
-
-
-/*
-    int current = menu->current - 1;
-
-    for (; current > - 1; current--)
-    {
-
-        if (strlen(menu->options[current]->name))
-        {
-
-            pthread_mutex_lock(&halo.mutexMenu);
-
-            menu->current = current;
-
-            pthread_mutex_unlock(&halo.mutexMenu);
-
-            return;
-
-        }
-
-    }
-*/
 }
 
 static FILE *halo_open(char *path)
@@ -328,23 +280,45 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     menu->animationProperties.translationX = width / 4;
     menu->animationProperties.translationY = height / 4 + height / 8;
 
-    struct halo_menu_option *option;
-    char line[4096];
+    char path[128];
+    char current[128];
+    char content[4096];
 
-    FILE *fileTitle = halo_open(halo.pathTitle);
+    FILE *head = fopen(halo.pathHead, "r");
+
+    if (fgets(path, 128, head) == NULL)
+    {
+
+        fprintf(stderr, "Could not read head\n");
+        exit(EXIT_FAILURE);
+
+    }
+
+    fclose(head);
+
+    path[strlen(path) - 1] = '\0';
+
+    strcpy(current, halo.pathConfig);
+    strcat(current, "/");
+    strcat(current, path);
+    strcat(current, "/title");
+
+    FILE *fileTitle = halo_open(current);
 
     if (!fileTitle)
         return 0;
 
     float y = 0;
 
-    while (fgets(line, 4096, fileTitle) != NULL)
+    struct halo_menu_option *option;
+
+    while (fgets(content, 4096, fileTitle) != NULL)
     {
 
-        line[strlen(line) - 1] = '\0';
+        content[strlen(content) - 1] = '\0';
         option = halo_menu_option_create();
-        option->name = (char *)malloc(strlen(line) + 1);
-        strcpy(option->name, line);
+        option->name = (char *)malloc(strlen(content) + 1);
+        strcpy(option->name, content);
         option->animationProperties.translationX = 0;
         option->animationProperties.translationY = y;
         halo_menu_option_list_add(menu->opts, option);
@@ -355,19 +329,24 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(fileTitle);
 
-    FILE *fileDesc = halo_open(halo.pathDesc);
+    strcpy(current, halo.pathConfig);
+    strcat(current, "/");
+    strcat(current, path);
+    strcat(current, "/desc");
+
+    FILE *fileDesc = halo_open(current);
 
     if (!fileDesc)
         return 0;
 
     option = menu->opts->head;
 
-    while (fgets(line, 4096, fileDesc) != NULL)
+    while (fgets(content, 4096, fileDesc) != NULL)
     {
 
-        line[strlen(line) - 1] = '\0';
-        option->description = (char *)malloc(strlen(line) + 1);
-        strcpy(option->description, line);
+        content[strlen(content) - 1] = '\0';
+        option->description = (char *)malloc(strlen(content) + 1);
+        strcpy(option->description, content);
 
         option = option->next;
 
@@ -375,19 +354,24 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(fileDesc);
 
-    FILE *fileExec = halo_open(halo.pathExec);
+    strcpy(current, halo.pathConfig);
+    strcat(current, "/");
+    strcat(current, path);
+    strcat(current, "/exec");
+
+    FILE *fileExec = halo_open(current);
 
     if (!fileExec)
         return 0;
 
     option = menu->opts->head;
 
-    while (fgets(line, 4096, fileExec) != NULL)
+    while (fgets(content, 4096, fileExec) != NULL)
     {
 
-        line[strlen(line) - 1] = '\0';
-        option->command = (char *)malloc(strlen(line) + 1);
-        strcpy(option->command, line);
+        content[strlen(content) - 1] = '\0';
+        option->command = (char *)malloc(strlen(content) + 1);
+        strcpy(option->command, content);
 
         option = option->next;
 

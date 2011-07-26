@@ -26,10 +26,7 @@ struct halo
     int pipe[2];
     char *pathHome;
     char pathConfig[128];
-    char pathInit[128];
-    char pathTitle[128];
-    char pathDesc[128];
-    char pathExec[128];
+    char pathHead[128];
     char pathPid[128];
 
 };
