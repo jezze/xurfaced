@@ -1,0 +1,8 @@
+#!/bin/bash
+
+pid=$(cat $HOME/.halo/pid)
+
+echo "$HOME/.halo/sethead browse"
+echo "$HOME/.halo/sethead system"
+echo ""
+echo "kill -SIGKILL $pid"

@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "$HOME/.halo/sethead main"
+echo ""
+echo ""
