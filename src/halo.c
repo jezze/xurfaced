@@ -28,7 +28,8 @@ static void halo_signal_usr1(int sig)
 
         pthread_mutex_lock(&halo.mutexMenu);
 
-//        halo_menu_destroy(halo.menu);
+        halo_menu_destroy(halo.menu);
+
         halo.menu = new;
 
         pthread_mutex_unlock(&halo.mutexMenu);

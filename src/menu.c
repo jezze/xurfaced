@@ -114,13 +114,19 @@ struct halo_menu_option_list *halo_menu_option_list_create()
 void halo_menu_option_list_destroy(struct halo_menu_option_list *list)
 {
 
-    while (list->head)
+    struct halo_menu_option *current = list->head;
+
+    do
     {
 
-        halo_menu_option_list_remove(list, list->head);
-        halo_menu_option_destroy(list->head);
+        struct halo_menu_option *next = current->next;
+
+        halo_menu_option_destroy(current);
+
+        current = next;
 
     }
+    while (current != list->head);
 
     list->current = 0;
 
