@@ -42,12 +42,10 @@ static void halo_init(struct halo *halo)
 {
 
     halo->pathHome = getenv("HOME");
-    strcpy(halo->pathConfig, halo->pathHome);
-    strcat(halo->pathConfig, "/.halo");
-    strcpy(halo->pathHead, halo->pathConfig);
-    strcat(halo->pathHead, "/head");
-    strcpy(halo->pathPid, halo->pathConfig);
-    strcat(halo->pathPid, "/pid");
+
+    sprintf(halo->pathConfig, "%s/.halo", halo->pathHome);
+    sprintf(halo->pathHead, "%s/head", halo->pathConfig);
+    sprintf(halo->pathPid, "%s/pid", halo->pathConfig);
 
     signal(SIGUSR1, halo_signal_usr1);
 
