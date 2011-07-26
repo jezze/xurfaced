@@ -142,23 +142,6 @@ static void halo_event_buttonpress(struct halo *halo, XButtonEvent *event)
 
 }
 
-static void halo_event_motionnotify(struct halo *halo, XMotionEvent *event)
-{
-/*
-    unsigned int cx = halo->screenWidth / 2;
-    unsigned int cy = halo->screenHeight / 2;
-
-    if (event->y < cy)
-        halo_menu_previous(halo->menu);
-    else if (event->y > cy)
-        halo_menu_next(halo->menu);
-
-    XWarpPointer(halo->display, 0, event->window, 0, 0, 0, 0, cx, cy);
-
-    XSync(halo->display, 0);
-*/
-}
-
 static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 {
 
@@ -260,12 +243,6 @@ void halo_event_handler(struct halo *halo)
         case KeyPress:
 
             halo_event_keypress(halo, &event.xkey);
-
-            break;
-
-        case MotionNotify:
-
-            halo_event_motionnotify(halo, &event.xmotion);
 
             break;
 

@@ -50,7 +50,7 @@ static void halo_window_init_base(struct halo *halo)
 
 //    XShapeSelectInput(halo->display, halo->main, ShapeNotifyMask);
 
-    XSelectInput(halo->display, halo->main, ButtonPressMask | PointerMotionMask | KeyPressMask);
+    XSelectInput(halo->display, halo->main, ButtonPressMask | KeyPressMask);
     XMapWindow(halo->display, halo->main);
 
     XSync(halo->display, 0);
