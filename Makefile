@@ -13,6 +13,8 @@ halo:
 
 install:
 	cp ./halo /usr/bin/
+	mkdir -p /usr/share/halo
+	cp -r ./share/* /usr/share/halo
 
 clean:
 	rm -f halo
