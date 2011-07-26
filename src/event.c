@@ -126,13 +126,13 @@ static void halo_event_buttonpress(struct halo *halo, XButtonEvent *event)
 
         case 4:
 
-            halo_menu_previous(halo->menu);
+            halo_menu_previous(halo->menu, 1);
 
             break;
 
         case 5:
 
-            halo_menu_next(halo->menu);
+            halo_menu_next(halo->menu, 1);
 
             break;
 
@@ -170,13 +170,25 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
         case XK_Up:
 
-            halo_menu_previous(halo->menu);
+            halo_menu_previous(halo->menu, 1);
+
+            break;
+
+        case XK_Page_Up:
+
+            halo_menu_previous(halo->menu, 8);
 
             break;
 
         case XK_Down:
 
-            halo_menu_next(halo->menu);
+            halo_menu_next(halo->menu, 1);
+
+            break;
+
+        case XK_Page_Down:
+
+            halo_menu_next(halo->menu, 8);
 
             break;
 

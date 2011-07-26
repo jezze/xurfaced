@@ -200,51 +200,43 @@ void halo_menu_activate(struct halo_menu *menu)
 
 }
 
-void halo_menu_next(struct halo_menu *menu)
+void halo_menu_next(struct halo_menu *menu, unsigned int num)
 {
 
     struct halo_menu_option *option = menu->opts->current;
 
-    do
+    while ((option = option->next))
     {
 
-        option = option->next;
+        if (!strlen(option->name))
+            continue;
 
-        if (strlen(option->name))
-        {
-
-            menu->opts->current = option;
-
-            return;
-
-        }
+        if (!--num)
+            break;
 
     }
-    while (option != menu->opts->current);
+
+    menu->opts->current = option;
 
 }
 
-void halo_menu_previous(struct halo_menu *menu)
+void halo_menu_previous(struct halo_menu *menu, unsigned int num)
 {
 
     struct halo_menu_option *option = menu->opts->current;
 
-    do
+    while ((option = option->prev))
     {
 
-        option = option->prev;
+        if (!strlen(option->name))
+            continue;
 
-        if (strlen(option->name))
-        {
-
-            menu->opts->current = option;
-
-            return;
-
-        }
+        if (!--num)
+            break;
 
     }
-    while (option != menu->opts->current);
+
+    menu->opts->current = option;
 
 }
 

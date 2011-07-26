@@ -43,8 +43,8 @@ extern void halo_menu_option_list_remove(struct halo_menu_option_list *list, str
 extern struct halo_menu *halo_menu_create();
 extern void halo_menu_destroy(struct halo_menu *menu);
 extern void halo_menu_activate(struct halo_menu *menu);
-extern void halo_menu_next(struct halo_menu *menu);
-extern void halo_menu_previous(struct halo_menu *menu);
+extern void halo_menu_next(struct halo_menu *menu, unsigned int num);
+extern void halo_menu_previous(struct halo_menu *menu, unsigned int num);
 extern struct halo_menu *halo_menu_init(unsigned int width, unsigned int height);
 
 #endif
