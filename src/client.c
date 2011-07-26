@@ -3,8 +3,6 @@
 #include <X11/extensions/Xrender.h>
 #include <client.h>
 
-struct halo_client_list clients;
-
 struct halo_client *halo_client_create(Window window)
 {
 
@@ -28,23 +26,30 @@ void halo_client_destroy(struct halo_client *client)
 struct halo_client_list *halo_client_list_create()
 {
 
-    clients.head = 0;
-    clients.current = 0;
+    struct halo_client_list *list = malloc(sizeof (struct halo_client_list));
+    list->head = 0;
+    list->current = 0;
 
-    return &clients;
+    return list;
 
 }
 
 void halo_client_list_destroy(struct halo_client_list *list)
 {
 
-    while (list->head)
+    struct halo_client *current = list->head;
+
+    do
     {
 
-        halo_client_list_remove(list, list->head);
-        halo_client_destroy(list->head);
+        struct halo_client *next = current->next;
+
+        halo_client_destroy(current);
+
+        current = next;
 
     }
+    while (current != list->head);
 
     list->current = 0;
 
