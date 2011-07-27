@@ -58,9 +58,9 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 
     }
     
-    struct halo_menu_option *option;
+    struct halo_menu_option *option = start;
 
-    for (option = start; option != stop->next; option = option->next)
+    do
     {
 
         if (option == current)
@@ -84,20 +84,25 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
         cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
         cairo_stroke(halo_cairo);
 
-        if (option != current)
-            continue;
+        if (option == current)
+        {
 
-        cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-        cairo_move_to(halo_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY + 24);
-        cairo_set_font_size(halo_cairo, 18.0);
-        cairo_set_line_width(halo_cairo, 2.0);
-        cairo_text_path(halo_cairo, option->description);
-        cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, option->animationProperties.alpha);
-        cairo_fill(halo_cairo);
-        cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
-        cairo_stroke(halo_cairo);
+            cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+            cairo_move_to(halo_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY + 24);
+            cairo_set_font_size(halo_cairo, 18.0);
+            cairo_set_line_width(halo_cairo, 2.0);
+            cairo_text_path(halo_cairo, option->description);
+            cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, option->animationProperties.alpha);
+            cairo_fill(halo_cairo);
+            cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
+            cairo_stroke(halo_cairo);
+
+        }
+
+        option = option->next;
 
     }
+    while (option != stop->next);
 
 }
 
