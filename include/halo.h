@@ -22,7 +22,7 @@ struct halo_xlib_backend
 struct halo
 {
 
-    struct halo_xlib_backend backend;
+    struct halo_xlib_backend *backend;
     int running;
     int paused;
     pthread_mutex_t mutexMenu;

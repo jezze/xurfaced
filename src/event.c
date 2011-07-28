@@ -15,28 +15,28 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
     XWindowChanges wc;
     wc.x = 0;
     wc.y = 0;
-    wc.width = halo->backend.screenWidth;
-    wc.height = halo->backend.screenHeight;
+    wc.width = halo->backend->screenWidth;
+    wc.height = halo->backend->screenHeight;
     wc.border_width = 0;
     wc.sibling = event->above;
     wc.stack_mode = event->detail;
 
-    XConfigureWindow(halo->backend.display, event->window, event->value_mask, &wc);
+    XConfigureWindow(halo->backend->display, event->window, event->value_mask, &wc);
 
     XConfigureEvent ce;
     ce.type = ConfigureNotify;
-    ce.display = halo->backend.display;
+    ce.display = halo->backend->display;
     ce.event = event->window;
     ce.window = event->window;
     ce.x = 0;
     ce.y = 0;
-    ce.width = halo->backend.screenWidth;
-    ce.height = halo->backend.screenHeight;
+    ce.width = halo->backend->screenWidth;
+    ce.height = halo->backend->screenHeight;
     ce.border_width = 0;
     ce.above = 0;
     ce.override_redirect = 0;
 
-    XSendEvent(halo->backend.display, event->window, 0, StructureNotifyMask, (XEvent *)&ce);
+    XSendEvent(halo->backend->display, event->window, 0, StructureNotifyMask, (XEvent *)&ce);
 
 }
 
@@ -48,7 +48,7 @@ static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *eve
     if (!client)
     {
 
-        XSync(halo->backend.display, 0);
+        XSync(halo->backend->display, 0);
 
         return;
 
@@ -61,9 +61,9 @@ static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *eve
 
     halo->paused = 0;
 
-    XRaiseWindow(halo->backend.display, halo->backend.main);
-    XSetInputFocus(halo->backend.display, halo->backend.main, RevertToParent, CurrentTime);
-    XSync(halo->backend.display, 0);
+    XRaiseWindow(halo->backend->display, halo->backend->main);
+    XSetInputFocus(halo->backend->display, halo->backend->main, RevertToParent, CurrentTime);
+    XSync(halo->backend->display, 0);
 
 }
 
@@ -86,22 +86,22 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
     halo_client_list_add(halo->clients, client);
     halo->clients->current = client;
 
-    XSelectInput(halo->backend.display, client->window, StructureNotifyMask | PropertyChangeMask);
-    XRaiseWindow(halo->backend.display, client->window);
-    XMoveResizeWindow(halo->backend.display, client->window, 0, 0, halo->backend.screenWidth, halo->backend.screenHeight);
-    XMapWindow(halo->backend.display, client->window);
-    XSetInputFocus(halo->backend.display, client->window, RevertToParent, CurrentTime);
-    XSync(halo->backend.display, 0);
+    XSelectInput(halo->backend->display, client->window, StructureNotifyMask | PropertyChangeMask);
+    XRaiseWindow(halo->backend->display, client->window);
+    XMoveResizeWindow(halo->backend->display, client->window, 0, 0, halo->backend->screenWidth, halo->backend->screenHeight);
+    XMapWindow(halo->backend->display, client->window);
+    XSetInputFocus(halo->backend->display, client->window, RevertToParent, CurrentTime);
+    XSync(halo->backend->display, 0);
 
     XWindowAttributes wa;
-    XGetWindowAttributes(halo->backend.display, client->window, &wa);
+    XGetWindowAttributes(halo->backend->display, client->window, &wa);
 
-    XRenderPictFormat *format = XRenderFindVisualFormat(halo->backend.display, wa.visual);
+    XRenderPictFormat *format = XRenderFindVisualFormat(halo->backend->display, wa.visual);
 
     XRenderPictureAttributes pa;
     pa.subwindow_mode = IncludeInferiors;
 
-    client->picture = XRenderCreatePicture(halo->backend.display, client->window, format, CPSubwindowMode, &pa);
+    client->picture = XRenderCreatePicture(halo->backend->display, client->window, format, CPSubwindowMode, &pa);
 
     halo->paused = 1;
 
@@ -138,7 +138,7 @@ static void halo_event_buttonpress(struct halo *halo, XButtonEvent *event)
 
     }
 
-    XSync(halo->backend.display, 0);
+    XSync(halo->backend->display, 0);
 
 }
 
@@ -158,7 +158,7 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
             if (!halo->clients->current)
                 break;
 
-    		XKillClient(halo->backend.display, halo->clients->current->window);
+    		XKillClient(halo->backend->display, halo->clients->current->window);
 
             break;
 
@@ -202,8 +202,8 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
             halo->clients->current = halo->clients->current->next;
 
-            XRaiseWindow(halo->backend.display, halo->clients->current->window);
-            XSetInputFocus(halo->backend.display, halo->clients->current->window, RevertToParent, CurrentTime);
+            XRaiseWindow(halo->backend->display, halo->clients->current->window);
+            XSetInputFocus(halo->backend->display, halo->clients->current->window, RevertToParent, CurrentTime);
 
             break;
 
@@ -214,8 +214,8 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
             halo->paused = 0;
 
-            XRaiseWindow(halo->backend.display, halo->backend.main);
-            XSetInputFocus(halo->backend.display, halo->backend.main, RevertToParent, CurrentTime);
+            XRaiseWindow(halo->backend->display, halo->backend->main);
+            XSetInputFocus(halo->backend->display, halo->backend->main, RevertToParent, CurrentTime);
 
             break;
 
@@ -227,7 +227,7 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
 
     }
 
-    XSync(halo->backend.display, 0);
+    XSync(halo->backend->display, 0);
 
 }
 
@@ -235,7 +235,7 @@ void halo_event_handler(struct halo *halo)
 {
 
     XEvent event;
-    XNextEvent(halo->backend.display, &event);
+    XNextEvent(halo->backend->display, &event);
 
     switch (event.type)
     {

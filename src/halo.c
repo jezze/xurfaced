@@ -25,7 +25,7 @@ static void halo_destroy(struct halo *halo)
     halo_client_list_destroy(halo->clients);
     halo_surface_destroy(halo);
     halo_window_destroy(halo);
-    halo_display_destroy(halo);
+    halo_display_destroy(halo->backend);
 
 }
 
@@ -39,7 +39,7 @@ static void halo_signal_term(int sig)
 static void halo_signal_usr1(int sig)
 {
 
-    struct halo_menu *new = halo_menu_init(halo.backend.screenWidth, halo.backend.screenHeight);
+    struct halo_menu *new = halo_menu_init(halo.backend->screenWidth, halo.backend->screenHeight);
 
     if (new)
     {
@@ -72,11 +72,11 @@ static void halo_init(struct halo *halo)
     fprintf(file, "%d", getpid());
     fclose(file);
 
-    halo_display_init(halo);
+    halo->backend = halo_display_create();
     halo_window_init(halo);
     halo_surface_init(halo);
     halo->clients = halo_client_list_create();
-    halo->menu = halo_menu_init(halo->backend.screenWidth, halo->backend.screenHeight);
+    halo->menu = halo_menu_init(halo->backend->screenWidth, halo->backend->screenHeight);
 
 }
 

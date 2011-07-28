@@ -1,10 +1,8 @@
 #ifndef HALO_DISPLAY_H
 #define HALO_DISPLAY_H
 
-struct halo;
-
-extern void halo_display_init(struct halo *halo);
-extern void halo_display_destroy(struct halo *halo);
+extern struct halo_xlib_backend *halo_display_create();
+extern void halo_display_destroy(struct halo_xlib_backend *backend);
 
 #endif
 

@@ -5,14 +5,15 @@
 #include <display.h>
 #include <halo.h>
 
-void halo_display_init(struct halo *halo)
+struct halo_xlib_backend *halo_display_create()
 {
 
     XInitThreads();
 
-    halo->backend.display = XOpenDisplay(0);
+    struct halo_xlib_backend *backend = malloc(sizeof (struct halo_xlib_backend));
+    backend->display = XOpenDisplay(0);
 
-    if (!halo->backend.display)
+    if (!backend->display)
     {
 
         fprintf(stderr, "halo: can not open display\n");
@@ -20,17 +21,20 @@ void halo_display_init(struct halo *halo)
 
     }
 
-    halo->backend.descriptor = XConnectionNumber(halo->backend.display);
-    halo->backend.screen = XDefaultScreen(halo->backend.display);
-    halo->backend.screenWidth = XDisplayWidth(halo->backend.display, halo->backend.screen);
-    halo->backend.screenHeight = XDisplayHeight(halo->backend.display, halo->backend.screen);
+    backend->descriptor = XConnectionNumber(backend->display);
+    backend->screen = XDefaultScreen(backend->display);
+    backend->screenWidth = XDisplayWidth(backend->display, backend->screen);
+    backend->screenHeight = XDisplayHeight(backend->display, backend->screen);
+
+    return backend;
 
 }
 
-void halo_display_destroy(struct halo *halo)
+void halo_display_destroy(struct halo_xlib_backend *backend)
 {
 
-    XCloseDisplay(halo->backend.display);
+    XCloseDisplay(backend->display);
+    free(backend);
 
 }
 

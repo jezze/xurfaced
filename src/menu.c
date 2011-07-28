@@ -51,8 +51,8 @@ static void halo_execute(char *command, int pipe[])
 
         }
 
-        if (halo.backend.display)
-            close(halo.backend.descriptor);
+        if (halo.backend->display)
+            close(halo.backend->descriptor);
 
         setsid();
 
