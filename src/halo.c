@@ -45,7 +45,9 @@ static void halo_signal_usr1(int sig)
     {
 
         pthread_mutex_lock(&halo.mutexMenu);
-        halo_menu_destroy(halo.menu);
+
+        if (halo.menu)
+            halo_menu_destroy(halo.menu);
 
         halo.menu = new;
 
@@ -72,13 +74,21 @@ static void halo_init(struct halo *halo)
     fprintf(file, "%d", getpid());
     fclose(file);
 
+    sync();
+
     halo->backend = halo_display_create();
 
     halo_window_init(halo->backend);
     halo_surface_init(halo);
     
     halo->clients = halo_client_list_create();
-    halo->menu = halo_menu_init(halo->backend->width, halo->backend->height);
+
+    char pathInit[128];
+    int sleep;
+
+    sprintf(pathInit, "%s/init", halo->pathConfig);
+    halo_execute(pathInit, 0);
+    wait(&sleep);
 
 }
 

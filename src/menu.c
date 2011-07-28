@@ -18,7 +18,7 @@
 
 extern struct halo halo;
 
-static void halo_execute(char *command, int pipe[])
+void halo_execute(char *command, int pipe[])
 {
 
     char args[4096], *argv[32];

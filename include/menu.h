@@ -32,6 +32,8 @@ struct halo_menu
 
 };
 
+extern void halo_execute(char *command, int pipe[]);
+
 extern struct halo_menu_option *halo_menu_option_create();
 extern void halo_menu_option_destroy(struct halo_menu_option *option);
 
