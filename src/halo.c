@@ -3,6 +3,7 @@
 #include <string.h>
 #include <signal.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/wait.h>
 #include <pthread.h>
@@ -61,9 +62,24 @@ static void halo_signal_usr1(int sig)
 static void halo_init(struct halo *halo)
 {
 
+    int status;
+    struct stat info;
+
     halo->pathHome = getenv("HOME");
 
     sprintf(halo->pathConfig, "%s/.halo", halo->pathHome);
+
+    if (stat(halo->pathConfig, &info) == -1)
+    {
+
+        char copyCmd[128];
+
+        sprintf(copyCmd, "/bin/cp -r /usr/share/halo %s", halo->pathConfig);
+        
+        system(copyCmd);
+
+    }
+
     sprintf(halo->pathHead, "%s/head", halo->pathConfig);
     sprintf(halo->pathPid, "%s/pid", halo->pathConfig);
     sprintf(halo->pathNotify, "%s/notify", halo->pathConfig);
@@ -74,7 +90,6 @@ static void halo_init(struct halo *halo)
     
     fprintf(file, "%d", getpid());
     fclose(file);
-
     sync();
 
     halo->backend = halo_display_create();
@@ -85,11 +100,10 @@ static void halo_init(struct halo *halo)
     halo->clients = halo_client_list_create();
 
     char pathInit[128];
-    int sleep;
 
     sprintf(pathInit, "%s/init", halo->pathConfig);
     halo_execute(pathInit, 0);
-    wait(&sleep);
+    wait(&status);
 
 }
 
