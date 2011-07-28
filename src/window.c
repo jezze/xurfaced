@@ -11,49 +11,49 @@
 static void halo_window_init_root(struct halo *halo)
 {
 
-    halo->root = XRootWindow(halo->display, halo->screen);
+    halo->backend.root = XRootWindow(halo->backend.display, halo->backend.screen);
 
-    XSelectInput(halo->display, halo->root, SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask | PropertyChangeMask);
+    XSelectInput(halo->backend.display, halo->backend.root, SubstructureRedirectMask | SubstructureNotifyMask | StructureNotifyMask | PropertyChangeMask);
 
-    halo->atom_net[0] = XInternAtom(halo->display, "_NET_SUPPORTED", 0);
-    halo->atom_net[1] = XInternAtom(halo->display, "_NET_WM_NAME", 0);
-    halo->atom_net[2] = XInternAtom(halo->display, "_NET_WM_STATE", 0);
-    halo->atom_net[3] = XInternAtom(halo->display, "_NET_WM_STATE_FULLSCREEN", 0);
+    halo->backend.atom_net[0] = XInternAtom(halo->backend.display, "_NET_SUPPORTED", 0);
+    halo->backend.atom_net[1] = XInternAtom(halo->backend.display, "_NET_WM_NAME", 0);
+    halo->backend.atom_net[2] = XInternAtom(halo->backend.display, "_NET_WM_STATE", 0);
+    halo->backend.atom_net[3] = XInternAtom(halo->backend.display, "_NET_WM_STATE_FULLSCREEN", 0);
 
-    XChangeProperty(halo->display, halo->root, halo->atom_net[0], XA_ATOM, 32, PropModeReplace, (unsigned char *)halo->atom_net, 4);
+    XChangeProperty(halo->backend.display, halo->backend.root, halo->backend.atom_net[0], XA_ATOM, 32, PropModeReplace, (unsigned char *)halo->backend.atom_net, 4);
 
-    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_c), Mod1Mask | ShiftMask, halo->root, 1, GrabModeAsync, GrabModeAsync);
-    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_q), Mod1Mask | ShiftMask, halo->root, 1, GrabModeAsync, GrabModeAsync);
-    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Escape), Mod1Mask, halo->root, 1, GrabModeAsync, GrabModeAsync);
-    XGrabKey(halo->display, XKeysymToKeycode(halo->display, XK_Tab), Mod1Mask, halo->root, 1, GrabModeAsync, GrabModeAsync);
+    XGrabKey(halo->backend.display, XKeysymToKeycode(halo->backend.display, XK_c), Mod1Mask | ShiftMask, halo->backend.root, 1, GrabModeAsync, GrabModeAsync);
+    XGrabKey(halo->backend.display, XKeysymToKeycode(halo->backend.display, XK_q), Mod1Mask | ShiftMask, halo->backend.root, 1, GrabModeAsync, GrabModeAsync);
+    XGrabKey(halo->backend.display, XKeysymToKeycode(halo->backend.display, XK_Escape), Mod1Mask, halo->backend.root, 1, GrabModeAsync, GrabModeAsync);
+    XGrabKey(halo->backend.display, XKeysymToKeycode(halo->backend.display, XK_Tab), Mod1Mask, halo->backend.root, 1, GrabModeAsync, GrabModeAsync);
 
-    XCompositeRedirectSubwindows(halo->display, halo->root, CompositeRedirectAutomatic);
+    XCompositeRedirectSubwindows(halo->backend.display, halo->backend.root, CompositeRedirectAutomatic);
 
-    XSync(halo->display, 0);
+    XSync(halo->backend.display, 0);
 
 }
 
 static void halo_window_init_base(struct halo *halo)
 {
 
-    halo->main = XCreateSimpleWindow(halo->display, halo->root, 0, 0, halo->screenWidth, halo->screenHeight, 0, XBlackPixel(halo->display, halo->screen), XBlackPixel(halo->display, halo->screen));
+    halo->backend.main = XCreateSimpleWindow(halo->backend.display, halo->backend.root, 0, 0, halo->backend.screenWidth, halo->backend.screenHeight, 0, XBlackPixel(halo->backend.display, halo->backend.screen), XBlackPixel(halo->backend.display, halo->backend.screen));
 
     XWindowAttributes wa;
-    XGetWindowAttributes(halo->display, halo->main, &wa);
+    XGetWindowAttributes(halo->backend.display, halo->backend.main, &wa);
 
-    XRenderPictFormat *format = XRenderFindVisualFormat(halo->display, wa.visual);
+    XRenderPictFormat *format = XRenderFindVisualFormat(halo->backend.display, wa.visual);
 
     XRenderPictureAttributes pa;
     pa.subwindow_mode = IncludeInferiors;
 
-    halo->mainPicture = XRenderCreatePicture(halo->display, halo->main, format, CPSubwindowMode, &pa); 
+    halo->backend.mainPicture = XRenderCreatePicture(halo->backend.display, halo->backend.main, format, CPSubwindowMode, &pa); 
 
-//    XShapeSelectInput(halo->display, halo->main, ShapeNotifyMask);
+//    XShapeSelectInput(halo->backend.display, halo->backend.main, ShapeNotifyMask);
 
-    XSelectInput(halo->display, halo->main, ButtonPressMask | KeyPressMask);
-    XMapWindow(halo->display, halo->main);
+    XSelectInput(halo->backend.display, halo->backend.main, ButtonPressMask | KeyPressMask);
+    XMapWindow(halo->backend.display, halo->backend.main);
 
-    XSync(halo->display, 0);
+    XSync(halo->backend.display, 0);
 
 }
 
@@ -68,11 +68,11 @@ void halo_window_init(struct halo *halo)
 void halo_window_destroy(struct halo *halo)
 {
 
-    XUnmapWindow(halo->display, halo->main);
+    XUnmapWindow(halo->backend.display, halo->backend.main);
 
-    XUngrabKeyboard(halo->display, CurrentTime);
+    XUngrabKeyboard(halo->backend.display, CurrentTime);
 
-    XSync(halo->display, 0);
+    XSync(halo->backend.display, 0);
 
 }
 

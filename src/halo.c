@@ -39,7 +39,7 @@ static void halo_signal_term(int sig)
 static void halo_signal_usr1(int sig)
 {
 
-    struct halo_menu *new = halo_menu_init(halo.screenWidth, halo.screenHeight);
+    struct halo_menu *new = halo_menu_init(halo.backend.screenWidth, halo.backend.screenHeight);
 
     if (new)
     {
@@ -76,7 +76,7 @@ static void halo_init(struct halo *halo)
     halo_window_init(halo);
     halo_surface_init(halo);
     halo->clients = halo_client_list_create();
-    halo->menu = halo_menu_init(halo->screenWidth, halo->screenHeight);
+    halo->menu = halo_menu_init(halo->backend.screenWidth, halo->backend.screenHeight);
 
 }
 

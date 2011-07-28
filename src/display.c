@@ -10,9 +10,9 @@ void halo_display_init(struct halo *halo)
 
     XInitThreads();
 
-    halo->display = XOpenDisplay(0);
+    halo->backend.display = XOpenDisplay(0);
 
-    if (!halo->display)
+    if (!halo->backend.display)
     {
 
         fprintf(stderr, "halo: can not open display\n");
@@ -20,17 +20,17 @@ void halo_display_init(struct halo *halo)
 
     }
 
-    halo->connection = XConnectionNumber(halo->display);
-    halo->screen = XDefaultScreen(halo->display);
-    halo->screenWidth = XDisplayWidth(halo->display, halo->screen);
-    halo->screenHeight = XDisplayHeight(halo->display, halo->screen);
+    halo->backend.descriptor = XConnectionNumber(halo->backend.display);
+    halo->backend.screen = XDefaultScreen(halo->backend.display);
+    halo->backend.screenWidth = XDisplayWidth(halo->backend.display, halo->backend.screen);
+    halo->backend.screenHeight = XDisplayHeight(halo->backend.display, halo->backend.screen);
 
 }
 
 void halo_display_destroy(struct halo *halo)
 {
 
-    XCloseDisplay(halo->display);
+    XCloseDisplay(halo->backend.display);
 
 }
 

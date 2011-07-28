@@ -4,11 +4,11 @@
 struct halo_client_list;
 struct halo_menu;
 
-struct halo
+struct halo_xlib_backend
 {
 
     Display *display;
-    int connection;
+    int descriptor;
     int screen;
     int screenWidth;
     int screenHeight;
@@ -16,6 +16,13 @@ struct halo
     Window main;
     Picture mainPicture;
     Atom atom_net[4];
+
+};
+
+struct halo
+{
+
+    struct halo_xlib_backend backend;
     int running;
     int paused;
     pthread_mutex_t mutexMenu;
