@@ -1,8 +1,5 @@
 #!/bin/bash
 
-echo "Videos"
-echo "Music"
-echo "Games"
 cat $HOME/.halo/plugins/list
 echo ""
 echo "System"
