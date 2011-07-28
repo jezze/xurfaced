@@ -9,6 +9,7 @@ struct halo_display_backend
     int screen;
     int screenWidth;
     int screenHeight;
+    Visual *visual;
     Window root;
     Window main;
     Picture mainPicture;

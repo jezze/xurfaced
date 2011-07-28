@@ -159,7 +159,7 @@ void halo_surface_blit(struct halo *halo)
 void halo_surface_init(struct halo *halo)
 {
 
-    halo_surface = cairo_xlib_surface_create(halo->backend->display, halo->backend->main, XDefaultVisual(halo->backend->display, 0), halo->backend->screenWidth, halo->backend->screenHeight);
+    halo_surface = cairo_xlib_surface_create(halo->backend->display, halo->backend->main, halo->backend->visual, halo->backend->screenWidth, halo->backend->screenHeight);
 
     halo_cairo = cairo_create(halo_surface);
     cairo_set_line_cap(halo_cairo, CAIRO_LINE_CAP_ROUND);
