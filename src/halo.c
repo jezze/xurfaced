@@ -18,6 +18,24 @@
 
 struct halo halo;
 
+static void halo_destroy(struct halo *halo)
+{
+
+    halo_menu_destroy(halo->menu);
+    halo_client_list_destroy(halo->clients);
+    halo_surface_destroy(halo);
+    halo_window_destroy(halo);
+    halo_display_destroy(halo);
+
+}
+
+static void halo_signal_term(int sig)
+{
+
+    halo_destroy(&halo);
+
+}
+
 static void halo_signal_usr1(int sig)
 {
 
@@ -47,6 +65,7 @@ static void halo_init(struct halo *halo)
     sprintf(halo->pathHead, "%s/head", halo->pathConfig);
     sprintf(halo->pathPid, "%s/pid", halo->pathConfig);
 
+    signal(SIGTERM, halo_signal_term);
     signal(SIGUSR1, halo_signal_usr1);
 
     FILE *file = fopen(halo->pathPid, "w");
@@ -58,17 +77,6 @@ static void halo_init(struct halo *halo)
     halo_surface_init(halo);
     halo->clients = halo_client_list_create();
     halo->menu = halo_menu_init(halo->screenWidth, halo->screenHeight);
-
-}
-
-static void halo_destroy(struct halo *halo)
-{
-
-    halo_menu_destroy(halo->menu);
-    halo_client_list_destroy(halo->clients);
-    halo_surface_destroy(halo);
-    halo_window_destroy(halo);
-    halo_display_destroy(halo);
 
 }
 
