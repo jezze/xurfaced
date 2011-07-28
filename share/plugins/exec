@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "$HOME/.halo/sethead system"
+echo ""
+echo "$HOME/.halo/sethead plugins/install"
+echo "$HOME/.halo/sethead plugins/uninstall"

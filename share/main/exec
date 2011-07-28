@@ -2,7 +2,10 @@
 
 pid=$(cat $HOME/.halo/pid)
 
-echo "$HOME/.halo/sethead browse"
-echo "$HOME/.halo/sethead system"
+echo "$HOME/.halo/sethead videos"
+echo "$HOME/.halo/sethead music"
+echo "$HOME/.halo/sethead games"
+cat $HOME/.halo/plugins/list | sed -r "s:(.*):$HOME/.halo/sethead \1:"
 echo ""
-echo "kill -SIGKILL $pid"
+echo "$HOME/.halo/sethead system"
+echo "$HOME/.halo/quit"

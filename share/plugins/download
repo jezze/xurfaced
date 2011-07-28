@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ "$1" = "" ]; then
+    exit;
+fi
+
+target="$HOME/.halo"
+
+mkdir "$target/$1"
+
+if [ $? -ne 0 ]; then
+    exit;
+fi
+
+echo $1 >> $HOME/.halo/plugins/list
+curl -s http://halo.abstraction.se/plugins/$1/title -o $target/$1/title
+chmod +x $target/$1/title
+curl -s http://halo.abstraction.se/plugins/$1/desc -o $target/$1/desc
+curl -s http://halo.abstraction.se/plugins/$1/exec -o $target/$1/exec
+chmod +x $target/$1/exec
+$HOME/.halo/sethead main

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+pid="$HOME/.halo/pid"
+
+if [ -e pid ]; then
+    kill -SIGTERM $(cat $pid);
+fi
+
+rm -f $pid

@@ -1,4 +1,0 @@
-#!/bin/bash
-
-echo -e 'Back\n\n..'
-ls -F1 $(cat $HOME/.halo/browse/cwd) | sort

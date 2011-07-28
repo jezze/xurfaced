@@ -2,4 +2,4 @@
 
 echo "$HOME/.halo/sethead main"
 echo ""
-echo ""
+echo "$HOME/.halo/sethead plugins"

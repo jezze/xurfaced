@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [ "$1" = "" ]; then
-    exit;
-fi
-
-echo $1 > $HOME/.halo/browse/cwd
-sync
-kill -SIGUSR1 $(cat $HOME/.halo/pid)

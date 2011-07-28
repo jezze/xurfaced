@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if [ "$1" = "" ]; then
+    exit;
+fi
+
+target="$HOME/.halo"
+
+rm -rf "$target/$1"
+
+sed -i "/$1/d" $HOME/.halo/plugins/list
+$HOME/.halo/refresh

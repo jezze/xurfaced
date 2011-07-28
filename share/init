@@ -1,0 +1,7 @@
+#!/bin/bash
+
+echo main > $HOME/.halo/head
+echo "Welcome to Halo" > $HOME/.halo/notify
+echo "" > $HOME/.halo/history
+sync
+kill -SIGUSR1 $(cat $HOME/.halo/pid)

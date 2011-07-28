@@ -6,4 +6,4 @@ fi
 
 echo $1 > $HOME/.halo/head
 sync
-kill -SIGUSR1 $(cat $HOME/.halo/pid)
+$HOME/.halo/refresh
