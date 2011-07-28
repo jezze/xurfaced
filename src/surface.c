@@ -29,13 +29,15 @@ static void halo_surface_blit_notification(int width, int height)
 
     cairo_font_extents_t fe;
 
-    cairo_rectangle(halo_cairo, 0, 0, width, height / 16);
-    cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, 0.2);
+    float boxheight = height / 24;
+
+    cairo_rectangle(halo_cairo, 0, 0, width, boxheight);
+    cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, 0.4);
     cairo_fill(halo_cairo);
     cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
     cairo_set_font_size(halo_cairo, 18.0);
     cairo_font_extents(halo_cairo, &fe);
-    cairo_move_to(halo_cairo, 20.0, height / 16 - fe.height - fe.descent);
+    cairo_move_to(halo_cairo, 24.0, boxheight / 2.0 + fe.height / 2.0 - fe.descent);
     cairo_text_path(halo_cairo, "Halo");
     cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, 1.0);
     cairo_fill(halo_cairo);

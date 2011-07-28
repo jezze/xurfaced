@@ -63,6 +63,7 @@ static void halo_init(struct halo *halo)
     sprintf(halo->pathConfig, "%s/.halo", halo->pathHome);
     sprintf(halo->pathHead, "%s/head", halo->pathConfig);
     sprintf(halo->pathPid, "%s/pid", halo->pathConfig);
+    sprintf(halo->pathNotify, "%s/notify", halo->pathConfig);
     signal(SIGTERM, halo_signal_term);
     signal(SIGUSR1, halo_signal_usr1);
 
