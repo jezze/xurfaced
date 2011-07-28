@@ -36,7 +36,7 @@ static void halo_window_init_root(struct halo_display_backend *backend)
 static void halo_window_init_base(struct halo_display_backend *backend)
 {
 
-    backend->main = XCreateSimpleWindow(backend->display, backend->root, 0, 0, backend->screenWidth, backend->screenHeight, 0, XBlackPixel(backend->display, backend->screen), XBlackPixel(backend->display, backend->screen));
+    backend->main = XCreateSimpleWindow(backend->display, backend->root, 0, 0, backend->width, backend->height, 0, XBlackPixel(backend->display, backend->screen), XBlackPixel(backend->display, backend->screen));
 
     XWindowAttributes wa;
     XGetWindowAttributes(backend->display, backend->main, &wa);

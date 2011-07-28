@@ -23,8 +23,8 @@ struct halo_display_backend *halo_display_create()
 
     backend->descriptor = XConnectionNumber(backend->display);
     backend->screen = XDefaultScreen(backend->display);
-    backend->screenWidth = XDisplayWidth(backend->display, backend->screen);
-    backend->screenHeight = XDisplayHeight(backend->display, backend->screen);
+    backend->width = XDisplayWidth(backend->display, backend->screen);
+    backend->height = XDisplayHeight(backend->display, backend->screen);
     backend->visual = XDefaultVisual(backend->display, 0);
 
     return backend;

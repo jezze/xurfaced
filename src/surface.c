@@ -137,9 +137,9 @@ void halo_surface_prep(struct halo *halo)
 
     cairo_push_group(halo_cairo);
 
-    halo_surface_blit_background(halo->backend->screenWidth, halo->backend->screenHeight);
-    halo_surface_blit_menu(halo->backend->screenHeight, halo->menu);
-    halo_surface_blit_notification(halo->backend->screenWidth, halo->backend->screenHeight);
+    halo_surface_blit_background(halo->backend->width, halo->backend->height);
+    halo_surface_blit_menu(halo->backend->height, halo->menu);
+    halo_surface_blit_notification(halo->backend->width, halo->backend->height);
 
     cairo_pop_group_to_source(halo_cairo);
 
@@ -159,12 +159,12 @@ void halo_surface_blit(struct halo *halo)
 void halo_surface_init(struct halo *halo)
 {
 
-    halo_surface = cairo_xlib_surface_create(halo->backend->display, halo->backend->main, halo->backend->visual, halo->backend->screenWidth, halo->backend->screenHeight);
+    halo_surface = cairo_xlib_surface_create(halo->backend->display, halo->backend->main, halo->backend->visual, halo->backend->width, halo->backend->height);
 
     halo_cairo = cairo_create(halo_surface);
     cairo_set_line_cap(halo_cairo, CAIRO_LINE_CAP_ROUND);
 
-    halo_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, halo->backend->screenHeight);
+    halo_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, halo->backend->height);
     cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.2, 0.0, 0.3, 1.0);
     cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.4, 0.2, 0.4, 1.0);
 

@@ -7,8 +7,8 @@ struct halo_display_backend
     Display *display;
     int descriptor;
     int screen;
-    int screenWidth;
-    int screenHeight;
+    int width;
+    int height;
     Visual *visual;
     Window root;
     Window main;

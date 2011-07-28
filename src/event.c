@@ -16,8 +16,8 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
     XWindowChanges wc;
     wc.x = 0;
     wc.y = 0;
-    wc.width = halo->backend->screenWidth;
-    wc.height = halo->backend->screenHeight;
+    wc.width = halo->backend->width;
+    wc.height = halo->backend->height;
     wc.border_width = 0;
     wc.sibling = event->above;
     wc.stack_mode = event->detail;
@@ -31,8 +31,8 @@ static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEven
     ce.window = event->window;
     ce.x = 0;
     ce.y = 0;
-    ce.width = halo->backend->screenWidth;
-    ce.height = halo->backend->screenHeight;
+    ce.width = halo->backend->width;
+    ce.height = halo->backend->height;
     ce.border_width = 0;
     ce.above = 0;
     ce.override_redirect = 0;
@@ -89,7 +89,7 @@ static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
 
     XSelectInput(halo->backend->display, client->window, StructureNotifyMask | PropertyChangeMask);
     XRaiseWindow(halo->backend->display, client->window);
-    XMoveResizeWindow(halo->backend->display, client->window, 0, 0, halo->backend->screenWidth, halo->backend->screenHeight);
+    XMoveResizeWindow(halo->backend->display, client->window, 0, 0, halo->backend->width, halo->backend->height);
     XMapWindow(halo->backend->display, client->window);
     XSetInputFocus(halo->backend->display, client->window, RevertToParent, CurrentTime);
     XSync(halo->backend->display, 0);
