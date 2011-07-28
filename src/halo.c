@@ -24,7 +24,7 @@ static void halo_destroy(struct halo *halo)
     halo_menu_destroy(halo->menu);
     halo_client_list_destroy(halo->clients);
     halo_surface_destroy(halo);
-    halo_window_destroy(halo);
+    halo_window_destroy(halo->backend);
     halo_display_destroy(halo->backend);
 
 }
@@ -73,7 +73,7 @@ static void halo_init(struct halo *halo)
     fclose(file);
 
     halo->backend = halo_display_create();
-    halo_window_init(halo);
+    halo_window_init(halo->backend);
     halo_surface_init(halo);
     halo->clients = halo_client_list_create();
     halo->menu = halo_menu_init(halo->backend->screenWidth, halo->backend->screenHeight);
