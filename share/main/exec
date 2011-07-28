@@ -2,7 +2,12 @@
 
 pid=$(cat $HOME/.halo/pid)
 
-cat $HOME/.halo/plugins/list | sed -r "s:(.*):$HOME/.halo/sethead \1:"
-echo ""
+plugins=$HOME/.halo/plugins/list
+
+if [ -e $plugins ]; then
+    cat $plugins | sed -r "s:(.*):$HOME/.halo/sethead \1:"
+    echo "";
+fi
+
 echo "$HOME/.halo/sethead system"
 echo "$HOME/.halo/quit"

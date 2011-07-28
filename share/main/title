@@ -1,6 +1,11 @@
 #!/bin/bash
 
-cat $HOME/.halo/plugins/list
-echo ""
+plugins=$HOME/.halo/plugins/list
+
+if [ -e $plugins ]; then
+    cat $plugins;
+    echo "";
+fi
+
 echo "System"
 echo "Quit"
