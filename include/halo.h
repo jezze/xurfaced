@@ -1,13 +1,10 @@
 #ifndef HALO_HALO_H
 #define HALO_HALO_H
 
-struct halo_client_list;
-struct halo_menu;
-
 struct halo
 {
 
-    struct halo_xlib_backend *backend;
+    struct halo_display_backend *backend;
     int running;
     int paused;
     pthread_mutex_t mutexMenu;

@@ -5,12 +5,12 @@
 #include <display.h>
 #include <halo.h>
 
-struct halo_xlib_backend *halo_display_create()
+struct halo_display_backend *halo_display_create()
 {
 
     XInitThreads();
 
-    struct halo_xlib_backend *backend = malloc(sizeof (struct halo_xlib_backend));
+    struct halo_display_backend *backend = malloc(sizeof (struct halo_display_backend));
     backend->display = XOpenDisplay(0);
 
     if (!backend->display)
@@ -30,7 +30,7 @@ struct halo_xlib_backend *halo_display_create()
 
 }
 
-void halo_display_destroy(struct halo_xlib_backend *backend)
+void halo_display_destroy(struct halo_display_backend *backend)
 {
 
     XCloseDisplay(backend->display);
