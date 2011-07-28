@@ -20,6 +20,7 @@ struct halo
     char pathHead[128];
     char pathPid[128];
     char pathNotify[128];
+    char notification[256];
 
 };
 

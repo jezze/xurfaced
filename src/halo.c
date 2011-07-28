@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <sys/wait.h>
 #include <pthread.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
