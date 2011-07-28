@@ -21,14 +21,11 @@ static void halo_window_init_root(struct halo_display_backend *backend)
     backend->atom_net[3] = XInternAtom(backend->display, "_NET_WM_STATE_FULLSCREEN", 0);
 
     XChangeProperty(backend->display, backend->root, backend->atom_net[0], XA_ATOM, 32, PropModeReplace, (unsigned char *)backend->atom_net, 4);
-
     XGrabKey(backend->display, XKeysymToKeycode(backend->display, XK_c), Mod1Mask | ShiftMask, backend->root, 1, GrabModeAsync, GrabModeAsync);
     XGrabKey(backend->display, XKeysymToKeycode(backend->display, XK_q), Mod1Mask | ShiftMask, backend->root, 1, GrabModeAsync, GrabModeAsync);
     XGrabKey(backend->display, XKeysymToKeycode(backend->display, XK_Escape), Mod1Mask, backend->root, 1, GrabModeAsync, GrabModeAsync);
     XGrabKey(backend->display, XKeysymToKeycode(backend->display, XK_Tab), Mod1Mask, backend->root, 1, GrabModeAsync, GrabModeAsync);
-
     XCompositeRedirectSubwindows(backend->display, backend->root, CompositeRedirectAutomatic);
-
     XSync(backend->display, 0);
 
 }
@@ -39,6 +36,7 @@ static void halo_window_init_main(struct halo_display_backend *backend)
     backend->main = XCreateSimpleWindow(backend->display, backend->root, 0, 0, backend->width, backend->height, 0, XBlackPixel(backend->display, backend->screen), XBlackPixel(backend->display, backend->screen));
 
     XWindowAttributes wa;
+
     XGetWindowAttributes(backend->display, backend->main, &wa);
 
     XRenderPictFormat *format = XRenderFindVisualFormat(backend->display, wa.visual);
@@ -48,11 +46,9 @@ static void halo_window_init_main(struct halo_display_backend *backend)
 
     backend->mainPicture = XRenderCreatePicture(backend->display, backend->main, format, CPSubwindowMode, &pa); 
 
-//    XShapeSelectInput(backend->display, backend->main, ShapeNotifyMask);
-
+    //XShapeSelectInput(backend->display, backend->main, ShapeNotifyMask);
     XSelectInput(backend->display, backend->main, ButtonPressMask | KeyPressMask);
     XMapWindow(backend->display, backend->main);
-
     XSync(backend->display, 0);
 
 }
@@ -69,9 +65,7 @@ void halo_window_destroy(struct halo_display_backend *backend)
 {
 
     XUnmapWindow(backend->display, backend->main);
-
     XUngrabKeyboard(backend->display, CurrentTime);
-
     XSync(backend->display, 0);
 
 }

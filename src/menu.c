@@ -56,9 +56,7 @@ static void halo_execute(char *command, int pipe[])
             close(halo.backend->descriptor);
 
         setsid();
-
         execvp(argv[0], argv);
-
         exit(EXIT_FAILURE);
 
     }
@@ -187,7 +185,6 @@ void halo_menu_destroy(struct halo_menu *menu)
 {
 
     halo_menu_option_list_destroy(menu->opts);
-
     free(menu->opts);
     free(menu);
 
@@ -257,6 +254,7 @@ static FILE *halo_open(char *path)
 {
 
     struct stat info;
+
     stat(path, &info);
 
     if (info.st_mode & S_IXUSR)
@@ -320,9 +318,12 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
         content[strlen(content) - 1] = '\0';
         option = halo_menu_option_create();
         option->name = (char *)malloc(strlen(content) + 1);
+
         strcpy(option->name, content);
+        
         option->animationProperties.translationX = 0;
         option->animationProperties.translationY = y;
+
         halo_menu_option_list_add(menu->opts, option);
 
         y += 80.0;
@@ -345,6 +346,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
         content[strlen(content) - 1] = '\0';
         option->description = (char *)malloc(strlen(content) + 1);
+
         strcpy(option->description, content);
 
         option = option->next;
@@ -367,6 +369,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
         content[strlen(content) - 1] = '\0';
         option->command = (char *)malloc(strlen(content) + 1);
+
         strcpy(option->command, content);
 
         option = option->next;

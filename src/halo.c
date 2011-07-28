@@ -45,7 +45,6 @@ static void halo_signal_usr1(int sig)
     {
 
         pthread_mutex_lock(&halo.mutexMenu);
-
         halo_menu_destroy(halo.menu);
 
         halo.menu = new;
@@ -64,17 +63,19 @@ static void halo_init(struct halo *halo)
     sprintf(halo->pathConfig, "%s/.halo", halo->pathHome);
     sprintf(halo->pathHead, "%s/head", halo->pathConfig);
     sprintf(halo->pathPid, "%s/pid", halo->pathConfig);
-
     signal(SIGTERM, halo_signal_term);
     signal(SIGUSR1, halo_signal_usr1);
 
     FILE *file = fopen(halo->pathPid, "w");
+    
     fprintf(file, "%d", getpid());
     fclose(file);
 
     halo->backend = halo_display_create();
+
     halo_window_init(halo->backend);
     halo_surface_init(halo);
+    
     halo->clients = halo_client_list_create();
     halo->menu = halo_menu_init(halo->backend->width, halo->backend->height);
 
@@ -131,16 +132,10 @@ static void halo_start(struct halo *halo)
     pthread_mutex_init(&halo->mutexRender, 0);
     pthread_cond_init(&halo->condRender, 0);
     pthread_mutex_init(&halo->mutexMenu, 0);
-
-    pthread_t threadRender;
-    pthread_t threadEvents;
-
-    pthread_create(&threadRender, 0, halo_thread_render, halo);
-    pthread_create(&threadEvents, 0, halo_thread_events, halo);
-
-    pthread_join(threadEvents, 0);
-    pthread_join(threadRender, 0);
-
+    pthread_create(&halo->threadRender, 0, halo_thread_render, halo);
+    pthread_create(&halo->threadEvents, 0, halo_thread_events, halo);
+    pthread_join(halo->threadEvents, 0);
+    pthread_join(halo->threadRender, 0);
     pthread_mutex_destroy(&halo->mutexMenu);
     pthread_cond_destroy(&halo->condRender);
     pthread_mutex_destroy(&halo->mutexRender);

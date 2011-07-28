@@ -7,6 +7,8 @@ struct halo
     struct halo_display_backend *backend;
     int running;
     int paused;
+    pthread_t threadRender;
+    pthread_t threadEvents;
     pthread_mutex_t mutexMenu;
     pthread_mutex_t mutexRender;
     pthread_cond_t condRender;
