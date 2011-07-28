@@ -12,6 +12,7 @@
 #include <X11/extensions/Xrender.h>
 #include <limb/dlist.h>
 #include <animation.h>
+#include <display.h>
 #include <halo.h>
 #include <menu.h>
 

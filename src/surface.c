@@ -6,6 +6,7 @@
 #include <cairo.h>
 #include <cairo-xlib.h>
 #include <animation.h>
+#include <display.h>
 #include <halo.h>
 #include <menu.h>
 #include <surface.h>

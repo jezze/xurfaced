@@ -5,6 +5,7 @@
 #include <X11/extensions/Xrender.h>
 #include <animation.h>
 #include <client.h>
+#include <display.h>
 #include <menu.h>
 #include <halo.h>
 #include <event.h>

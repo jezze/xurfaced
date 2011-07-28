@@ -4,21 +4,6 @@
 struct halo_client_list;
 struct halo_menu;
 
-struct halo_xlib_backend
-{
-
-    Display *display;
-    int descriptor;
-    int screen;
-    int screenWidth;
-    int screenHeight;
-    Window root;
-    Window main;
-    Picture mainPicture;
-    Atom atom_net[4];
-
-};
-
 struct halo
 {
 

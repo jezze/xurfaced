@@ -5,7 +5,7 @@
 #include <X11/extensions/Xrender.h>
 #include <X11/extensions/Xfixes.h>
 #include <X11/extensions/shape.h>
-#include <halo.h>
+#include <display.h>
 #include <window.h>
 
 static void halo_window_init_root(struct halo_xlib_backend *backend)
