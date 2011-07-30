@@ -1,9 +1,23 @@
 #ifndef HALO_HALO_H
 #define HALO_HALO_H
 
+struct halo_config
+{
+
+    char base[128];
+    char head[128];
+    char oninit[128];
+    char onexit[128];
+    char pid[128];
+    char notify[128];
+    char notification[256];
+
+};
+
 struct halo
 {
 
+    struct halo_config config;
     struct halo_display_backend *backend;
     int running;
     int paused;
@@ -15,12 +29,6 @@ struct halo
     struct halo_menu *menu;
     struct halo_client_list *clients;
     int pipe[2];
-    char *pathHome;
-    char pathConfig[128];
-    char pathHead[128];
-    char pathPid[128];
-    char pathNotify[128];
-    char notification[256];
 
 };
 

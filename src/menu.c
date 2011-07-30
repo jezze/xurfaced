@@ -287,7 +287,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     char current[128];
     char content[4096];
 
-    FILE *head = fopen(halo.pathHead, "r");
+    FILE *head = fopen(halo.config.head, "r");
 
     if (fgets(path, 128, head) == NULL)
     {
@@ -301,7 +301,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     path[strlen(path) - 1] = '\0';
 
-    sprintf(current, "%s/%s/title", halo.pathConfig, path);
+    sprintf(current, "%s/%s/title", halo.config.base, path);
 
     FILE *fileTitle = halo_open(current);
 
@@ -332,7 +332,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(fileTitle);
 
-    sprintf(current, "%s/%s/desc", halo.pathConfig, path);
+    sprintf(current, "%s/%s/desc", halo.config.base, path);
 
     FILE *fileDesc = halo_open(current);
 
@@ -355,7 +355,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(fileDesc);
 
-    sprintf(current, "%s/%s/exec", halo.pathConfig, path);
+    sprintf(current, "%s/%s/exec", halo.config.base, path);
 
     FILE *fileExec = halo_open(current);
 

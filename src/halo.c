@@ -59,50 +59,54 @@ static void halo_signal_usr1(int sig)
 
 }
 
+static void halo_init_config(struct halo_config *config)
+{
+
+    char *home = getenv("HOME");
+
+    sprintf(config->base, "%s/.halo", home);
+    sprintf(config->head, "%s/head", config->base);
+    sprintf(config->oninit, "%s/oninit", config->base);
+    sprintf(config->onexit, "%s/onexit", config->base);
+    sprintf(config->pid, "%s/pid", config->base);
+    sprintf(config->notify, "%s/notify", config->base);
+
+}
+
 static void halo_init(struct halo *halo)
 {
+
+    signal(SIGTERM, halo_signal_term);
+    signal(SIGUSR1, halo_signal_usr1);
+
+    halo_init_config(&halo->config);
 
     int status;
     struct stat info;
 
-    halo->pathHome = getenv("HOME");
-
-    sprintf(halo->pathConfig, "%s/.halo", halo->pathHome);
-
-    if (stat(halo->pathConfig, &info) == -1)
+    if (stat(halo->config.base, &info) == -1)
     {
 
         char copyCmd[128];
 
-        sprintf(copyCmd, "/bin/cp -r /usr/share/halo %s", halo->pathConfig);
+        sprintf(copyCmd, "/bin/cp -r /usr/share/halo %s", halo->config.base);
         
         system(copyCmd);
 
     }
 
-    sprintf(halo->pathHead, "%s/head", halo->pathConfig);
-    sprintf(halo->pathPid, "%s/pid", halo->pathConfig);
-    sprintf(halo->pathNotify, "%s/notify", halo->pathConfig);
-    signal(SIGTERM, halo_signal_term);
-    signal(SIGUSR1, halo_signal_usr1);
-
-    FILE *file = fopen(halo->pathPid, "w");
+    FILE *pid = fopen(halo->config.pid, "w");
     
-    fprintf(file, "%d", getpid());
-    fclose(file);
+    fprintf(pid, "%d", getpid());
+    fclose(pid);
     sync();
 
     halo->backend = halo_display_create();
+    halo->clients = halo_client_list_create();
 
     halo_window_init(halo->backend);
     halo_surface_init(halo);
-    
-    halo->clients = halo_client_list_create();
-
-    char pathInit[128];
-
-    sprintf(pathInit, "%s/init", halo->pathConfig);
-    halo_execute(pathInit, 0);
+    halo_execute(halo->config.oninit, 0);
     wait(&status);
 
 }
