@@ -150,20 +150,22 @@ static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent 
 
     KeySym key = XLookupKeysym(event, 0);
 
-    struct stat info;
-
     char path[128];
 
-    sprintf(path, "%s/key-%u", xurfaced->config.base, (unsigned int)key);
+    if (event->state & Mod1Mask & ShiftMask)
+        sprintf(path, "%s/key-mod1-shift-%u", xurfaced->config.base, (unsigned int)key);
+    else if (event->state & Mod1Mask)
+        sprintf(path, "%s/key-mod1-%u", xurfaced->config.base, (unsigned int)key);
+    else
+        sprintf(path, "%s/key-%u", xurfaced->config.base, (unsigned int)key);
+
+    struct stat info;
 
     if (stat(path, &info) != -1)
-    {
-
         xurfaced_execute(path, 0);
 
-    }
-
     int status;
+
     wait(&status);
 
     switch (key)
