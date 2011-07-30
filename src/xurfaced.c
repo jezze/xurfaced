@@ -25,7 +25,7 @@ static void xurfaced_destroy(struct xurfaced *xurfaced)
 
     xurfaced_menu_destroy(xurfaced->menu);
     xurfaced_client_list_destroy(xurfaced->clients);
-    xurfaced_surface_destroy(xurfaced);
+    xurfaced_surface_destroy(xurfaced->backend);
     xurfaced_window_destroy(xurfaced->backend);
     xurfaced_display_destroy(xurfaced->backend);
 
@@ -161,7 +161,7 @@ static void xurfaced_init(struct xurfaced *xurfaced)
     xurfaced->clients = xurfaced_client_list_create();
 
     xurfaced_window_init(xurfaced->backend);
-    xurfaced_surface_init(xurfaced);
+    xurfaced_surface_init(xurfaced->backend);
     xurfaced_execute(xurfaced->config.oninit, 0);
     wait(&status);
 
@@ -179,8 +179,8 @@ static void *xurfaced_thread_render(void *arg)
     {
 
         pthread_mutex_lock(&xurfaced->mutexMenu);
-        xurfaced_surface_prep(xurfaced);
-        xurfaced_surface_blit(xurfaced);
+        xurfaced_surface_prep(xurfaced->backend, xurfaced->menu);
+        xurfaced_surface_blit(xurfaced->backend);
         pthread_mutex_unlock(&xurfaced->mutexMenu);
 
         gettimeofday(&tv, 0);

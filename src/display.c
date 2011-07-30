@@ -3,7 +3,6 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
 #include <display.h>
-#include <xurfaced.h>
 
 struct xurfaced_display_backend *xurfaced_display_create()
 {

@@ -1,13 +1,13 @@
 #include <stdlib.h>
 #include <math.h>
-#include <pthread.h>
+//#include <pthread.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
 #include <animation.h>
 #include <display.h>
-#include <xurfaced.h>
+//#include <xurfaced.h>
 #include <menu.h>
 #include <surface.h>
 
@@ -130,42 +130,42 @@ static void xurfaced_surface_blit_menu(unsigned int height, struct xurfaced_menu
 
 }
 
-void xurfaced_surface_prep(struct xurfaced *xurfaced)
+void xurfaced_surface_prep(struct xurfaced_display_backend *backend, struct xurfaced_menu *menu)
 {
 
     cairo_push_group(xurfaced_cairo);
-    xurfaced_surface_blit_background(xurfaced->backend->width, xurfaced->backend->height);
-    xurfaced_surface_blit_menu(xurfaced->backend->height, xurfaced->menu);
-    xurfaced_surface_blit_notification(xurfaced->backend->width, xurfaced->backend->height);
+    xurfaced_surface_blit_background(backend->width, backend->height);
+    xurfaced_surface_blit_menu(backend->height, menu);
+    xurfaced_surface_blit_notification(backend->width, backend->height);
     cairo_pop_group_to_source(xurfaced_cairo);
 
 }
 
-void xurfaced_surface_blit(struct xurfaced *xurfaced)
+void xurfaced_surface_blit(struct xurfaced_display_backend *backend)
 {
 
-    XLockDisplay(xurfaced->backend->display);
+    XLockDisplay(backend->display);
     cairo_paint(xurfaced_cairo);
-    XUnlockDisplay(xurfaced->backend->display);
+    XUnlockDisplay(backend->display);
 
 }
 
-void xurfaced_surface_init(struct xurfaced *xurfaced)
+void xurfaced_surface_init(struct xurfaced_display_backend *backend)
 {
 
-    xurfaced_surface = cairo_xlib_surface_create(xurfaced->backend->display, xurfaced->backend->main, xurfaced->backend->visual, xurfaced->backend->width, xurfaced->backend->height);
+    xurfaced_surface = cairo_xlib_surface_create(backend->display, backend->main, backend->visual, backend->width, backend->height);
     xurfaced_cairo = cairo_create(xurfaced_surface);
 
     cairo_set_line_cap(xurfaced_cairo, CAIRO_LINE_CAP_ROUND);
 
-    xurfaced_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, xurfaced->backend->height);
+    xurfaced_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, backend->height);
 
     cairo_pattern_add_color_stop_rgba(xurfaced_background_pattern, 0.0, 0.2, 0.0, 0.3, 1.0);
     cairo_pattern_add_color_stop_rgba(xurfaced_background_pattern, 1.0, 0.4, 0.2, 0.4, 1.0);
 
 }
 
-void xurfaced_surface_destroy(struct xurfaced *xurfaced)
+void xurfaced_surface_destroy(struct xurfaced_display_backend *backend)
 {
 
     cairo_destroy(xurfaced_cairo);
