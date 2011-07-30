@@ -1,0 +1,12 @@
+#!/bin/bash
+
+h=$HOME/.xurfaced/history
+c=$(wc -l $h | cut -d' ' -f1)
+
+if [ $c -gt 1 ]; then
+    sed -i '$d' $h;
+fi
+
+l=$(tail -n 1 $h)
+
+$HOME/.xurfaced/sethead $l

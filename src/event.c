@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/stat.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/extensions/Xrender.h>
@@ -148,6 +149,19 @@ static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent 
 
     KeySym key = XLookupKeysym(event, 0);
 
+    struct stat info;
+
+    char path[128];
+
+    sprintf(path, "%s/key-%u", xurfaced->config.base, (unsigned int)key);
+
+    if (stat(path, &info) != -1)
+    {
+
+        xurfaced_execute(path, 0);
+
+    }
+
     switch (key)
     {
 
@@ -165,7 +179,7 @@ static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent 
 
         case XK_q:
 
-            xurfaced->running = 0;
+//            xurfaced->running = 0;
 
             break;
 

@@ -2,8 +2,4 @@
 
 pid="$HOME/.xurfaced/pid"
 
-if [ -e pid ]; then
-    kill -SIGTERM $(cat $pid);
-fi
-
-rm -f $pid
+kill -SIGTERM $(cat $pid)

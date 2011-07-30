@@ -1,7 +1,8 @@
 #!/bin/bash
 
-echo main > $HOME/.xurfaced/head
+init="main"
+
+echo $init > $HOME/.xurfaced/head
+> $HOME/.xurfaced/history
 echo "Welcome to xurfaced" > $HOME/.xurfaced/notify
-echo "" > $HOME/.xurfaced/history
-sync
-kill -SIGUSR1 $(cat $HOME/.xurfaced/pid)
+$HOME/.xurfaced/sethead $init

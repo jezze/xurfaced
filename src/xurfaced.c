@@ -34,7 +34,7 @@ static void xurfaced_destroy(struct xurfaced *xurfaced)
 static void xurfaced_signal_term(int sig)
 {
 
-    xurfaced_destroy(&xurfaced);
+    xurfaced.running = 0;
 
 }
 
