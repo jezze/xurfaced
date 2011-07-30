@@ -1,6 +1,7 @@
 #ifndef XURFACED_MENU_H
 #define XURFACED_MENU_H
 
+struct xurfaced;
 struct animation_properties;
 
 struct xurfaced_menu_option
@@ -47,7 +48,7 @@ extern void xurfaced_menu_destroy(struct xurfaced_menu *menu);
 extern void xurfaced_menu_activate(struct xurfaced_menu *menu);
 extern void xurfaced_menu_next(struct xurfaced_menu *menu, unsigned int num);
 extern void xurfaced_menu_previous(struct xurfaced_menu *menu, unsigned int num);
-extern struct xurfaced_menu *xurfaced_menu_init(unsigned int width, unsigned int height);
+extern struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int width, unsigned int height);
 
 #endif
 

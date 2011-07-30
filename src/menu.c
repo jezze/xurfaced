@@ -16,8 +16,6 @@
 #include <xurfaced.h>
 #include <menu.h>
 
-extern struct xurfaced xurfaced;
-
 struct xurfaced_menu_option *xurfaced_menu_option_create()
 {
 
@@ -194,7 +192,7 @@ void xurfaced_menu_previous(struct xurfaced_menu *menu, unsigned int num)
 
 }
 
-static FILE *xurfaced_open(char *path)
+static FILE *xurfaced_open(char *path, int apipe[])
 {
 
     struct stat info;
@@ -204,10 +202,10 @@ static FILE *xurfaced_open(char *path)
     if (info.st_mode & S_IXUSR)
     {
 
-        pipe(xurfaced.pipe);
-        xurfaced_execute(path, xurfaced.pipe);
+        pipe(apipe);
+        xurfaced_execute(path, apipe);
 
-        return fdopen(xurfaced.pipe[0], "r");
+        return fdopen(apipe[0], "r");
 
     }
     
@@ -220,7 +218,7 @@ static FILE *xurfaced_open(char *path)
 
 }
 
-struct xurfaced_menu *xurfaced_menu_init(unsigned int width, unsigned int height)
+struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int width, unsigned int height)
 {
 
     struct xurfaced_menu *menu = xurfaced_menu_create();
@@ -231,7 +229,7 @@ struct xurfaced_menu *xurfaced_menu_init(unsigned int width, unsigned int height
     char current[128];
     char content[4096];
 
-    FILE *head = fopen(xurfaced.config.head, "r");
+    FILE *head = fopen(xurfaced->config.head, "r");
 
     if (fgets(path, 128, head) == NULL)
     {
@@ -245,9 +243,9 @@ struct xurfaced_menu *xurfaced_menu_init(unsigned int width, unsigned int height
 
     path[strlen(path) - 1] = '\0';
 
-    sprintf(current, "%s/%s/title", xurfaced.config.base, path);
+    sprintf(current, "%s/%s/title", xurfaced->config.base, path);
 
-    FILE *fileTitle = xurfaced_open(current);
+    FILE *fileTitle = xurfaced_open(current, xurfaced->pipe);
 
     if (!fileTitle)
         return 0;
@@ -276,9 +274,9 @@ struct xurfaced_menu *xurfaced_menu_init(unsigned int width, unsigned int height
 
     fclose(fileTitle);
 
-    sprintf(current, "%s/%s/desc", xurfaced.config.base, path);
+    sprintf(current, "%s/%s/desc", xurfaced->config.base, path);
 
-    FILE *fileDesc = xurfaced_open(current);
+    FILE *fileDesc = xurfaced_open(current, xurfaced->pipe);
 
     if (!fileDesc)
         return 0;
@@ -299,9 +297,9 @@ struct xurfaced_menu *xurfaced_menu_init(unsigned int width, unsigned int height
 
     fclose(fileDesc);
 
-    sprintf(current, "%s/%s/exec", xurfaced.config.base, path);
+    sprintf(current, "%s/%s/exec", xurfaced->config.base, path);
 
-    FILE *fileExec = xurfaced_open(current);
+    FILE *fileExec = xurfaced_open(current, xurfaced->pipe);
 
     if (!fileExec)
         return 0;

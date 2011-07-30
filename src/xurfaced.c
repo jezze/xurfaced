@@ -41,7 +41,7 @@ static void xurfaced_signal_term(int sig)
 static void xurfaced_signal_usr1(int sig)
 {
 
-    struct xurfaced_menu *new = xurfaced_menu_init(xurfaced.backend->width, xurfaced.backend->height);
+    struct xurfaced_menu *new = xurfaced_menu_init(&xurfaced, xurfaced.backend->width, xurfaced.backend->height);
 
     if (new)
     {
