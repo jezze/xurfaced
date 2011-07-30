@@ -177,12 +177,6 @@ static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent 
 
             break;
 
-        case XK_q:
-
-//            xurfaced->running = 0;
-
-            break;
-
         case XK_Up:
 
             xurfaced_menu_previous(xurfaced->menu, 1);

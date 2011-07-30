@@ -5,8 +5,7 @@ c=$(wc -l $h | cut -d' ' -f1)
 
 if [ $c -gt 1 ]; then
     sed -i '$d' $h;
+    l=$(tail -n 1 $h)
+    sed -i '$d' $h;
+    $HOME/.xurfaced/sethead $l
 fi
-
-l=$(tail -n 1 $h)
-
-$HOME/.xurfaced/sethead $l
