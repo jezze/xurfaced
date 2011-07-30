@@ -1,13 +1,11 @@
 #include <stdlib.h>
 #include <math.h>
-//#include <pthread.h>
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
 #include <cairo.h>
 #include <cairo-xlib.h>
 #include <animation.h>
 #include <display.h>
-//#include <xurfaced.h>
 #include <menu.h>
 #include <surface.h>
 
