@@ -1,5 +1,3 @@
 #!/bin/bash
 
-echo "$HOME/.xurfaced/sethead main"
-echo ""
 echo "$HOME/.xurfaced/sethead plugins"
