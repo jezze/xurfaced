@@ -1,7 +1,7 @@
 #!/bin/bash
 
-list="$HOME/.halo/plugins/list"
+list="$HOME/.xurfaced/plugins/list"
 
-echo "$HOME/.halo/sethead plugins"
+echo "$HOME/.xurfaced/sethead plugins"
 echo ""
-cat $list | sed -r "s:(.*):$HOME/.halo/plugins/remove \1:"
+cat $list | sed -r "s:(.*):$HOME/.xurfaced/plugins/remove \1:"

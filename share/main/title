@@ -1,6 +1,6 @@
 #!/bin/bash
 
-plugins=$HOME/.halo/plugins/list
+plugins=$HOME/.xurfaced/plugins/list
 
 if [ -e $plugins ]; then
     cat $plugins;

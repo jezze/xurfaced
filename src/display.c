@@ -3,20 +3,20 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
 #include <display.h>
-#include <halo.h>
+#include <xurfaced.h>
 
-struct halo_display_backend *halo_display_create()
+struct xurfaced_display_backend *xurfaced_display_create()
 {
 
     XInitThreads();
 
-    struct halo_display_backend *backend = malloc(sizeof (struct halo_display_backend));
+    struct xurfaced_display_backend *backend = malloc(sizeof (struct xurfaced_display_backend));
     backend->display = XOpenDisplay(0);
 
     if (!backend->display)
     {
 
-        fprintf(stderr, "halo: can not open display\n");
+        fprintf(stderr, "xurfaced: can not open display\n");
         exit(EXIT_FAILURE);
 
     }
@@ -31,7 +31,7 @@ struct halo_display_backend *halo_display_create()
 
 }
 
-void halo_display_destroy(struct halo_display_backend *backend)
+void xurfaced_display_destroy(struct xurfaced_display_backend *backend)
 {
 
     XCloseDisplay(backend->display);

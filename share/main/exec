@@ -1,13 +1,13 @@
 #!/bin/bash
 
-pid=$(cat $HOME/.halo/pid)
+pid=$(cat $HOME/.xurfaced/pid)
 
-plugins=$HOME/.halo/plugins/list
+plugins=$HOME/.xurfaced/plugins/list
 
 if [ -e $plugins ]; then
-    cat $plugins | sed -r "s:(.*):$HOME/.halo/sethead \1:"
+    cat $plugins | sed -r "s:(.*):$HOME/.xurfaced/sethead \1:"
     echo "";
 fi
 
-echo "$HOME/.halo/sethead system"
-echo "$HOME/.halo/quit"
+echo "$HOME/.xurfaced/sethead system"
+echo "$HOME/.xurfaced/quit"

@@ -8,7 +8,7 @@
 #include <display.h>
 #include <window.h>
 
-static void halo_window_init_root(struct halo_display_backend *backend)
+static void xurfaced_window_init_root(struct xurfaced_display_backend *backend)
 {
 
     backend->root = XRootWindow(backend->display, backend->screen);
@@ -30,7 +30,7 @@ static void halo_window_init_root(struct halo_display_backend *backend)
 
 }
 
-static void halo_window_init_main(struct halo_display_backend *backend)
+static void xurfaced_window_init_main(struct xurfaced_display_backend *backend)
 {
 
     backend->main = XCreateSimpleWindow(backend->display, backend->root, 0, 0, backend->width, backend->height, 0, XBlackPixel(backend->display, backend->screen), XBlackPixel(backend->display, backend->screen));
@@ -53,15 +53,15 @@ static void halo_window_init_main(struct halo_display_backend *backend)
 
 }
 
-void halo_window_init(struct halo_display_backend *backend)
+void xurfaced_window_init(struct xurfaced_display_backend *backend)
 {
 
-    halo_window_init_root(backend);
-    halo_window_init_main(backend);
+    xurfaced_window_init_root(backend);
+    xurfaced_window_init_main(backend);
 
 }
 
-void halo_window_destroy(struct halo_display_backend *backend)
+void xurfaced_window_destroy(struct xurfaced_display_backend *backend)
 {
 
     XUnmapWindow(backend->display, backend->main);

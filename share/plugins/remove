@@ -4,9 +4,9 @@ if [ "$1" = "" ]; then
     exit;
 fi
 
-target="$HOME/.halo"
+target="$HOME/.xurfaced"
 
 rm -rf "$target/$1"
 
-sed -i "/$1/d" $HOME/.halo/plugins/list
-$HOME/.halo/refresh
+sed -i "/$1/d" $HOME/.xurfaced/plugins/list
+$HOME/.xurfaced/refresh

@@ -1,32 +1,32 @@
-#ifndef HALO_CLIENT_H
-#define HALO_CLIENT_H
+#ifndef XURFACED_CLIENT_H
+#define XURFACED_CLIENT_H
 
-struct halo_client
+struct xurfaced_client
 {
 
     Window window;
     Picture picture;
-    struct halo_client *next;
-    struct halo_client *prev;
+    struct xurfaced_client *next;
+    struct xurfaced_client *prev;
 
 };
 
-struct halo_client_list
+struct xurfaced_client_list
 {
 
-    struct halo_client *head;
-    struct halo_client *current;
+    struct xurfaced_client *head;
+    struct xurfaced_client *current;
 
 };
 
-extern struct halo_client *halo_client_create(Window window);
-extern void halo_client_destroy(struct halo_client *client);
+extern struct xurfaced_client *xurfaced_client_create(Window window);
+extern void xurfaced_client_destroy(struct xurfaced_client *client);
 
-extern struct halo_client_list *halo_client_list_create();
-extern void halo_client_list_destroy(struct halo_client_list *list);
-extern void halo_client_list_add(struct halo_client_list *list, struct halo_client *client);
-extern void halo_client_list_remove(struct halo_client_list *list, struct halo_client *client);
-extern struct halo_client *halo_client_list_find(struct halo_client_list *list, Window window);
+extern struct xurfaced_client_list *xurfaced_client_list_create();
+extern void xurfaced_client_list_destroy(struct xurfaced_client_list *list);
+extern void xurfaced_client_list_add(struct xurfaced_client_list *list, struct xurfaced_client *client);
+extern void xurfaced_client_list_remove(struct xurfaced_client_list *list, struct xurfaced_client *client);
+extern struct xurfaced_client *xurfaced_client_list_find(struct xurfaced_client_list *list, Window window);
 
 #endif
 

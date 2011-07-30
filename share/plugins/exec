@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "$HOME/.halo/sethead system"
+echo "$HOME/.xurfaced/sethead system"
 echo ""
-echo "$HOME/.halo/sethead plugins/install"
-echo "$HOME/.halo/sethead plugins/uninstall"
+echo "$HOME/.xurfaced/sethead plugins/install"
+echo "$HOME/.xurfaced/sethead plugins/uninstall"

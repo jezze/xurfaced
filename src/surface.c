@@ -7,50 +7,50 @@
 #include <cairo-xlib.h>
 #include <animation.h>
 #include <display.h>
-#include <halo.h>
+#include <xurfaced.h>
 #include <menu.h>
 #include <surface.h>
 
-static cairo_t *halo_cairo;
-static cairo_surface_t *halo_surface;
-static cairo_pattern_t *halo_background_pattern;
+static cairo_t *xurfaced_cairo;
+static cairo_surface_t *xurfaced_surface;
+static cairo_pattern_t *xurfaced_background_pattern;
 
-static void halo_surface_blit_background(int width, int height)
+static void xurfaced_surface_blit_background(int width, int height)
 {
 
-    cairo_rectangle(halo_cairo, 0, 0, width, height);
-    cairo_set_source(halo_cairo, halo_background_pattern);
-    cairo_fill(halo_cairo);
+    cairo_rectangle(xurfaced_cairo, 0, 0, width, height);
+    cairo_set_source(xurfaced_cairo, xurfaced_background_pattern);
+    cairo_fill(xurfaced_cairo);
 
 }
 
-static void halo_surface_blit_notification(int width, int height)
+static void xurfaced_surface_blit_notification(int width, int height)
 {
 
     cairo_font_extents_t fe;
 
     float boxheight = height / 24;
 
-    cairo_rectangle(halo_cairo, 0, 0, width, boxheight);
-    cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, 0.4);
-    cairo_fill(halo_cairo);
-    cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    cairo_set_font_size(halo_cairo, 18.0);
-    cairo_font_extents(halo_cairo, &fe);
-    cairo_move_to(halo_cairo, 24.0, boxheight / 2.0 + fe.height / 2.0 - fe.descent);
-    cairo_text_path(halo_cairo, "Halo");
-    cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, 1.0);
-    cairo_fill(halo_cairo);
-    cairo_set_line_width(halo_cairo, 2.0);
-    cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, 0.7);
-    cairo_stroke(halo_cairo);
+    cairo_rectangle(xurfaced_cairo, 0, 0, width, boxheight);
+    cairo_set_source_rgba(xurfaced_cairo, 0.0, 0.0, 0.0, 0.4);
+    cairo_fill(xurfaced_cairo);
+    cairo_select_font_face(xurfaced_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+    cairo_set_font_size(xurfaced_cairo, 18.0);
+    cairo_font_extents(xurfaced_cairo, &fe);
+    cairo_move_to(xurfaced_cairo, 24.0, boxheight / 2.0 + fe.height / 2.0 - fe.descent);
+    cairo_text_path(xurfaced_cairo, "xurfaced");
+    cairo_set_source_rgba(xurfaced_cairo, 1.0, 1.0, 1.0, 1.0);
+    cairo_fill(xurfaced_cairo);
+    cairo_set_line_width(xurfaced_cairo, 2.0);
+    cairo_set_source_rgba(xurfaced_cairo, 0.0, 0.0, 0.0, 0.7);
+    cairo_stroke(xurfaced_cairo);
 
 }
 
-static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
+static void xurfaced_surface_blit_menu(unsigned int height, struct xurfaced_menu *menu)
 {
 
-    struct halo_menu_option *current = menu->opts->current;
+    struct xurfaced_menu_option *current = menu->opts->current;
 
     float middle = height / 4 + height / 8;
     float offset = menu->animationProperties.translationY + current->animationProperties.translationY;
@@ -66,8 +66,8 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 
     }
 
-    struct halo_menu_option *start = menu->opts->current;
-    struct halo_menu_option *stop = menu->opts->current;
+    struct xurfaced_menu_option *start = menu->opts->current;
+    struct xurfaced_menu_option *stop = menu->opts->current;
 
     unsigned int i;
 
@@ -82,7 +82,7 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 
     }
     
-    struct halo_menu_option *option = start;
+    struct xurfaced_menu_option *option = start;
 
     do
     {
@@ -98,28 +98,28 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
         if (option->animationProperties.alpha <= 0.3)
             option->animationProperties.alpha = 0.3;
 
-        cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-        cairo_set_font_size(halo_cairo, 32.0);
-        cairo_move_to(halo_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY);
-        cairo_text_path(halo_cairo, option->name);
-        cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, option->animationProperties.alpha);
-        cairo_fill(halo_cairo);
-        cairo_set_line_width(halo_cairo, 4.0);
-        cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
-        cairo_stroke(halo_cairo);
+        cairo_select_font_face(xurfaced_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+        cairo_set_font_size(xurfaced_cairo, 32.0);
+        cairo_move_to(xurfaced_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY);
+        cairo_text_path(xurfaced_cairo, option->name);
+        cairo_set_source_rgba(xurfaced_cairo, 1.0, 1.0, 1.0, option->animationProperties.alpha);
+        cairo_fill(xurfaced_cairo);
+        cairo_set_line_width(xurfaced_cairo, 4.0);
+        cairo_set_source_rgba(xurfaced_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
+        cairo_stroke(xurfaced_cairo);
 
         if (option == current)
         {
 
-            cairo_select_font_face(halo_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-            cairo_set_font_size(halo_cairo, 18.0);
-            cairo_move_to(halo_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY + 24);
-            cairo_text_path(halo_cairo, option->description);
-            cairo_set_source_rgba(halo_cairo, 1.0, 1.0, 1.0, option->animationProperties.alpha);
-            cairo_fill(halo_cairo);
-            cairo_set_line_width(halo_cairo, 2.0);
-            cairo_set_source_rgba(halo_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
-            cairo_stroke(halo_cairo);
+            cairo_select_font_face(xurfaced_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+            cairo_set_font_size(xurfaced_cairo, 18.0);
+            cairo_move_to(xurfaced_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY + 24);
+            cairo_text_path(xurfaced_cairo, option->description);
+            cairo_set_source_rgba(xurfaced_cairo, 1.0, 1.0, 1.0, option->animationProperties.alpha);
+            cairo_fill(xurfaced_cairo);
+            cairo_set_line_width(xurfaced_cairo, 2.0);
+            cairo_set_source_rgba(xurfaced_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
+            cairo_stroke(xurfaced_cairo);
 
         }
 
@@ -130,46 +130,46 @@ static void halo_surface_blit_menu(unsigned int height, struct halo_menu *menu)
 
 }
 
-void halo_surface_prep(struct halo *halo)
+void xurfaced_surface_prep(struct xurfaced *xurfaced)
 {
 
-    cairo_push_group(halo_cairo);
-    halo_surface_blit_background(halo->backend->width, halo->backend->height);
-    halo_surface_blit_menu(halo->backend->height, halo->menu);
-    halo_surface_blit_notification(halo->backend->width, halo->backend->height);
-    cairo_pop_group_to_source(halo_cairo);
+    cairo_push_group(xurfaced_cairo);
+    xurfaced_surface_blit_background(xurfaced->backend->width, xurfaced->backend->height);
+    xurfaced_surface_blit_menu(xurfaced->backend->height, xurfaced->menu);
+    xurfaced_surface_blit_notification(xurfaced->backend->width, xurfaced->backend->height);
+    cairo_pop_group_to_source(xurfaced_cairo);
 
 }
 
-void halo_surface_blit(struct halo *halo)
+void xurfaced_surface_blit(struct xurfaced *xurfaced)
 {
 
-    XLockDisplay(halo->backend->display);
-    cairo_paint(halo_cairo);
-    XUnlockDisplay(halo->backend->display);
+    XLockDisplay(xurfaced->backend->display);
+    cairo_paint(xurfaced_cairo);
+    XUnlockDisplay(xurfaced->backend->display);
 
 }
 
-void halo_surface_init(struct halo *halo)
+void xurfaced_surface_init(struct xurfaced *xurfaced)
 {
 
-    halo_surface = cairo_xlib_surface_create(halo->backend->display, halo->backend->main, halo->backend->visual, halo->backend->width, halo->backend->height);
-    halo_cairo = cairo_create(halo_surface);
+    xurfaced_surface = cairo_xlib_surface_create(xurfaced->backend->display, xurfaced->backend->main, xurfaced->backend->visual, xurfaced->backend->width, xurfaced->backend->height);
+    xurfaced_cairo = cairo_create(xurfaced_surface);
 
-    cairo_set_line_cap(halo_cairo, CAIRO_LINE_CAP_ROUND);
+    cairo_set_line_cap(xurfaced_cairo, CAIRO_LINE_CAP_ROUND);
 
-    halo_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, halo->backend->height);
+    xurfaced_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, xurfaced->backend->height);
 
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 0.0, 0.2, 0.0, 0.3, 1.0);
-    cairo_pattern_add_color_stop_rgba(halo_background_pattern, 1.0, 0.4, 0.2, 0.4, 1.0);
+    cairo_pattern_add_color_stop_rgba(xurfaced_background_pattern, 0.0, 0.2, 0.0, 0.3, 1.0);
+    cairo_pattern_add_color_stop_rgba(xurfaced_background_pattern, 1.0, 0.4, 0.2, 0.4, 1.0);
 
 }
 
-void halo_surface_destroy(struct halo *halo)
+void xurfaced_surface_destroy(struct xurfaced *xurfaced)
 {
 
-    cairo_destroy(halo_cairo);
-    cairo_surface_destroy(halo_surface);
+    cairo_destroy(xurfaced_cairo);
+    cairo_surface_destroy(xurfaced_surface);
 
 }
 

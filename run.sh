@@ -2,14 +2,14 @@
 
 TTY="vt5"
 
-if [ -f halo ]
+if [ -f xurfaced ]
 then
 
-    echo "Starting halo on tty $TTY"
-    xinit ./halo -display :1 -- :1 $TTY
+    echo "Starting xurfaced on tty $TTY"
+    xinit ./xurfaced -display :1 -- :1 $TTY
 
 else
 
-    echo "Halo file does not exist. Forgot to compile?"
+    echo "xurfaced file does not exist. Forgot to compile?"
 
 fi

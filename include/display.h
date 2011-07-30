@@ -1,7 +1,7 @@
-#ifndef HALO_DISPLAY_H
-#define HALO_DISPLAY_H
+#ifndef XURFACED_DISPLAY_H
+#define XURFACED_DISPLAY_H
 
-struct halo_display_backend
+struct xurfaced_display_backend
 {
 
     Display *display;
@@ -17,8 +17,8 @@ struct halo_display_backend
 
 };
 
-extern struct halo_display_backend *halo_display_create();
-extern void halo_display_destroy(struct halo_display_backend *backend);
+extern struct xurfaced_display_backend *xurfaced_display_create();
+extern void xurfaced_display_destroy(struct xurfaced_display_backend *backend);
 
 #endif
 

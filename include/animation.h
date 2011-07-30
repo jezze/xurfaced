@@ -1,5 +1,5 @@
-#ifndef HALO_ANIMATION_H
-#define HALO_ANIMATION_H
+#ifndef XURFACED_ANIMATION_H
+#define XURFACED_ANIMATION_H
 
 struct animation_properties
 {

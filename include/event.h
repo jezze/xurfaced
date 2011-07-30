@@ -1,9 +1,9 @@
-#ifndef HALO_EVENT_H
-#define HALO_EVENT_H
+#ifndef XURFACED_EVENT_H
+#define XURFACED_EVENT_H
 
-struct halo;
+struct xurfaced;
 
-extern void halo_event_handler(struct halo *halo);
+extern void xurfaced_event_handler(struct xurfaced *xurfaced);
 
 #endif
 

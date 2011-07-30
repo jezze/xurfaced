@@ -7,68 +7,68 @@
 #include <client.h>
 #include <display.h>
 #include <menu.h>
-#include <halo.h>
+#include <xurfaced.h>
 #include <event.h>
 
-static void halo_event_configurerequest(struct halo *halo, XConfigureRequestEvent *event)
+static void xurfaced_event_configurerequest(struct xurfaced *xurfaced, XConfigureRequestEvent *event)
 {
 
     XWindowChanges wc;
     wc.x = 0;
     wc.y = 0;
-    wc.width = halo->backend->width;
-    wc.height = halo->backend->height;
+    wc.width = xurfaced->backend->width;
+    wc.height = xurfaced->backend->height;
     wc.border_width = 0;
     wc.sibling = event->above;
     wc.stack_mode = event->detail;
 
-    XConfigureWindow(halo->backend->display, event->window, event->value_mask, &wc);
+    XConfigureWindow(xurfaced->backend->display, event->window, event->value_mask, &wc);
 
     XConfigureEvent ce;
     ce.type = ConfigureNotify;
-    ce.display = halo->backend->display;
+    ce.display = xurfaced->backend->display;
     ce.event = event->window;
     ce.window = event->window;
     ce.x = 0;
     ce.y = 0;
-    ce.width = halo->backend->width;
-    ce.height = halo->backend->height;
+    ce.width = xurfaced->backend->width;
+    ce.height = xurfaced->backend->height;
     ce.border_width = 0;
     ce.above = 0;
     ce.override_redirect = 0;
 
-    XSendEvent(halo->backend->display, event->window, 0, StructureNotifyMask, (XEvent *)&ce);
+    XSendEvent(xurfaced->backend->display, event->window, 0, StructureNotifyMask, (XEvent *)&ce);
 
 }
 
-static void halo_event_destroywindow(struct halo *halo, XDestroyWindowEvent *event)
+static void xurfaced_event_destroywindow(struct xurfaced *xurfaced, XDestroyWindowEvent *event)
 {
 
-    struct halo_client *client = halo_client_list_find(halo->clients, event->window);
+    struct xurfaced_client *client = xurfaced_client_list_find(xurfaced->clients, event->window);
 
     if (!client)
     {
 
-        XSync(halo->backend->display, 0);
+        XSync(xurfaced->backend->display, 0);
 
         return;
 
     }
 
-    halo_client_list_remove(halo->clients, client);
-    halo_client_destroy(client);
+    xurfaced_client_list_remove(xurfaced->clients, client);
+    xurfaced_client_destroy(client);
 
-    halo->clients->current = halo->clients->head;
+    xurfaced->clients->current = xurfaced->clients->head;
 
-    halo->paused = 0;
+    xurfaced->paused = 0;
 
-    XRaiseWindow(halo->backend->display, halo->backend->main);
-    XSetInputFocus(halo->backend->display, halo->backend->main, RevertToParent, CurrentTime);
-    XSync(halo->backend->display, 0);
+    XRaiseWindow(xurfaced->backend->display, xurfaced->backend->main);
+    XSetInputFocus(xurfaced->backend->display, xurfaced->backend->main, RevertToParent, CurrentTime);
+    XSync(xurfaced->backend->display, 0);
 
 }
 
-static void halo_event_expose(struct halo *halo, XExposeEvent *event)
+static void xurfaced_event_expose(struct xurfaced *xurfaced, XExposeEvent *event)
 {
 
     if (event->count)
@@ -76,44 +76,44 @@ static void halo_event_expose(struct halo *halo, XExposeEvent *event)
 
 }
 
-static void halo_event_maprequest(struct halo *halo, XMapRequestEvent *event)
+static void xurfaced_event_maprequest(struct xurfaced *xurfaced, XMapRequestEvent *event)
 {
 
-    struct halo_client *client = halo_client_create(event->window);
+    struct xurfaced_client *client = xurfaced_client_create(event->window);
 
     if (!client)
         return;
 
-    halo_client_list_add(halo->clients, client);
-    halo->clients->current = client;
+    xurfaced_client_list_add(xurfaced->clients, client);
+    xurfaced->clients->current = client;
 
-    XSelectInput(halo->backend->display, client->window, StructureNotifyMask | PropertyChangeMask);
-    XRaiseWindow(halo->backend->display, client->window);
-    XMoveResizeWindow(halo->backend->display, client->window, 0, 0, halo->backend->width, halo->backend->height);
-    XMapWindow(halo->backend->display, client->window);
-    XSetInputFocus(halo->backend->display, client->window, RevertToParent, CurrentTime);
-    XSync(halo->backend->display, 0);
+    XSelectInput(xurfaced->backend->display, client->window, StructureNotifyMask | PropertyChangeMask);
+    XRaiseWindow(xurfaced->backend->display, client->window);
+    XMoveResizeWindow(xurfaced->backend->display, client->window, 0, 0, xurfaced->backend->width, xurfaced->backend->height);
+    XMapWindow(xurfaced->backend->display, client->window);
+    XSetInputFocus(xurfaced->backend->display, client->window, RevertToParent, CurrentTime);
+    XSync(xurfaced->backend->display, 0);
 
     XWindowAttributes wa;
-    XGetWindowAttributes(halo->backend->display, client->window, &wa);
+    XGetWindowAttributes(xurfaced->backend->display, client->window, &wa);
 
-    XRenderPictFormat *format = XRenderFindVisualFormat(halo->backend->display, wa.visual);
+    XRenderPictFormat *format = XRenderFindVisualFormat(xurfaced->backend->display, wa.visual);
 
     XRenderPictureAttributes pa;
     pa.subwindow_mode = IncludeInferiors;
 
-    client->picture = XRenderCreatePicture(halo->backend->display, client->window, format, CPSubwindowMode, &pa);
+    client->picture = XRenderCreatePicture(xurfaced->backend->display, client->window, format, CPSubwindowMode, &pa);
 
-    halo->paused = 1;
+    xurfaced->paused = 1;
 
 }
 
-static void halo_event_unmap(struct halo *halo, XUnmapEvent *event)
+static void xurfaced_event_unmap(struct xurfaced *xurfaced, XUnmapEvent *event)
 {
 
 }
 
-static void halo_event_buttonpress(struct halo *halo, XButtonEvent *event)
+static void xurfaced_event_buttonpress(struct xurfaced *xurfaced, XButtonEvent *event)
 {
 
     switch (event->button)
@@ -121,29 +121,29 @@ static void halo_event_buttonpress(struct halo *halo, XButtonEvent *event)
 
         case 1:
 
-            halo_menu_activate(halo->menu);
+            xurfaced_menu_activate(xurfaced->menu);
 
             break;
 
         case 4:
 
-            halo_menu_previous(halo->menu, 1);
+            xurfaced_menu_previous(xurfaced->menu, 1);
 
             break;
 
         case 5:
 
-            halo_menu_next(halo->menu, 1);
+            xurfaced_menu_next(xurfaced->menu, 1);
 
             break;
 
     }
 
-    XSync(halo->backend->display, 0);
+    XSync(xurfaced->backend->display, 0);
 
 }
 
-static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
+static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent *event)
 {
 
     KeySym key = XLookupKeysym(event, 0);
@@ -156,40 +156,40 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
             if (!(event->state & Mod1Mask))
                 break;
 
-            if (!halo->clients->current)
+            if (!xurfaced->clients->current)
                 break;
 
-    		XKillClient(halo->backend->display, halo->clients->current->window);
+    		XKillClient(xurfaced->backend->display, xurfaced->clients->current->window);
 
             break;
 
         case XK_q:
 
-            halo->running = 0;
+            xurfaced->running = 0;
 
             break;
 
         case XK_Up:
 
-            halo_menu_previous(halo->menu, 1);
+            xurfaced_menu_previous(xurfaced->menu, 1);
 
             break;
 
         case XK_Page_Up:
 
-            halo_menu_previous(halo->menu, 8);
+            xurfaced_menu_previous(xurfaced->menu, 8);
 
             break;
 
         case XK_Down:
 
-            halo_menu_next(halo->menu, 1);
+            xurfaced_menu_next(xurfaced->menu, 1);
 
             break;
 
         case XK_Page_Down:
 
-            halo_menu_next(halo->menu, 8);
+            xurfaced_menu_next(xurfaced->menu, 8);
 
             break;
 
@@ -198,13 +198,13 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
             if (!(event->state & Mod1Mask))
                 break;
 
-            if (!halo->clients->current)
+            if (!xurfaced->clients->current)
                 break;
 
-            halo->clients->current = halo->clients->current->next;
+            xurfaced->clients->current = xurfaced->clients->current->next;
 
-            XRaiseWindow(halo->backend->display, halo->clients->current->window);
-            XSetInputFocus(halo->backend->display, halo->clients->current->window, RevertToParent, CurrentTime);
+            XRaiseWindow(xurfaced->backend->display, xurfaced->clients->current->window);
+            XSetInputFocus(xurfaced->backend->display, xurfaced->clients->current->window, RevertToParent, CurrentTime);
 
             break;
 
@@ -213,73 +213,73 @@ static void halo_event_keypress(struct halo *halo, XKeyPressedEvent *event)
             if (!(event->state & Mod1Mask))
                 break;
 
-            halo->paused = 0;
+            xurfaced->paused = 0;
 
-            XRaiseWindow(halo->backend->display, halo->backend->main);
-            XSetInputFocus(halo->backend->display, halo->backend->main, RevertToParent, CurrentTime);
+            XRaiseWindow(xurfaced->backend->display, xurfaced->backend->main);
+            XSetInputFocus(xurfaced->backend->display, xurfaced->backend->main, RevertToParent, CurrentTime);
 
             break;
 
         case XK_Return:
 
-            halo_menu_activate(halo->menu);
+            xurfaced_menu_activate(xurfaced->menu);
 
             break;
 
     }
 
-    XSync(halo->backend->display, 0);
+    XSync(xurfaced->backend->display, 0);
 
 }
 
-void halo_event_handler(struct halo *halo)
+void xurfaced_event_handler(struct xurfaced *xurfaced)
 {
 
     XEvent event;
-    XNextEvent(halo->backend->display, &event);
+    XNextEvent(xurfaced->backend->display, &event);
 
     switch (event.type)
     {
 
         case ButtonPress:
 
-            halo_event_buttonpress(halo, &event.xbutton);
+            xurfaced_event_buttonpress(xurfaced, &event.xbutton);
 
             break;
 
         case Expose:
 
-            halo_event_expose(halo, &event.xexpose);
+            xurfaced_event_expose(xurfaced, &event.xexpose);
 
             break;
 
         case KeyPress:
 
-            halo_event_keypress(halo, &event.xkey);
+            xurfaced_event_keypress(xurfaced, &event.xkey);
 
             break;
 
         case MapRequest:
 
-            halo_event_maprequest(halo, &event.xmaprequest);
+            xurfaced_event_maprequest(xurfaced, &event.xmaprequest);
 
             break;
 
         case ConfigureRequest:
 
-            halo_event_configurerequest(halo, &event.xconfigurerequest);
+            xurfaced_event_configurerequest(xurfaced, &event.xconfigurerequest);
 
             break;
 
         case UnmapNotify:
 
-            halo_event_unmap(halo, &event.xunmap);
+            xurfaced_event_unmap(xurfaced, &event.xunmap);
 
             break;
 
         case DestroyNotify:
 
-            halo_event_destroywindow(halo, &event.xdestroywindow);
+            xurfaced_event_destroywindow(xurfaced, &event.xdestroywindow);
 
             break;
 

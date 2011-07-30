@@ -1,6 +1,6 @@
 #!/bin/bash
 
-list="http://halo.abstraction.se/plugins/list"
+list="http://xurfaced.abstraction.se/plugins/list"
 
 echo "Back"
 echo ""

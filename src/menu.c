@@ -13,12 +13,12 @@
 #include <limb/dlist.h>
 #include <animation.h>
 #include <display.h>
-#include <halo.h>
+#include <xurfaced.h>
 #include <menu.h>
 
-extern struct halo halo;
+extern struct xurfaced xurfaced;
 
-void halo_execute(char *command, int pipe[])
+void xurfaced_execute(char *command, int pipe[])
 {
 
     char args[4096], *argv[32];
@@ -52,8 +52,8 @@ void halo_execute(char *command, int pipe[])
 
         }
 
-        if (halo.backend->display)
-            close(halo.backend->descriptor);
+        if (xurfaced.backend->display)
+            close(xurfaced.backend->descriptor);
 
         setsid();
         execvp(argv[0], argv);
@@ -74,10 +74,10 @@ void halo_execute(char *command, int pipe[])
 
 }
 
-struct halo_menu_option *halo_menu_option_create()
+struct xurfaced_menu_option *xurfaced_menu_option_create()
 {
 
-    struct halo_menu_option *option = malloc(sizeof (struct halo_menu_option));
+    struct xurfaced_menu_option *option = malloc(sizeof (struct xurfaced_menu_option));
     option->name = 0;
     option->description = 0;
     option->command = 0;
@@ -89,7 +89,7 @@ struct halo_menu_option *halo_menu_option_create()
 
 }
 
-void halo_menu_option_destroy(struct halo_menu_option *option)
+void xurfaced_menu_option_destroy(struct xurfaced_menu_option *option)
 {
 
     free(option->name);
@@ -99,10 +99,10 @@ void halo_menu_option_destroy(struct halo_menu_option *option)
 
 }
 
-struct halo_menu_option_list *halo_menu_option_list_create()
+struct xurfaced_menu_option_list *xurfaced_menu_option_list_create()
 {
 
-    struct halo_menu_option_list *list = malloc(sizeof (struct halo_menu_option_list));
+    struct xurfaced_menu_option_list *list = malloc(sizeof (struct xurfaced_menu_option_list));
     list->head = 0;
     list->current = 0;
 
@@ -110,17 +110,17 @@ struct halo_menu_option_list *halo_menu_option_list_create()
 
 }
 
-void halo_menu_option_list_destroy(struct halo_menu_option_list *list)
+void xurfaced_menu_option_list_destroy(struct xurfaced_menu_option_list *list)
 {
 
-    struct halo_menu_option *current = list->head;
+    struct xurfaced_menu_option *current = list->head;
 
     do
     {
 
-        struct halo_menu_option *next = current->next;
+        struct xurfaced_menu_option *next = current->next;
 
-        halo_menu_option_destroy(current);
+        xurfaced_menu_option_destroy(current);
 
         current = next;
 
@@ -131,7 +131,7 @@ void halo_menu_option_list_destroy(struct halo_menu_option_list *list)
 
 }
 
-void halo_menu_option_list_add(struct halo_menu_option_list *list, struct halo_menu_option *option)
+void xurfaced_menu_option_list_add(struct xurfaced_menu_option_list *list, struct xurfaced_menu_option *option)
 {
 
     if (!list->head)
@@ -157,7 +157,7 @@ void halo_menu_option_list_add(struct halo_menu_option_list *list, struct halo_m
 
 }
 
-void halo_menu_option_list_remove(struct halo_menu_option_list *list, struct halo_menu_option *option)
+void xurfaced_menu_option_list_remove(struct xurfaced_menu_option_list *list, struct xurfaced_menu_option *option)
 {
 
     if (option == list->head)
@@ -171,37 +171,37 @@ void halo_menu_option_list_remove(struct halo_menu_option_list *list, struct hal
 
 }
 
-struct halo_menu *halo_menu_create()
+struct xurfaced_menu *xurfaced_menu_create()
 {
 
-    struct halo_menu *menu = malloc(sizeof (struct halo_menu));
-    menu->opts = halo_menu_option_list_create();
+    struct xurfaced_menu *menu = malloc(sizeof (struct xurfaced_menu));
+    menu->opts = xurfaced_menu_option_list_create();
 
     return menu;
 
 }
 
-void halo_menu_destroy(struct halo_menu *menu)
+void xurfaced_menu_destroy(struct xurfaced_menu *menu)
 {
 
-    halo_menu_option_list_destroy(menu->opts);
+    xurfaced_menu_option_list_destroy(menu->opts);
     free(menu->opts);
     free(menu);
 
 }
 
-void halo_menu_activate(struct halo_menu *menu)
+void xurfaced_menu_activate(struct xurfaced_menu *menu)
 {
 
     if (strlen(menu->opts->current->command))
-        halo_execute(menu->opts->current->command, 0);
+        xurfaced_execute(menu->opts->current->command, 0);
 
 }
 
-void halo_menu_next(struct halo_menu *menu, unsigned int num)
+void xurfaced_menu_next(struct xurfaced_menu *menu, unsigned int num)
 {
 
-    struct halo_menu_option *option = menu->opts->current;
+    struct xurfaced_menu_option *option = menu->opts->current;
 
     if (option == menu->opts->head->prev)
         return;
@@ -224,10 +224,10 @@ void halo_menu_next(struct halo_menu *menu, unsigned int num)
 
 }
 
-void halo_menu_previous(struct halo_menu *menu, unsigned int num)
+void xurfaced_menu_previous(struct xurfaced_menu *menu, unsigned int num)
 {
 
-    struct halo_menu_option *option = menu->opts->current;
+    struct xurfaced_menu_option *option = menu->opts->current;
 
     if (option == menu->opts->head)
         return;
@@ -250,7 +250,7 @@ void halo_menu_previous(struct halo_menu *menu, unsigned int num)
 
 }
 
-static FILE *halo_open(char *path)
+static FILE *xurfaced_open(char *path)
 {
 
     struct stat info;
@@ -260,10 +260,10 @@ static FILE *halo_open(char *path)
     if (info.st_mode & S_IXUSR)
     {
 
-        pipe(halo.pipe);
-        halo_execute(path, halo.pipe);
+        pipe(xurfaced.pipe);
+        xurfaced_execute(path, xurfaced.pipe);
 
-        return fdopen(halo.pipe[0], "r");
+        return fdopen(xurfaced.pipe[0], "r");
 
     }
     
@@ -276,10 +276,10 @@ static FILE *halo_open(char *path)
 
 }
 
-struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
+struct xurfaced_menu *xurfaced_menu_init(unsigned int width, unsigned int height)
 {
 
-    struct halo_menu *menu = halo_menu_create();
+    struct xurfaced_menu *menu = xurfaced_menu_create();
     menu->animationProperties.translationX = width / 4;
     menu->animationProperties.translationY = height / 4 + height / 8;
 
@@ -287,7 +287,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
     char current[128];
     char content[4096];
 
-    FILE *head = fopen(halo.config.head, "r");
+    FILE *head = fopen(xurfaced.config.head, "r");
 
     if (fgets(path, 128, head) == NULL)
     {
@@ -301,22 +301,22 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     path[strlen(path) - 1] = '\0';
 
-    sprintf(current, "%s/%s/title", halo.config.base, path);
+    sprintf(current, "%s/%s/title", xurfaced.config.base, path);
 
-    FILE *fileTitle = halo_open(current);
+    FILE *fileTitle = xurfaced_open(current);
 
     if (!fileTitle)
         return 0;
 
     float y = 0;
 
-    struct halo_menu_option *option;
+    struct xurfaced_menu_option *option;
 
     while (fgets(content, 4096, fileTitle) != NULL)
     {
 
         content[strlen(content) - 1] = '\0';
-        option = halo_menu_option_create();
+        option = xurfaced_menu_option_create();
         option->name = (char *)malloc(strlen(content) + 1);
 
         strcpy(option->name, content);
@@ -324,7 +324,7 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
         option->animationProperties.translationX = 0;
         option->animationProperties.translationY = y;
 
-        halo_menu_option_list_add(menu->opts, option);
+        xurfaced_menu_option_list_add(menu->opts, option);
 
         y += 80.0;
 
@@ -332,9 +332,9 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(fileTitle);
 
-    sprintf(current, "%s/%s/desc", halo.config.base, path);
+    sprintf(current, "%s/%s/desc", xurfaced.config.base, path);
 
-    FILE *fileDesc = halo_open(current);
+    FILE *fileDesc = xurfaced_open(current);
 
     if (!fileDesc)
         return 0;
@@ -355,9 +355,9 @@ struct halo_menu *halo_menu_init(unsigned int width, unsigned int height)
 
     fclose(fileDesc);
 
-    sprintf(current, "%s/%s/exec", halo.config.base, path);
+    sprintf(current, "%s/%s/exec", xurfaced.config.base, path);
 
-    FILE *fileExec = halo_open(current);
+    FILE *fileExec = xurfaced_open(current);
 
     if (!fileExec)
         return 0;

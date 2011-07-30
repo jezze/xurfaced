@@ -1,5 +1,5 @@
 #!/bin/bash
 
-echo "$HOME/.halo/sethead main"
+echo "$HOME/.xurfaced/sethead main"
 echo ""
-echo "$HOME/.halo/sethead plugins"
+echo "$HOME/.xurfaced/sethead plugins"

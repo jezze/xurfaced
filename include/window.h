@@ -1,8 +1,8 @@
-#ifndef HALO_WINDOW_H
-#define HALO_WINDOW_H
+#ifndef XURFACED_WINDOW_H
+#define XURFACED_WINDOW_H
 
-extern void halo_window_init(struct halo_display_backend *backend);
-extern void halo_window_destroy(struct halo_display_backend *backend);
+extern void xurfaced_window_init(struct xurfaced_display_backend *backend);
+extern void xurfaced_window_destroy(struct xurfaced_display_backend *backend);
 
 #endif
 

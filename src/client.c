@@ -3,10 +3,10 @@
 #include <X11/extensions/Xrender.h>
 #include <client.h>
 
-struct halo_client *halo_client_create(Window window)
+struct xurfaced_client *xurfaced_client_create(Window window)
 {
 
-    struct halo_client *client = malloc(sizeof (struct halo_client));
+    struct xurfaced_client *client = malloc(sizeof (struct xurfaced_client));
     client->window = window;
     client->picture = 0;
     client->next = 0;
@@ -16,17 +16,17 @@ struct halo_client *halo_client_create(Window window)
 
 }
 
-void halo_client_destroy(struct halo_client *client)
+void xurfaced_client_destroy(struct xurfaced_client *client)
 {
 
     free(client);
 
 }
 
-struct halo_client_list *halo_client_list_create()
+struct xurfaced_client_list *xurfaced_client_list_create()
 {
 
-    struct halo_client_list *list = malloc(sizeof (struct halo_client_list));
+    struct xurfaced_client_list *list = malloc(sizeof (struct xurfaced_client_list));
     list->head = 0;
     list->current = 0;
 
@@ -34,17 +34,17 @@ struct halo_client_list *halo_client_list_create()
 
 }
 
-void halo_client_list_destroy(struct halo_client_list *list)
+void xurfaced_client_list_destroy(struct xurfaced_client_list *list)
 {
 
-    struct halo_client *current = list->head;
+    struct xurfaced_client *current = list->head;
 
     do
     {
 
-        struct halo_client *next = current->next;
+        struct xurfaced_client *next = current->next;
 
-        halo_client_destroy(current);
+        xurfaced_client_destroy(current);
 
         current = next;
 
@@ -55,7 +55,7 @@ void halo_client_list_destroy(struct halo_client_list *list)
 
 }
 
-void halo_client_list_add(struct halo_client_list *list, struct halo_client *client)
+void xurfaced_client_list_add(struct xurfaced_client_list *list, struct xurfaced_client *client)
 {
 
     if (!list->head)
@@ -81,7 +81,7 @@ void halo_client_list_add(struct halo_client_list *list, struct halo_client *cli
 
 }
 
-void halo_client_list_remove(struct halo_client_list *list, struct halo_client *client)
+void xurfaced_client_list_remove(struct xurfaced_client_list *list, struct xurfaced_client *client)
 {
 
     if (client == list->head)
@@ -95,10 +95,10 @@ void halo_client_list_remove(struct halo_client_list *list, struct halo_client *
 
 }
 
-struct halo_client *halo_client_list_find(struct halo_client_list *list, Window window)
+struct xurfaced_client *xurfaced_client_list_find(struct xurfaced_client_list *list, Window window)
 {
 
-    struct halo_client *current = list->head;
+    struct xurfaced_client *current = list->head;
 
     if (!current)
         return 0;

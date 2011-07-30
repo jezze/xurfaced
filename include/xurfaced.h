@@ -1,7 +1,7 @@
-#ifndef HALO_HALO_H
-#define HALO_HALO_H
+#ifndef XURFACED_XURFACED_H
+#define XURFACED_XURFACED_H
 
-struct halo_config
+struct xurfaced_config
 {
 
     char base[128];
@@ -14,11 +14,11 @@ struct halo_config
 
 };
 
-struct halo
+struct xurfaced
 {
 
-    struct halo_config config;
-    struct halo_display_backend *backend;
+    struct xurfaced_config config;
+    struct xurfaced_display_backend *backend;
     int running;
     int paused;
     pthread_t threadRender;
@@ -26,8 +26,8 @@ struct halo
     pthread_mutex_t mutexMenu;
     pthread_mutex_t mutexRender;
     pthread_cond_t condRender;
-    struct halo_menu *menu;
-    struct halo_client_list *clients;
+    struct xurfaced_menu *menu;
+    struct xurfaced_client_list *clients;
     int pipe[2];
 
 };
