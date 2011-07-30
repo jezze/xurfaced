@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <X11/extensions/Xrender.h>
@@ -161,6 +162,9 @@ static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent 
         xurfaced_execute(path, 0);
 
     }
+
+    int status;
+    wait(&status);
 
     switch (key)
     {
