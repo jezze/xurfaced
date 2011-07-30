@@ -18,62 +18,6 @@
 
 extern struct xurfaced xurfaced;
 
-void xurfaced_execute(char *command, int pipe[])
-{
-
-    char args[4096], *argv[32];
-
-    memcpy(args, command, strlen(command) + 1);
-
-    argv[0] = strtok(args, " ");
-
-    unsigned int i = 0;
-
-    while ((argv[++i] = strtok(0, " ")));
-
-    int pid = fork();
-    int pchild;
-
-    if (pid == -1)
-        return;
-
-    if (!pid)
-    {
-
-        pchild = getpid();
-
-        if (pipe)
-        {
-
-            close(1);
-            dup(pipe[1]);
-            close(pipe[0]);
-            close(pipe[1]);
-
-        }
-
-        if (xurfaced.backend->display)
-            close(xurfaced.backend->descriptor);
-
-        setsid();
-        execvp(argv[0], argv);
-        exit(EXIT_FAILURE);
-
-    }
-
-    if (pipe)
-    {
-
-        close(pipe[1]);
-
-        int status;
-
-        wait(&status);
-
-    }
-
-}
-
 struct xurfaced_menu_option *xurfaced_menu_option_create()
 {
 
