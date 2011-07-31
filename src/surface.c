@@ -166,7 +166,7 @@ void xurfaced_surface_init(struct xurfaced_display_backend *backend)
     xurfaced_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, backend->height);
 
     unsigned int top = 0x441155;
-    unsigned int bottom = 0x112244;
+    unsigned int bottom = 0x001133;
 
     double r = xurfaced_convert_hex_to_decimal(top >> 16);
     double g = xurfaced_convert_hex_to_decimal(top >> 8);
