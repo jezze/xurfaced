@@ -13,6 +13,13 @@ static cairo_t *xurfaced_cairo;
 static cairo_surface_t *xurfaced_surface;
 static cairo_pattern_t *xurfaced_background_pattern;
 
+static double xurfaced_convert_hex_to_decimal(unsigned int value)
+{
+
+    return (double)(value & 0xFF) / (double)0xFF;
+
+}
+
 static void xurfaced_surface_blit_background(int width, int height)
 {
 
@@ -90,8 +97,8 @@ static void xurfaced_surface_blit_menu(unsigned int height, struct xurfaced_menu
         else
             option->animationProperties.alpha -= 0.05;
 
-        if (option->animationProperties.alpha >= 0.8)
-            option->animationProperties.alpha = 0.8;
+        if (option->animationProperties.alpha >= 1.0)
+            option->animationProperties.alpha = 1.0;
 
         if (option->animationProperties.alpha <= 0.3)
             option->animationProperties.alpha = 0.3;
@@ -158,8 +165,19 @@ void xurfaced_surface_init(struct xurfaced_display_backend *backend)
 
     xurfaced_background_pattern = cairo_pattern_create_linear(0.0, 0.0, 0.0, backend->height);
 
-    cairo_pattern_add_color_stop_rgba(xurfaced_background_pattern, 0.0, 0.2, 0.0, 0.3, 1.0);
-    cairo_pattern_add_color_stop_rgba(xurfaced_background_pattern, 1.0, 0.4, 0.2, 0.4, 1.0);
+    unsigned int top = 0x441155;
+    unsigned int bottom = 0x112244;
+
+    double r = xurfaced_convert_hex_to_decimal(top >> 16);
+    double g = xurfaced_convert_hex_to_decimal(top >> 8);
+    double b = xurfaced_convert_hex_to_decimal(top);
+
+    double r2 = xurfaced_convert_hex_to_decimal(bottom >> 16);
+    double g2 = xurfaced_convert_hex_to_decimal(bottom >> 8);
+    double b2 = xurfaced_convert_hex_to_decimal(bottom);
+
+    cairo_pattern_add_color_stop_rgb(xurfaced_background_pattern, 0.0, r, g, b);
+    cairo_pattern_add_color_stop_rgb(xurfaced_background_pattern, 1.0, r2, g2, b2);
 
 }
 
