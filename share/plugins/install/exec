@@ -1,7 +1,6 @@
 #!/bin/bash
 
-list="http://xurfaced.abstraction.se/plugins/list"
+conf=$HOME/.xurfaced
+repository=$(cat $conf/plugins/repository)
 
-echo "$HOME/.xurfaced/sethead plugins"
-echo ""
-curl -s $list | sed -r "s:(.*):$HOME/.xurfaced/plugins/download \1:"
+curl -s $repository/list | sed -r "s:(.*):$conf/plugins/download \1:"

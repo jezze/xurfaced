@@ -1,7 +1,5 @@
 #!/bin/bash
 
-list="$HOME/.xurfaced/plugins/list"
+conf=$HOME/.xurfaced
 
-echo "$HOME/.xurfaced/sethead plugins"
-echo ""
-cat $list | sed -r "s:(.*):$HOME/.xurfaced/plugins/remove \1:"
+cat $conf/plugins/list | sed -r "s:(.*):$conf/plugins/remove \1:"

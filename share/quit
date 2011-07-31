@@ -1,5 +1,6 @@
 #!/bin/bash
 
-pid="$HOME/.xurfaced/pid"
+conf=$HOME/.xurfaced
+pid="$conf/pid"
 
 kill -SIGTERM $(cat $pid)

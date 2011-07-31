@@ -1,12 +1,12 @@
 #!/bin/bash
 
 if [ "$1" = "" ]; then
-    exit;
+    exit
 fi
 
-target="$HOME/.xurfaced"
+conf=$HOME/.xurfaced
+target=$HOME/.xurfaced/$1
 
-rm -rf "$target/$1"
-
-sed -i "/$1/d" $HOME/.xurfaced/plugins/list
-$HOME/.xurfaced/refresh
+rm -rf $target
+sed -i "/$1/d" $conf/plugins/list
+$conf/refresh

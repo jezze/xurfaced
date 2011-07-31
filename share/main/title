@@ -1,10 +1,11 @@
 #!/bin/bash
 
-plugins=$HOME/.xurfaced/plugins/list
+conf=$HOME/.xurfaced
+plugins=$conf/plugins/list
 
 if [ -e $plugins ]; then
-    cat $plugins;
-    echo "";
+    cat $plugins
+    echo ""
 fi
 
 echo "System"

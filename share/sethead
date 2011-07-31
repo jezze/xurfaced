@@ -1,10 +1,12 @@
 #!/bin/bash
 
 if [ "$1" = "" ]; then
-    exit;
+    exit
 fi
 
-echo $1 > $HOME/.xurfaced/head
-echo $1 >> $HOME/.xurfaced/history
+conf=$HOME/.xurfaced
+
+echo $1 > $conf/head
+echo $1 >> $conf/history
 sync
-$HOME/.xurfaced/refresh
+$conf/refresh

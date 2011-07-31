@@ -1,4 +1,6 @@
 #!/bin/bash
 
-echo "$HOME/.xurfaced/sethead plugins/install"
-echo "$HOME/.xurfaced/sethead plugins/uninstall"
+conf=$HOME/.xurfaced
+
+echo "$conf/sethead plugins/install"
+echo "$conf/sethead plugins/uninstall"

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-list="http://xurfaced.abstraction.se/plugins/list"
+conf=$HOME/.xurfaced
+repository=$(cat $conf/plugins/repository)
 
-echo "Back"
-echo ""
-curl -s $list
+curl -s $repository/list

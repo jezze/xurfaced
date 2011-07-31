@@ -2,4 +2,4 @@
 
 conf=$HOME/.xurfaced
 
-cat $conf/plugins/list
+$conf/sethead $(cat $conf/mark)
