@@ -209,6 +209,25 @@ static FILE *xurfaced_open(char *path, int apipe[])
 
 }
 
+static void xurfaced_read_head(struct xurfaced *xurfaced, char *buffer, unsigned int size)
+{
+
+    FILE *fd = fopen(xurfaced->config.head, "r");
+
+    if (fgets(buffer, size, fd) == NULL)
+    {
+
+        fprintf(stderr, "Could not read head\n");
+        exit(EXIT_FAILURE);
+
+    }
+
+    fclose(fd);
+
+    buffer[strlen(buffer) - 1] = '\0';
+
+}
+
 struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int width, unsigned int height)
 {
 
@@ -217,99 +236,78 @@ struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int
     menu->animationProperties.translationY = height / 4 + height / 8;
 
     char path[128];
+
+    xurfaced_read_head(xurfaced, path, 128);
+
     char current[128];
-    char content[4096];
-
-    FILE *head = fopen(xurfaced->config.head, "r");
-
-    if (fgets(path, 128, head) == NULL)
-    {
-
-        fprintf(stderr, "Could not read head\n");
-        exit(EXIT_FAILURE);
-
-    }
-
-    fclose(head);
-
-    path[strlen(path) - 1] = '\0';
 
     sprintf(current, "%s/%s/title", xurfaced->config.base, path);
 
-    FILE *fileTitle = xurfaced_open(current, xurfaced->pipe);
-
-    if (!fileTitle)
-        return 0;
-
-    float y = 0;
-
-    struct xurfaced_menu_option *option;
-
-    while (fgets(content, 4096, fileTitle) != NULL)
-    {
-
-        content[strlen(content) - 1] = '\0';
-        option = xurfaced_menu_option_create();
-        option->name = (char *)malloc(strlen(content) + 1);
-
-        strcpy(option->name, content);
-        
-        option->animationProperties.translationX = 0;
-        option->animationProperties.translationY = y;
-
-        xurfaced_menu_option_list_add(menu->opts, option);
-
-        y += 80.0;
-
-    }
-
-    fclose(fileTitle);
+    FILE *title = xurfaced_open(current, xurfaced->pipe);
 
     sprintf(current, "%s/%s/desc", xurfaced->config.base, path);
 
-    FILE *fileDesc = xurfaced_open(current, xurfaced->pipe);
-
-    if (!fileDesc)
-        return 0;
-
-    option = menu->opts->head;
-
-    while (fgets(content, 4096, fileDesc) != NULL)
-    {
-
-        content[strlen(content) - 1] = '\0';
-        option->description = (char *)malloc(strlen(content) + 1);
-
-        strcpy(option->description, content);
-
-        option = option->next;
-
-    }
-
-    fclose(fileDesc);
+    FILE *desc = xurfaced_open(current, xurfaced->pipe);
 
     sprintf(current, "%s/%s/exec", xurfaced->config.base, path);
 
-    FILE *fileExec = xurfaced_open(current, xurfaced->pipe);
+    FILE *exec = xurfaced_open(current, xurfaced->pipe);
 
-    if (!fileExec)
+    if (!title || !desc || !exec)
         return 0;
 
-    option = menu->opts->head;
+    float y = 0;
+    char content[4096];
+    struct xurfaced_menu_option *option;
 
-    while (fgets(content, 4096, fileExec) != NULL)
+    for (;;)
     {
 
+        if (!fgets(content, 4096, title))
+            break;
+
         content[strlen(content) - 1] = '\0';
-        option->command = (char *)malloc(strlen(content) + 1);
 
-        strcpy(option->command, content);
+        option = xurfaced_menu_option_create();
+        option->name = 0;
+        option->description = 0;
+        option->command = 0;
 
-        option = option->next;
+        option->name = malloc(strlen(content) + 1);
+
+        strcpy(option->name, content);
+        
+        if (fgets(content, 4096, desc) != 0)
+        {
+
+            content[strlen(content) - 1] = '\0';
+            option->description = malloc(strlen(content) + 1);
+
+            strcpy(option->description, content);
+
+        }
+
+        if (fgets(content, 4096, exec) != 0)
+        {
+
+            content[strlen(content) - 1] = '\0';
+            option->command = malloc(strlen(content) + 1);
+
+            strcpy(option->command, content);
+
+        }
+
+        option->animationProperties.translationX = 0;
+        option->animationProperties.translationY = y;
+        y += 80.0;
+
+        xurfaced_menu_option_list_add(menu->opts, option);
 
     }
 
-    fclose(fileExec);
+    fclose(title);
+    fclose(desc);
+    fclose(exec);
 
     menu->opts->current = menu->opts->head;
 
