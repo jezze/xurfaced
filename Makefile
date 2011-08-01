@@ -7,9 +7,9 @@ xurfaced:
 	gcc -Wall -I./include `pkg-config --cflags x11 xrender xcomposite cairo` -c src/event.c -o src/event.o
 	gcc -Wall -I./include `pkg-config --cflags x11 xrender xcomposite cairo` -c src/xurfaced.c -o src/xurfaced.o
 	gcc -Wall -I./include `pkg-config --cflags x11 xrender xcomposite cairo` -c src/menu.c -o src/menu.o
-	gcc -Wall -I./include `pkg-config --cflags x11 xrender xcomposite cairo` -c src/surface.c -o src/surface.o
+	gcc -Wall -I./include `pkg-config --cflags x11 xrender xcomposite cairo` -c src/graphic.c -o src/graphic.o
 	gcc -Wall -I./include `pkg-config --cflags x11 xrender xcomposite cairo` -c src/window.c -o src/window.o
-	gcc -Wall -lm -lpthread `pkg-config --libs x11 xrender xcomposite cairo` src/limb/llist.o src/client.o src/display.o src/event.o src/xurfaced.o src/menu.o src/surface.o src/window.o -o xurfaced
+	gcc -Wall -lm -lpthread `pkg-config --libs x11 xrender xcomposite cairo` src/limb/llist.o src/client.o src/display.o src/event.o src/xurfaced.o src/menu.o src/graphic.o src/window.o -o xurfaced
 
 install:
 	cp ./xurfaced /usr/bin/
