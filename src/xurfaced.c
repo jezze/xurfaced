@@ -15,7 +15,7 @@
 #include <event.h>
 #include <xurfaced.h>
 #include <menu.h>
-#include <graphic.h>
+#include <render.h>
 #include <window.h>
 
 struct xurfaced xurfaced;
@@ -31,8 +31,8 @@ static void *xurfaced_thread_render(void *arg)
     {
 
         pthread_mutex_lock(&xurfaced->mutexMenu);
-        xurfaced_graphic_prep(xurfaced->backend, xurfaced->menu);
-        xurfaced_graphic_blit(xurfaced->backend);
+        xurfaced_render_prep(xurfaced->backend, xurfaced->menu);
+        xurfaced_render_blit(xurfaced->backend);
         pthread_mutex_unlock(&xurfaced->mutexMenu);
 
         gettimeofday(&tv, 0);
@@ -206,7 +206,7 @@ static void xurfaced_init(struct xurfaced *xurfaced)
     xurfaced->clients = xurfaced_client_list_create();
 
     xurfaced_window_init(xurfaced->backend);
-    xurfaced_graphic_init(xurfaced->backend);
+    xurfaced_render_init(xurfaced->backend);
     xurfaced_execute(xurfaced->config.oninit, 0);
     wait(&status);
 
@@ -217,7 +217,7 @@ static void xurfaced_destroy(struct xurfaced *xurfaced)
 
     xurfaced_menu_destroy(xurfaced->menu);
     xurfaced_client_list_destroy(xurfaced->clients);
-    xurfaced_graphic_destroy(xurfaced->backend);
+    xurfaced_render_destroy(xurfaced->backend);
     xurfaced_window_destroy(xurfaced->backend);
     xurfaced_display_destroy(xurfaced->backend);
 
