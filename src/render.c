@@ -13,6 +13,10 @@ static cairo_t *xurfaced_render_cairo;
 static cairo_surface_t *xurfaced_render_cairo_surface;
 static cairo_pattern_t *xurfaced_render_cairo_background;
 
+unsigned int xurfaced_render_text = 0xFFFFFFFF;
+unsigned int xurfaced_render_background_top = 0x441155FF;
+unsigned int xurfaced_render_background_bottom = 0x001133FF;
+
 static double xurfaced_render_convert(unsigned int value)
 {
 
@@ -34,21 +38,24 @@ static void xurfaced_render_blit_notification(int width, int height)
 
     cairo_font_extents_t fe;
 
-    float boxheight = height / 24;
+    double r = xurfaced_render_convert(xurfaced_render_text >> 24);
+    double g = xurfaced_render_convert(xurfaced_render_text >> 16);
+    double b = xurfaced_render_convert(xurfaced_render_text >> 8);
+    double a = xurfaced_render_convert(xurfaced_render_text);
+
+    double boxheight = height / 24.0;
+    double stextheight = height / 56.0;
 
     cairo_rectangle(xurfaced_render_cairo, 0, 0, width, boxheight);
     cairo_set_source_rgba(xurfaced_render_cairo, 0.0, 0.0, 0.0, 0.4);
     cairo_fill(xurfaced_render_cairo);
     cairo_select_font_face(xurfaced_render_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-    cairo_set_font_size(xurfaced_render_cairo, 18.0);
+    cairo_set_font_size(xurfaced_render_cairo, stextheight);
     cairo_font_extents(xurfaced_render_cairo, &fe);
     cairo_move_to(xurfaced_render_cairo, 24.0, boxheight / 2.0 + fe.height / 2.0 - fe.descent);
     cairo_text_path(xurfaced_render_cairo, "xurfaced");
-    cairo_set_source_rgba(xurfaced_render_cairo, 1.0, 1.0, 1.0, 1.0);
+    cairo_set_source_rgba(xurfaced_render_cairo, r, g, b, a);
     cairo_fill(xurfaced_render_cairo);
-    cairo_set_line_width(xurfaced_render_cairo, 2.0);
-    cairo_set_source_rgba(xurfaced_render_cairo, 0.0, 0.0, 0.0, 0.7);
-    cairo_stroke(xurfaced_render_cairo);
 
 }
 
@@ -57,9 +64,16 @@ static void xurfaced_render_blit_menu(unsigned int height, struct xurfaced_menu 
 
     struct xurfaced_menu_option *current = menu->opts->current;
 
-    float middle = height / 4 + height / 8;
-    float offset = menu->animationProperties.translationY + current->animationProperties.translationY;
-    float distance = fabs(middle - offset);
+    double r = xurfaced_render_convert(xurfaced_render_text >> 24);
+    double g = xurfaced_render_convert(xurfaced_render_text >> 16);
+    double b = xurfaced_render_convert(xurfaced_render_text >> 8);
+
+    double btextheight = height / 32.0;
+    double stextheight = height / 56.0;
+
+    double middle = height / 4.0 + height / 8.0;
+    double offset = menu->animationProperties.translationY + current->animationProperties.translationY;
+    double distance = fabs(middle - offset);
 
     if (distance > 5.0)
     {
@@ -104,27 +118,21 @@ static void xurfaced_render_blit_menu(unsigned int height, struct xurfaced_menu 
             option->animationProperties.alpha = 0.3;
 
         cairo_select_font_face(xurfaced_render_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
-        cairo_set_font_size(xurfaced_render_cairo, 32.0);
+        cairo_set_font_size(xurfaced_render_cairo, btextheight);
         cairo_move_to(xurfaced_render_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY);
         cairo_text_path(xurfaced_render_cairo, option->name);
-        cairo_set_source_rgba(xurfaced_render_cairo, 1.0, 1.0, 1.0, option->animationProperties.alpha);
+        cairo_set_source_rgba(xurfaced_render_cairo, r, g, b, option->animationProperties.alpha);
         cairo_fill(xurfaced_render_cairo);
-        cairo_set_line_width(xurfaced_render_cairo, 4.0);
-        cairo_set_source_rgba(xurfaced_render_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
-        cairo_stroke(xurfaced_render_cairo);
 
         if (option == current)
         {
 
             cairo_select_font_face(xurfaced_render_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
-            cairo_set_font_size(xurfaced_render_cairo, 18.0);
+            cairo_set_font_size(xurfaced_render_cairo, stextheight);
             cairo_move_to(xurfaced_render_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY + 24);
             cairo_text_path(xurfaced_render_cairo, option->description);
-            cairo_set_source_rgba(xurfaced_render_cairo, 1.0, 1.0, 1.0, option->animationProperties.alpha);
+            cairo_set_source_rgba(xurfaced_render_cairo, r, g, b, option->animationProperties.alpha);
             cairo_fill(xurfaced_render_cairo);
-            cairo_set_line_width(xurfaced_render_cairo, 2.0);
-            cairo_set_source_rgba(xurfaced_render_cairo, 0.0, 0.0, 0.0, option->animationProperties.alpha - 0.3);
-            cairo_stroke(xurfaced_render_cairo);
 
         }
 
@@ -164,18 +172,18 @@ void xurfaced_render_init(struct xurfaced_display_backend *backend)
 
     cairo_set_line_cap(xurfaced_render_cairo, CAIRO_LINE_CAP_ROUND);
 
-    unsigned int top = 0x441155;
-    unsigned int bottom = 0x001133;
+    unsigned int top = 0x441155FF;
+    unsigned int bottom = 0x001133FF;
 
-    double r = xurfaced_render_convert(top >> 16);
-    double g = xurfaced_render_convert(top >> 8);
-    double b = xurfaced_render_convert(top);
-    double r2 = xurfaced_render_convert(bottom >> 16);
-    double g2 = xurfaced_render_convert(bottom >> 8);
-    double b2 = xurfaced_render_convert(bottom);
+    double rt = xurfaced_render_convert(xurfaced_render_background_top >> 24);
+    double gt = xurfaced_render_convert(xurfaced_render_background_top >> 16);
+    double bt = xurfaced_render_convert(xurfaced_render_background_top >> 8);
+    double rb = xurfaced_render_convert(xurfaced_render_background_bottom >> 24);
+    double gb = xurfaced_render_convert(xurfaced_render_background_bottom >> 16);
+    double bb = xurfaced_render_convert(xurfaced_render_background_bottom >> 8);
 
-    cairo_pattern_add_color_stop_rgb(xurfaced_render_cairo_background, 0.0, r, g, b);
-    cairo_pattern_add_color_stop_rgb(xurfaced_render_cairo_background, 1.0, r2, g2, b2);
+    cairo_pattern_add_color_stop_rgb(xurfaced_render_cairo_background, 0.0, rt, gt, bt);
+    cairo_pattern_add_color_stop_rgb(xurfaced_render_cairo_background, 1.0, rb, gb, bb);
 
 }
 
