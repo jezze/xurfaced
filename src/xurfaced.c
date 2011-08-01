@@ -20,14 +20,44 @@
 
 struct xurfaced xurfaced;
 
-static void xurfaced_destroy(struct xurfaced *xurfaced)
+static void *xurfaced_thread_render(void *arg)
 {
 
-    xurfaced_menu_destroy(xurfaced->menu);
-    xurfaced_client_list_destroy(xurfaced->clients);
-    xurfaced_graphic_destroy(xurfaced->backend);
-    xurfaced_window_destroy(xurfaced->backend);
-    xurfaced_display_destroy(xurfaced->backend);
+    struct xurfaced *xurfaced = (struct xurfaced *)arg;
+    struct timespec ts;
+    struct timeval tv;
+
+    while (xurfaced->running)
+    {
+
+        pthread_mutex_lock(&xurfaced->mutexMenu);
+        xurfaced_graphic_prep(xurfaced->backend, xurfaced->menu);
+        xurfaced_graphic_blit(xurfaced->backend);
+        pthread_mutex_unlock(&xurfaced->mutexMenu);
+
+        gettimeofday(&tv, 0);
+
+        ts.tv_sec = tv.tv_sec;
+        ts.tv_nsec = tv.tv_usec * 1000;
+        ts.tv_nsec += 10 * 1000 * 1000;
+
+        pthread_cond_timedwait(&xurfaced->condRender, &xurfaced->mutexRender, &ts);
+
+    }
+
+    return 0;
+
+}
+
+static void *xurfaced_thread_event(void *arg)
+{
+
+    struct xurfaced *xurfaced = (struct xurfaced *)arg;
+
+    while (xurfaced->running)
+        xurfaced_event_handler(xurfaced);
+
+    return 0;
 
 }
 
@@ -41,21 +71,19 @@ static void xurfaced_signal_term(int sig)
 static void xurfaced_signal_usr1(int sig)
 {
 
-    struct xurfaced_menu *new = xurfaced_menu_init(&xurfaced, xurfaced.backend->width, xurfaced.backend->height);
+    struct xurfaced_menu *menu = xurfaced_menu_init(&xurfaced, xurfaced.backend->width, xurfaced.backend->height);
 
-    if (new)
-    {
+    if (!menu)
+        return;
 
-        pthread_mutex_lock(&xurfaced.mutexMenu);
+    pthread_mutex_lock(&xurfaced.mutexMenu);
 
-        if (xurfaced.menu)
-            xurfaced_menu_destroy(xurfaced.menu);
+    if (xurfaced.menu)
+        xurfaced_menu_destroy(xurfaced.menu);
 
-        xurfaced.menu = new;
+    xurfaced.menu = menu;
 
-        pthread_mutex_unlock(&xurfaced.mutexMenu);
-
-    }
+    pthread_mutex_unlock(&xurfaced.mutexMenu);
 
 }
 
@@ -115,6 +143,25 @@ void xurfaced_execute(char *command, int pipe[])
 
 }
 
+static void xurfaced_run(struct xurfaced *xurfaced)
+{
+
+    xurfaced->running = 1;
+    xurfaced->paused = 0;
+
+    pthread_mutex_init(&xurfaced->mutexRender, 0);
+    pthread_cond_init(&xurfaced->condRender, 0);
+    pthread_mutex_init(&xurfaced->mutexMenu, 0);
+    pthread_create(&xurfaced->threadRender, 0, xurfaced_thread_render, xurfaced);
+    pthread_create(&xurfaced->threadEvents, 0, xurfaced_thread_event, xurfaced);
+    pthread_join(xurfaced->threadEvents, 0);
+    pthread_join(xurfaced->threadRender, 0);
+    pthread_mutex_destroy(&xurfaced->mutexMenu);
+    pthread_cond_destroy(&xurfaced->condRender);
+    pthread_mutex_destroy(&xurfaced->mutexRender);
+
+}
+
 static void xurfaced_init_config(struct xurfaced_config *config)
 {
 
@@ -132,21 +179,19 @@ static void xurfaced_init_config(struct xurfaced_config *config)
 static void xurfaced_init(struct xurfaced *xurfaced)
 {
 
+    int status;
+    struct stat info;
+    char copyCmd[128];
+
     signal(SIGTERM, xurfaced_signal_term);
     signal(SIGUSR1, xurfaced_signal_usr1);
 
     xurfaced_init_config(&xurfaced->config);
 
-    int status;
-    struct stat info;
-
     if (stat(xurfaced->config.base, &info) == -1)
     {
 
-        char copyCmd[128];
-
         sprintf(copyCmd, "/bin/cp -r /usr/share/xurfaced %s", xurfaced->config.base);
-        
         system(copyCmd);
 
     }
@@ -167,64 +212,14 @@ static void xurfaced_init(struct xurfaced *xurfaced)
 
 }
 
-static void *xurfaced_thread_render(void *arg)
+static void xurfaced_destroy(struct xurfaced *xurfaced)
 {
 
-    struct xurfaced *xurfaced = (struct xurfaced *)arg;
-
-    struct timespec ts;
-    struct timeval tv;
-
-    while (xurfaced->running)
-    {
-
-        pthread_mutex_lock(&xurfaced->mutexMenu);
-        xurfaced_graphic_prep(xurfaced->backend, xurfaced->menu);
-        xurfaced_graphic_blit(xurfaced->backend);
-        pthread_mutex_unlock(&xurfaced->mutexMenu);
-
-        gettimeofday(&tv, 0);
-
-        ts.tv_sec = tv.tv_sec;
-        ts.tv_nsec = tv.tv_usec * 1000;
-        ts.tv_nsec += 10 * 1000 * 1000;
-
-        pthread_cond_timedwait(&xurfaced->condRender, &xurfaced->mutexRender, &ts);
-
-    }
-
-    return 0;
-
-}
-
-static void *xurfaced_thread_events(void *arg)
-{
-
-    struct xurfaced *xurfaced = (struct xurfaced *)arg;
-
-    while (xurfaced->running)
-        xurfaced_event_handler(xurfaced);
-
-    return 0;
-
-}
-
-static void xurfaced_start(struct xurfaced *xurfaced)
-{
-
-    xurfaced->running = 1;
-    xurfaced->paused = 0;
-
-    pthread_mutex_init(&xurfaced->mutexRender, 0);
-    pthread_cond_init(&xurfaced->condRender, 0);
-    pthread_mutex_init(&xurfaced->mutexMenu, 0);
-    pthread_create(&xurfaced->threadRender, 0, xurfaced_thread_render, xurfaced);
-    pthread_create(&xurfaced->threadEvents, 0, xurfaced_thread_events, xurfaced);
-    pthread_join(xurfaced->threadEvents, 0);
-    pthread_join(xurfaced->threadRender, 0);
-    pthread_mutex_destroy(&xurfaced->mutexMenu);
-    pthread_cond_destroy(&xurfaced->condRender);
-    pthread_mutex_destroy(&xurfaced->mutexRender);
+    xurfaced_menu_destroy(xurfaced->menu);
+    xurfaced_client_list_destroy(xurfaced->clients);
+    xurfaced_graphic_destroy(xurfaced->backend);
+    xurfaced_window_destroy(xurfaced->backend);
+    xurfaced_display_destroy(xurfaced->backend);
 
 }
 
@@ -232,7 +227,7 @@ int main(int argc, char *argv[])
 {
 
     xurfaced_init(&xurfaced);
-    xurfaced_start(&xurfaced);
+    xurfaced_run(&xurfaced);
     xurfaced_destroy(&xurfaced);
 
     return 0;
