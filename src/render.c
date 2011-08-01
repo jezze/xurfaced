@@ -90,7 +90,7 @@ static void xurfaced_render_blit_menu(unsigned int height, struct xurfaced_menu 
 
     unsigned int i;
 
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < 8; i++)
     {
 
         if (start != menu->opts->head)
@@ -129,7 +129,7 @@ static void xurfaced_render_blit_menu(unsigned int height, struct xurfaced_menu 
 
             cairo_select_font_face(xurfaced_render_cairo, "Arial", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
             cairo_set_font_size(xurfaced_render_cairo, stextheight);
-            cairo_move_to(xurfaced_render_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY + 24);
+            cairo_move_to(xurfaced_render_cairo, menu->animationProperties.translationX, menu->animationProperties.translationY + option->animationProperties.translationY + btextheight);
             cairo_text_path(xurfaced_render_cairo, option->description);
             cairo_set_source_rgba(xurfaced_render_cairo, r, g, b, option->animationProperties.alpha);
             cairo_fill(xurfaced_render_cairo);
@@ -171,9 +171,6 @@ void xurfaced_render_init(struct xurfaced_display_backend *backend)
     xurfaced_render_cairo_background = cairo_pattern_create_linear(0.0, 0.0, 0.0, backend->height);
 
     cairo_set_line_cap(xurfaced_render_cairo, CAIRO_LINE_CAP_ROUND);
-
-    unsigned int top = 0x441155FF;
-    unsigned int bottom = 0x001133FF;
 
     double rt = xurfaced_render_convert(xurfaced_render_background_top >> 24);
     double gt = xurfaced_render_convert(xurfaced_render_background_top >> 16);

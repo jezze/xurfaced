@@ -299,7 +299,7 @@ struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int
 
         option->animationProperties.translationX = 0;
         option->animationProperties.translationY = y;
-        y += 80.0;
+        y += height / 10.0;
 
         xurfaced_menu_option_list_add(menu->opts, option);
 

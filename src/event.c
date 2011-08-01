@@ -191,7 +191,7 @@ static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent 
 
         case XK_Page_Up:
 
-            xurfaced_menu_previous(xurfaced->menu, 8);
+            xurfaced_menu_previous(xurfaced->menu, 6);
 
             break;
 
@@ -203,7 +203,7 @@ static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent 
 
         case XK_Page_Down:
 
-            xurfaced_menu_next(xurfaced->menu, 8);
+            xurfaced_menu_next(xurfaced->menu, 6);
 
             break;
 
