@@ -10,6 +10,7 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrender.h>
 #include <animation.h>
+#include <config.h>
 #include <client.h>
 #include <display.h>
 #include <event.h>
@@ -196,10 +197,10 @@ static void xurfaced_init(struct xurfaced *xurfaced)
 
     }
 
-    FILE *pid = fopen(xurfaced->config.pid, "w");
-    
-    fprintf(pid, "%d", getpid());
-    fclose(pid);
+    char pid[32];
+
+    sprintf(pid, "%u", getpid());
+    xurfaced_config_write(xurfaced->config.pid, pid);
     sync();
 
     xurfaced->backend = xurfaced_display_create();
