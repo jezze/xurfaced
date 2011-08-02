@@ -184,20 +184,22 @@ void xurfaced_menu_previous(struct xurfaced_menu *menu, unsigned int num)
 
 }
 
-static FILE *xurfaced_open(char *path, int apipe[])
+static FILE *xurfaced_open(struct xurfaced *xurfaced, char *head, char *title)
 {
 
     struct stat info;
+    char path[128];
 
+    sprintf(path, "%s/%s/%s", xurfaced->config.base, head, title);
     stat(path, &info);
 
     if (info.st_mode & S_IXUSR)
     {
 
-        pipe(apipe);
-        xurfaced_execute(path, apipe);
+        pipe(xurfaced->pipe);
+        xurfaced_execute(path, xurfaced->pipe);
 
-        return fdopen(apipe[0], "r");
+        return fdopen(xurfaced->pipe[0], "r");
 
     }
     
@@ -223,19 +225,9 @@ struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int
 
     path[strlen(path) - 1] = '\0';
 
-    char current[128];
-
-    sprintf(current, "%s/%s/title", xurfaced->config.base, path);
-
-    FILE *title = xurfaced_open(current, xurfaced->pipe);
-
-    sprintf(current, "%s/%s/desc", xurfaced->config.base, path);
-
-    FILE *desc = xurfaced_open(current, xurfaced->pipe);
-
-    sprintf(current, "%s/%s/exec", xurfaced->config.base, path);
-
-    FILE *exec = xurfaced_open(current, xurfaced->pipe);
+    FILE *title = xurfaced_open(xurfaced, path, "title");
+    FILE *desc = xurfaced_open(xurfaced, path, "desc");
+    FILE *exec = xurfaced_open(xurfaced, path, "exec");
 
     if (!title || !desc || !exec)
         return 0;
