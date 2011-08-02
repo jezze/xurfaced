@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <animation.h>
+#include <config.h>
 #include <xurfaced.h>
 #include <menu.h>
 
@@ -209,25 +210,6 @@ static FILE *xurfaced_open(char *path, int apipe[])
 
 }
 
-static void xurfaced_read_head(struct xurfaced *xurfaced, char *buffer, unsigned int size)
-{
-
-    FILE *fd = fopen(xurfaced->config.head, "r");
-
-    if (fgets(buffer, size, fd) == NULL)
-    {
-
-        fprintf(stderr, "Could not read head\n");
-        exit(EXIT_FAILURE);
-
-    }
-
-    fclose(fd);
-
-    buffer[strlen(buffer) - 1] = '\0';
-
-}
-
 struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int width, unsigned int height)
 {
 
@@ -237,7 +219,9 @@ struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int
 
     char path[128];
 
-    xurfaced_read_head(xurfaced, path, 128);
+    xurfaced_config_read(xurfaced->config.head, path, 128);
+
+    path[strlen(path) - 1] = '\0';
 
     char current[128];
 
