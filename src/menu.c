@@ -3,8 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/Xrender.h>
 #include <animation.h>
 #include <config.h>
+#include <display.h>
 #include <xurfaced.h>
 #include <menu.h>
 
@@ -187,8 +190,8 @@ void xurfaced_menu_previous(struct xurfaced_menu *menu, unsigned int num)
 static FILE *xurfaced_open(struct xurfaced *xurfaced, char *head, char *title)
 {
 
-    struct stat info;
     char path[128];
+    struct stat info;
 
     sprintf(path, "%s/%s/%s", xurfaced->config.base, head, title);
     stat(path, &info);
@@ -212,25 +215,15 @@ static FILE *xurfaced_open(struct xurfaced *xurfaced, char *head, char *title)
 
 }
 
-struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int width, unsigned int height)
+static void xurfaced_menu_init_options(struct xurfaced *xurfaced, struct xurfaced_menu *menu, char *path)
 {
-
-    struct xurfaced_menu *menu = xurfaced_menu_create();
-    menu->animationProperties.translationX = width / 4;
-    menu->animationProperties.translationY = height / 4 + height / 8;
-
-    char path[128];
-
-    xurfaced_config_read(xurfaced->config.head, path, 128);
-
-    path[strlen(path) - 1] = '\0';
 
     FILE *title = xurfaced_open(xurfaced, path, "title");
     FILE *desc = xurfaced_open(xurfaced, path, "desc");
     FILE *exec = xurfaced_open(xurfaced, path, "exec");
 
     if (!title || !desc || !exec)
-        return 0;
+        return;
 
     float y = 0;
     char content[4096];
@@ -275,7 +268,7 @@ struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int
 
         option->animationProperties.translationX = 0;
         option->animationProperties.translationY = y;
-        y += height / 10.0;
+        y += xurfaced->backend->height / 10.0;
 
         xurfaced_menu_option_list_add(menu->opts, option);
 
@@ -284,6 +277,24 @@ struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced, unsigned int
     fclose(title);
     fclose(desc);
     fclose(exec);
+
+
+}
+
+struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced)
+{
+
+    struct xurfaced_menu *menu = xurfaced_menu_create();
+    menu->animationProperties.translationX = xurfaced->backend->width / 4;
+    menu->animationProperties.translationY = xurfaced->backend->height / 4 + xurfaced->backend->height / 8;
+
+    char path[128];
+
+    xurfaced_config_read(xurfaced->config.head, path, 128);
+
+    path[strlen(path) - 1] = '\0';
+
+    xurfaced_menu_init_options(xurfaced, menu, path);
 
     menu->opts->current = menu->opts->head;
 
