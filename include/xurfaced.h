@@ -9,6 +9,7 @@ struct xurfaced_config
     char oninit[128];
     char onexit[128];
     char pid[128];
+    char key[128];
     char notify[128];
     char notification[256];
 

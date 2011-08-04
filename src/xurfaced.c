@@ -173,6 +173,7 @@ static void xurfaced_init_config(struct xurfaced_config *config)
     sprintf(config->oninit, "%s/oninit", config->base);
     sprintf(config->onexit, "%s/onexit", config->base);
     sprintf(config->pid, "%s/pid", config->base);
+    sprintf(config->key, "%s/key", config->base);
     sprintf(config->notify, "%s/notify", config->base);
 
 }

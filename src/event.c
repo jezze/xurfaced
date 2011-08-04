@@ -6,6 +6,7 @@
 #include <X11/keysym.h>
 #include <X11/extensions/Xrender.h>
 #include <animation.h>
+#include <config.h>
 #include <client.h>
 #include <display.h>
 #include <menu.h>
@@ -149,6 +150,11 @@ static void xurfaced_event_keypress(struct xurfaced *xurfaced, XKeyPressedEvent 
 {
 
     KeySym key = XLookupKeysym(event, 0);
+
+    char skey[32];
+
+    sprintf(skey, "%d", (unsigned int)key);
+    xurfaced_config_write(xurfaced->config.key, skey);
 
     char path[128];
 

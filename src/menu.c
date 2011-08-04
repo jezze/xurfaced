@@ -285,8 +285,8 @@ struct xurfaced_menu *xurfaced_menu_init(struct xurfaced *xurfaced)
 {
 
     struct xurfaced_menu *menu = xurfaced_menu_create();
-    menu->animationProperties.translationX = xurfaced->backend->width / 4;
-    menu->animationProperties.translationY = xurfaced->backend->height / 4 + xurfaced->backend->height / 8;
+    menu->animationProperties.translationX = xurfaced->backend->width / 16.0;
+    menu->animationProperties.translationY = xurfaced->backend->height / 4.0 + xurfaced->backend->height / 8.0;
 
     char path[128];
 
