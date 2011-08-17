@@ -174,17 +174,17 @@ void xurfaced_render_init(struct xurfaced_display_backend *backend)
     btextheight = backend->height / 32.0;
     stextheight = backend->height / 56.0;
     middle = backend->height / 4.0 + backend->height / 8.0;
-    r = xurfaced_render_convert(xurfacedRenderText >> 24);
-    g = xurfaced_render_convert(xurfacedRenderText >> 16);
-    b = xurfaced_render_convert(xurfacedRenderText >> 8);
-    a = xurfaced_render_convert(xurfacedRenderText);
+    r = xurfaced_render_convert(xurfacedRenderText >> XURFACED_RENDER_COLOR_BITS_RED);
+    g = xurfaced_render_convert(xurfacedRenderText >> XURFACED_RENDER_COLOR_BITS_GREEN);
+    b = xurfaced_render_convert(xurfacedRenderText >> XURFACED_RENDER_COLOR_BITS_BLUE);
+    a = xurfaced_render_convert(xurfacedRenderText >> XURFACED_RENDER_COLOR_BITS_ALPHA);
 
-    double rt = xurfaced_render_convert(xurfacedRenderBackgroundTop >> 24);
-    double gt = xurfaced_render_convert(xurfacedRenderBackgroundTop >> 16);
-    double bt = xurfaced_render_convert(xurfacedRenderBackgroundTop >> 8);
-    double rb = xurfaced_render_convert(xurfacedRenderBackgroundBottom >> 24);
-    double gb = xurfaced_render_convert(xurfacedRenderBackgroundBottom >> 16);
-    double bb = xurfaced_render_convert(xurfacedRenderBackgroundBottom >> 8);
+    double rt = xurfaced_render_convert(xurfacedRenderBackgroundTop >> XURFACED_RENDER_COLOR_BITS_RED);
+    double gt = xurfaced_render_convert(xurfacedRenderBackgroundTop >> XURFACED_RENDER_COLOR_BITS_GREEN);
+    double bt = xurfaced_render_convert(xurfacedRenderBackgroundTop >> XURFACED_RENDER_COLOR_BITS_BLUE);
+    double rb = xurfaced_render_convert(xurfacedRenderBackgroundBottom >> XURFACED_RENDER_COLOR_BITS_RED);
+    double gb = xurfaced_render_convert(xurfacedRenderBackgroundBottom >> XURFACED_RENDER_COLOR_BITS_GREEN);
+    double bb = xurfaced_render_convert(xurfacedRenderBackgroundBottom >> XURFACED_RENDER_COLOR_BITS_BLUE);
 
     cairo_pattern_add_color_stop_rgb(xurfacedRenderCairoBackgroundPattern, 0.0, rt, gt, bt);
     cairo_pattern_add_color_stop_rgb(xurfacedRenderCairoBackgroundPattern, 1.0, rb, gb, bb);
