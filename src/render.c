@@ -16,6 +16,14 @@ static cairo_pattern_t *xurfacedRenderCairoBackgroundPattern;
 unsigned int xurfacedRenderText;
 unsigned int xurfacedRenderBackgroundTop;
 unsigned int xurfacedRenderBackgroundBottom;
+double boxheight;
+double btextheight;
+double stextheight;
+double middle;
+double r;
+double g;
+double b;
+double a;
 
 static double xurfaced_render_convert(unsigned int value)
 {
@@ -42,14 +50,6 @@ static void xurfaced_render_blit_notification(int width, int height)
 
     cairo_font_extents_t fe;
 
-    double r = xurfaced_render_convert(xurfacedRenderText >> 24);
-    double g = xurfaced_render_convert(xurfacedRenderText >> 16);
-    double b = xurfaced_render_convert(xurfacedRenderText >> 8);
-    double a = xurfaced_render_convert(xurfacedRenderText);
-
-    double boxheight = height / 24.0;
-    double stextheight = height / 56.0;
-
     cairo_rectangle(xurfacedRenderCairo, 0, 0, width, boxheight);
     cairo_set_source_rgba(xurfacedRenderCairo, 0.0, 0.0, 0.0, 0.8);
     cairo_fill(xurfacedRenderCairo);
@@ -67,14 +67,6 @@ static void xurfaced_render_blit_menu(unsigned int height, struct xurfaced_menu 
 
     struct xurfaced_menu_option *current = menu->opts->current;
 
-    double r = xurfaced_render_convert(xurfacedRenderText >> 24);
-    double g = xurfaced_render_convert(xurfacedRenderText >> 16);
-    double b = xurfaced_render_convert(xurfacedRenderText >> 8);
-
-    double btextheight = height / 32.0;
-    double stextheight = height / 56.0;
-
-    double middle = height / 4.0 + height / 8.0;
     double offset = menu->animationProperties.translationY + current->animationProperties.translationY;
     double distance = fabs(middle - offset);
 
@@ -177,6 +169,15 @@ void xurfaced_render_init(struct xurfaced_display_backend *backend)
     xurfacedRenderText = 0xFFFFFFFF;
     xurfacedRenderBackgroundTop = 0x441155FF;
     xurfacedRenderBackgroundBottom = 0x001133FF;
+
+    boxheight = backend->height / 24.0;
+    btextheight = backend->height / 32.0;
+    stextheight = backend->height / 56.0;
+    middle = backend->height / 4.0 + backend->height / 8.0;
+    r = xurfaced_render_convert(xurfacedRenderText >> 24);
+    g = xurfaced_render_convert(xurfacedRenderText >> 16);
+    b = xurfaced_render_convert(xurfacedRenderText >> 8);
+    a = xurfaced_render_convert(xurfacedRenderText);
 
     double rt = xurfaced_render_convert(xurfacedRenderBackgroundTop >> 24);
     double gt = xurfaced_render_convert(xurfacedRenderBackgroundTop >> 16);
